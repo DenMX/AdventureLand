@@ -1,0 +1,272 @@
+let MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser']
+
+
+const ARMOR = ['shoes', 'chest', 'helmet', 'pants','gloves','shield']
+const JEWELRY = ['amulet', 'ring', 'belt', 'yearring']
+
+load_code('PotionUse')
+
+let goingForLoot = false
+
+//setInterval(checkParty,3000)
+async function checkParty()
+{
+    if(goingForLoot) return
+    
+    let charToGo = 
+    {
+        name: null, hp_pot: null, mp_pot: null, take_items: false, position: null
+    }
+
+    const myCharacters = get_characters();
+    let selfCharacter = myCharacters.find(
+        (c) => c.name === character.name
+    );
+
+    if (!selfCharacter) {
+        return;
+    }
+
+    let onlineOnServer = myCharacters.filter(
+        (c) => c.name !== character.name && c.online > 0 && c.server === selfCharacter.server
+    );
+
+    for (let char of onlineOnServer) {
+        var member = get(char.name)
+		console.log(member)
+        if(member)
+        {
+            if(member.hp_pot<MAX_HP_POTIONS/10)
+            {
+                await smart_move('upgrade')
+                charToGo.name = member
+                charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
+                console.log('Buy hp for ${member}'+name)
+                if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot) await buy_with_gold(HP_POT, MAX_HP_POTIONS-member.hp_pot)
+            }
+            if(member.mp_pot<MAX_MP_POTIONS/10)
+            {
+                await smart_move('upgrade')
+                charToGo.name = member
+                charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
+                console.log('Buy mp for '+name)
+                if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) await buy_with_gold(MP_POT, MAX_MP_POTIONS-member.mp_pot)
+            }
+            if(member.items_count>38)
+            {
+                charToGo.take_items = true
+            }
+            if(charToGo.name)
+            {
+                goingForLoot=true
+                position = {x: member.x, y: member.y}
+                smart_move(position)
+                if(charToGo.take_items) takeLoot(member)
+                for(let i=0; i< character.items.length; i++)
+                {
+                    item = character.items[i];
+                    if(item.name == HP_POT) await send_item(member, item, charToGo.hp_pot);
+                    if(item.name == MP_POT) await send_item(member, item, charToGo.mp_pot);
+                }
+                storeUpgradeAndCombine();
+                goingForLoot=false
+            }
+        }
+    }
+
+
+    setTimeout(checkParty, 5000)
+}
+
+async function takeLoot(char)
+{
+    await send_cm(char, {name: character.name, cmd: 'giveMeLoot'})
+}
+
+async function storeUpgradeAndCombine()
+{
+
+// 	set_message('looking at loot')
+// 	for(i=0; i<character.items.length; i++){
+		
+// 		if(character.items[i] === null) continue;
+
+// 		let gItem = G.items[character.items[i].name]
+// 		switch(gItem.type){
+// 			case 'material':
+// 			case 'gem': 
+// 			case 'quest':
+// 				bank_store(i) 
+// 				break;
+// 		}
+			
+
+// 		set_message(i)
+// 	}
+	
+// 	is_upgrading=true; 
+// 	going_to_sell=false;
+// 	console.warn('is_upgrading:'+is_upgrading+' going_to_sell:'+going_to_sell)
+// 	if(character.name!='Archealer')
+// 		await smart_move('upgrade').then(upgradeItems).then(buyPots).then(combineItems);
+// 	else 
+// 		await smart_move('upgrade').then(upgradeItems).then(buyPots).then(combineItems);
+	
+// 	if(!current_farm_pos) await smart_move(current_farm_pos)
+// 	else await smart_move(MAIN_FARM)
+
+// 	attack_mode=true
+// 	going_to_sell=false
+// 	is_upgrading=false
+    
+}
+
+function findScroll(grade)
+{
+	let scroll = null
+
+	for(let i=0; i<character.items.length; i++){
+		if(character.items[i] == null) continue
+		if(character.items[i].name == 'scroll'+grade) 
+		{
+			console.log('Scroll at ' + i)
+			scroll = i
+			break
+		}
+	}
+	return scroll
+}
+
+function getGrade(gItem, lvl)
+{
+	let grade
+	for(let i=0; i<gItem.grades.length; i++)
+	{
+		console.log('Searching grade')
+		console.log('Grade = '+gItem.grades[i]+' Level = ' + lvl)
+		if(gItem.grades[i] > lvl) {
+			console.log('\nGrade ' + i)
+			grade = i;
+			console.log(i)
+			break;
+		}
+	}
+	return grade;
+}
+
+
+async function upgradeItems()
+{
+	console.log('start upgrade')
+	let upgradeItems = 1
+	while (upgradeItems > 0)
+	{
+		console.log('while started')
+		upgradeItems = 0
+		for(var j =0; j<MAX_LVL_TO_UPGRADE; j++)
+		{
+			for(let i=0; i<character.items.length; i++)
+			{
+				console.log('for is here')
+				if(character.items[i]==null || !ARMOR.includes(G.items[character.items[i].name].type) || G.items[character.items[i].name].type == 'shield' || character.items[i].level != j){
+					continue;
+				} 
+				
+				console.log('itemchecked')
+				let item = character.items[i]
+				let gItem = G.items[item.name]
+				console.log('Item:' + i + ' ' + gItem.name)
+				
+				if(character.slots[gItem.type] == null || character.slots[gItem.type].level<item.level) 
+				{
+					await equip(i);
+					upgradeItems++
+					break
+				}
+
+				let grade = getGrade(gItem, item.level)
+
+				if( item.level <= character.slots[gItem.type].level)
+				{
+					if(findScroll(grade) != null)
+					{
+						let success = await upgrade(i, findScroll(grade))
+						if(success.success == true) 
+						{
+							upgradeItems++
+							console.log('Success:'+success.success)
+							continue
+						}
+						else continue
+						
+					} 
+					else
+					{
+						console.log(item.name + ' has no scrolls')
+						await buy_with_gold('scroll'+grade, 1)
+						let success = await upgrade(i, findScroll(grade))
+						if(success.success == true) 
+						{
+							upgradeItems++
+							console.log('Success:'+success.success)
+							continue
+						}
+					}
+					
+				}			
+			}
+		}
+		
+	}
+}
+
+
+async function combineItems()
+{
+	let upgradeItems = 1
+	while (upgradeItems > 0)
+	{
+		
+		upgradeItems = 0
+		for(var lvl=0; lvl<4; lvl++)
+		{
+			for(let slot=0; slot<character.items.length; slot++)
+			{
+				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) || character.items[slot].level != lvl) continue
+				let item=[character.items[slot]]
+				let items = [slot]
+
+				console.log(item)
+				for(let subSlot=0; subSlot<character.items.length; subSlot++)
+				{
+					if(character.items[subSlot] && character.items[subSlot]!= item) items.push(subSlot)
+				}
+			console.log(items.length)
+				let combCount = items.length/3
+				if(combCount<1) continue
+				for(let i=0; i<combCount; i++)
+				{
+					console.warn('comb string: '+String(items).substring(0,5), findCScroll(0))
+					await compound(String(items).substring(0,5), findCScroll(0))
+					for(let s=0; s<3; s++) items.shift()
+				}	
+			}
+		}
+	}
+}
+
+function findCScroll(grade)
+{
+	let scroll = null
+
+	for(let i=0; i<character.items.length; i++){
+		if(character.items[i] == null) continue
+		if(character.items[i].name == 'cscroll'+grade) 
+		{
+			console.log('Scroll at ' + i)
+			scroll = i
+			break
+		}
+	}
+	return scroll
+}

@@ -1,0 +1,214 @@
+let isGoingForLoot = false
+let isGoingToBank = false
+let isExchanging = false
+// let isCombining = false
+
+var state='Idling'
+
+const DEFAULT_STATE = 'Idling'
+
+var cyberland_check
+var bank_check
+
+var queue = []
+
+
+
+initChar()
+async function initChar()
+{
+	load_code('PotionUse')
+	load_code('Basics')
+	load_code('Mover')
+	load_code('MerBuisiness')
+	load_code('MerchantItems')
+
+	let getState = get(character.name)
+	if(getState?.merchant_queue) queue = getState.merchant_queue
+	cyberland_check = getState?.last_cyber_check
+	bank_check = getState?.last_bank_check
+
+	queue.push(checkParty)
+	queue.push(checkItemsCount)
+	//queue.push(checkBank)
+	queue.push(checkCyberTime)
+	//queue.push(buyWeapon)
+	console.log(queue)
+	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
+
+	
+	setInterval(useBaff, 200)
+	checkState()
+	setInterval(saveState, 3000)
+}
+
+
+function saveState()
+{
+	let state = 
+	{
+		x: character.x,
+		y: character.y,
+		map: character.map,
+		last_cyber_check: cyberland_check,
+		last_bank_check: bank_check,
+		merchant_queue: queue
+	}
+	set(character.name, state)
+}
+
+// startMyChars()
+async function startMyChars()
+{
+	let online = getMyCharactersOnline()
+	for(let char of MY_CHARACTERS)
+	{
+		if(char != character.name && !online.includes(char)) start_character(char)
+	}
+}
+
+async function changeState(newState)
+{
+	if(newState==DEFAULT_STATE)
+	{
+		state=DEFAULT_STATE
+	}
+	else if(state!=newState)
+	{
+		state=newState
+	}
+	
+	game_log(state, '#FF7F50')
+}
+
+
+async function checkState()
+{
+	if(state==DEFAULT_STATE )
+	{
+
+		console.log(queue)
+		try
+		{
+			for(let i in queue)
+			{
+				let fu = queue.shift()
+				if(fu)await fu()
+				break
+			}
+		}
+		catch(ex)
+		{
+			console.error(ex)
+		}
+	}
+	setTimeout(checkState, 5000)
+}
+
+async function checkBank()
+{
+	
+	if(Date.now()-bank_check<getMsFromMinutes(MINUTES_TO_CHECKBANK))
+	{
+		setTimeout(scheduler(checkBank), getMsFromMinutes(5))
+		return
+	}
+	changeState('Checking bank..')
+	await smart_move('bank')
+	bank_check = Date.now()
+	for(let items in character.bank)
+	{
+		let tmpItems = character.bank[items]
+		for(let item in tmpItems)
+		{
+			let tmpItem = tmpItems[item]
+			if(!tmpItem) continue
+			if(ITEMS_TO_EXCHANGE.includes(tmpItem.name) && tmpItem.q>=1000)
+			{
+				await bank_retrieve(items, item)
+			}
+		}
+	}
+
+	
+	for(let i in character.items)
+	{
+
+		if(!character.items[i]) continue
+
+		if(character.items[i].name=='seashell') 
+		{
+			changeState('Going to fisherman..')
+			await smart_exchange('fisherman', 'seashell', i)
+			
+		}
+		else if(character.items[i].name == 'leather')
+		{
+			changeState('Going to leather..')
+			await smart_exchange('leathermerchant', 'leather', i)
+		}
+	}
+	changeState(DEFAULT_STATE)
+	setTimeout(scheduler(checkBank), getMsFromMinutes(MINUTES_TO_CHECKBANK))
+}
+
+async function buyPots()
+{
+	changeState('Going for pots...')
+	if(mpPotsCount()< MAX_MP_POTIONS/3) 
+	{
+		await smart_move('upgrade');
+		await buy_with_gold(MP_POT, MAX_MP_POTIONS-mpPotsCount());
+	}
+	if(hpPotsCount()< MAX_HP_POTIONS/3)
+	{
+		await smart_move('upgrade');
+		await buy_with_gold(HP_POT, MAX_HP_POTIONS-hpPotsCount())
+	} 
+	changeState(DEFAULT_STATE)
+	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
+}
+
+
+async function checkCyberTime()
+{
+	if(Date.now()-cyberland_check<MS_TO_CYBER_CHECK ) {
+		setTimeout(scheduler(checkCyberTime), 60000)
+		return
+	}
+	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check)) await checkCyberlandCommand()
+	setTimeout(scheduler(checkCyberTime), MS_TO_CYBER_CHECK)
+}
+
+
+async function checkItemsCount()
+{
+	
+	if(itemsCount()>=ITEMS_COUNT_TO_STORE && !character.q.upgrade && !character.q.compound && !character.q.exchange) 
+	{
+		changeState('Going to bank...')
+		await smart_move('bank').then(storeUpgradeAndCombine)
+	}
+	setTimeout(scheduler(checkItemsCount), 2000)
+	
+}
+
+
+async function useBaff()
+{
+	let players =Object.values(parent.entities).filter((e) => e.type=='character' && (!e.s.mluck || e.s.mluck<=900000))
+
+	for(let p of players)
+	{
+		while(is_on_cooldown('mluck') || !is_in_range(p, 'mluck')) await sleep(50);
+		try
+		{
+			await use_skill('mluck', p.name)
+		}
+		catch(ex)
+		{
+			console.warn('Error while buffing')
+			console.warn(ex)
+		}
+	}
+}
