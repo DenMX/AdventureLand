@@ -1,8 +1,47 @@
-load_code('Basics')
-load_code('PotionUse')
-load_code('State')
-load_code('Mover')
-load_code('MainBehavior')
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
+
+async function runCharacter() {
+    // Initialize modules
+    await initialize_character();
+
+}
+runCharacter();
+
+async function initialize_character() {
+    
+	await load_module('Basics')
+    await load_module('PotionUse')
+    await load_module('State')
+    await load_module('Mover')
+    await load_module('MainBehavior')
+}
+
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
+load_module('Basics')
+load_module('PotionUse')
+load_module('State')
+load_module('Mover')
+load_module('MainBehavior')
 
 
 

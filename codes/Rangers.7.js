@@ -1,9 +1,55 @@
-load_code('Basics')
-load_code('PotionUse')
-load_code('State')
-load_code('Mover')
-load_code('MainBehavior')
+var controller = undefined;
+async function runCharacter() {
+    // Initialize modules
+    await initialize_character();
 
+    // Restore state
+    restoreCharacterState();
+    // Send character info
+    updateCharacterInfoLoop();
+    // Respawn if dead
+    respawnLoop();
+
+    // Character behaviour
+    let currStrat = new WarriorBehaviour(false, FARM_AREAS.moles);
+
+    // Character controller
+    controller = new CharacterController({
+        do_quests: false
+    }, currStrat);
+    
+    controller.enable();
+    currStrat.enable();
+
+    sendItemsToCharacterLoop("Momental");
+}
+runCharacter();
+
+async function initialize_character() {
+    
+    await load_module('Basics')
+    await load_module('PotionUse')
+    await load_module('State')
+    await load_module('Mover')
+    await load_module('MainBehavior')
+}
+
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
+
+async function init()
+{
+
+}
 
 
 const TARGETING_BLACK_LIST = null

@@ -1,1 +1,12 @@
-load_code('Rangers')
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
+load_module('Rangers')

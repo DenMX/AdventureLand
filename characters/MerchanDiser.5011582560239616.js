@@ -12,16 +12,33 @@ var bank_check
 
 var queue = []
 
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
+
+async function runCharacter() {
+    // Initialize modules
+    await initChar();
+
+}
+runCharacter();
 
 
-initChar()
 async function initChar()
 {
-	load_code('PotionUse')
-	load_code('Basics')
-	load_code('Mover')
-	load_code('MerBuisiness')
-	load_code('MerchantItems')
+	await load_module('PotionUse')
+	await load_module('Basics')
+	await load_module('Mover')
+	await load_module('MerBuisiness')
+	await load_module('MerchantItems')
 
 	let getState = get(character.name)
 	if(getState?.merchant_queue) queue = getState.merchant_queue
