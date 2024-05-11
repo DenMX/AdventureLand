@@ -1,9 +1,29 @@
-load_code('Basics')
-load_code('PotionUse')
-load_code('State')
-load_code('Mover')
-load_code('MainBehavior')
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
 
+async function runCharacter() {
+    // Initialize modules
+    await initialize_character();
+
+}
+runCharacter();
+
+async function initialize_character() {
+    
+	await load_module('Basics')
+    await load_module('PotionUse')
+    await load_module('State')
+    await load_module('MainBehavior')
+}
 
 
 const TARGETING_BLACK_LIST = null

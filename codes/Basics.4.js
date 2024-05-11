@@ -3,7 +3,7 @@ const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'a
 
 const ADD_PARTY = ['man1', 'men2', 'men3']
 
-
+load_module('Mover')
 
 function scheduler(func)
 {
