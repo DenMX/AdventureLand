@@ -13,11 +13,11 @@ const ARMOR_SLOT_LIB =
 
 const DISMANTLE_POSITION = {x: -4, y: 443}
 
-const MAX_LVL_TO_UPGRADE=8
+const MAX_LVL_TO_UPGRADE=9
 
-const MAX_LVL_TO_UPGRADE_EQUIP=7
+const MAX_LVL_TO_UPGRADE_EQUIP=8
 
-const MAX_LVL_TO_UPGRADE_JEWELRY=2
+const MAX_LVL_TO_UPGRADE_JEWELRY=3
 
 const ITEMS_TO_EXCHANGE = [
 	'seashell',
@@ -39,7 +39,10 @@ const UPGRADE_WEAPONS = {
 	firestaff: {level: 7},
 	firebow: {level: 7},
 	bow: {level: 9},
-	staff: {level:9}
+	staff: {level:9},
+	fireblade: {level: 7},
+	t2bow: {level: 9},
+	hbow: {level:8}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']

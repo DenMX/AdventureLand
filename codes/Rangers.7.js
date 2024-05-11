@@ -21,8 +21,7 @@ async function runCharacter() {
     controller.enable();
     currStrat.enable();
 
-    sendItemsToCharacterLoop("Momental");
-}
+    }
 runCharacter();
 
 async function initialize_character() {
@@ -103,7 +102,9 @@ async function useTriplShot(target)
 	
     if(!is_on_cooldown('3shot') && character.mp> G.skills['3shot'].mp)
     {
-        await use_skill('3shot', target).then(function(data){ reduce_cooldown("3shot", character.ping)})
+	    let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
+        && is_in_range(e) && e!== target)
+        await use_skill('3shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("3shot", character.ping)})
     }
 }
 
@@ -136,16 +137,16 @@ function myAttack(target){
 		// Walk half the distance
 	}
 	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
-    && Object.values(parent.entities).filter((e) => e.type == 'monster' && character.range>=getDistance(e, character)).length > 2)
+    && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 2)
 	{
-		if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		set_message("Attacking");
 		useTriplShot(target).catch(() => {});
 		reduce_cooldown("3shot", Math.min(...parent.pings));
 	}
     else if(can_attack(target) )
     {
-        if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+        //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		set_message("Attacking");
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.min(...parent.pings));

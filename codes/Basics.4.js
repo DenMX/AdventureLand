@@ -59,6 +59,7 @@ function on_party_invite(name) {
     }
 }
 
+setInterval(shuffleItems, 60000)
 function shuffleItems()
 {
     for(let i in character.items)

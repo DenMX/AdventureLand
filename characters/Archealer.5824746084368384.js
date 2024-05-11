@@ -37,11 +37,11 @@ async function load_module(module) {
         console.error(ex);
     }
 }
-load_module('Basics')
-load_module('PotionUse')
-load_module('State')
-load_module('Mover')
-load_module('MainBehavior')
+//load_module('Basics')
+//load_module('PotionUse')
+//load_module('State')
+//load_module('Mover')
+//load_module('MainBehavior')
 
 
 

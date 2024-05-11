@@ -133,7 +133,7 @@ async function storeUpgradeAndCombine()
 					bank_store(i) 
 					break;
 			}
-			if(JEWELRY.includes(gItem.type) && item.level>=2)
+			if(JEWELRY.includes(gItem.type) && item.level==MAX_LVL_TO_UPGRADE_JEWELRY)
 			{
 				bank_store(i);
 			}
@@ -287,11 +287,11 @@ async function combineItems()
 					}
 					if(items.length>=3)
 					{
-						let cscrolls = await findCScroll(0)
-						if(!cscrolls) await buy_with_gold('cscroll0', 1)
+						let grade = getGrade(gItem, lvl)
+						let cscrolls = await findCScroll(grade)
+						if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
 						if(!character.s.massproduction) use_skill('massproduction')
-						await compound(items[0],items[1],items[2],findCScroll(0))
-						sellItems()
+						await compound(items[0],items[1],items[2],findCScroll(grade))
 						break;
 					}
 				}	
