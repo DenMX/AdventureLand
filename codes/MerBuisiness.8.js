@@ -140,8 +140,8 @@ async function storeUpgradeAndCombine()
 			
 		}
 		await smart_move('upgrade')
-		queue.push(upgradeArmor)
-		queue.push(combineItems)
+		merch_queue.push(upgradeArmor)
+		merch_queue.push(combineItems)
 	}
 	catch(ex) {console.error(ex)}
 	finally

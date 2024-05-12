@@ -10,7 +10,7 @@ const DEFAULT_STATE = 'Idling'
 var cyberland_check
 var bank_check
 
-var queue = []
+var merch_queue = []
 
 async function load_module(module) {
     try {
@@ -40,16 +40,16 @@ async function initChar()
 	await load_module('MerchantItems')
 
 	let getState = get(character.name)
-	if(getState?.merchant_queue) queue = getState.merchant_queue
+	//if(getState?.merchant_merch_queue) merch_queue = getState.merchant_merch_queue
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
 
-	queue.push(checkParty)
-	queue.push(checkItemsCount)
-	//queue.push(checkBank)
-	queue.push(checkCyberTime)
-	//queue.push(buyWeapon)
-	console.log(queue)
+	merch_queue.push(checkParty)
+	merch_queue.push(checkItemsCount)
+	//merch_queue.push(checkBank)
+	merch_queue.push(checkCyberTime)
+	//merch_queue.push(buyWeapon)
+	console.log(merch_queue)
 	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
 
 	
@@ -68,7 +68,7 @@ function saveState()
 		map: character.map,
 		last_cyber_check: cyberland_check,
 		last_bank_check: bank_check,
-		merchant_queue: queue
+		merchant_merch_queue: merch_queue
 	}
 	set(character.name, state)
 }
@@ -103,14 +103,17 @@ async function checkState()
 	if(state==DEFAULT_STATE )
 	{
 
-		console.log(queue)
+		console.log(merch_queue)
 		try
 		{
-			for(let i in queue)
+			for(let i in merch_queue)
 			{
-				let fu = queue.shift()
-				if(fu)await fu()
-				break
+				let fu = merch_queue.shift()
+				if(fu)
+				{
+					await fu()
+					break
+				}
 			}
 		}
 		catch(ex)
