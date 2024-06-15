@@ -3,24 +3,6 @@ async function runCharacter() {
     // Initialize modules
     await initialize_character();
 
-    // Restore state
-    restoreCharacterState();
-    // Send character info
-    updateCharacterInfoLoop();
-    // Respawn if dead
-    respawnLoop();
-
-    // Character behaviour
-    let currStrat = new WarriorBehaviour(false, FARM_AREAS.moles);
-
-    // Character controller
-    controller = new CharacterController({
-        do_quests: false
-    }, currStrat);
-    
-    controller.enable();
-    currStrat.enable();
-
     }
 runCharacter();
 
@@ -99,7 +81,7 @@ async function useMark(target)
 async function useTriplShot(target)
 {
 	
-    if(!is_on_cooldown('3shot') && character.mp> G.skills['3shot'].mp)
+    if(!is_on_cooldown('3shot') )
     {
 	    let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
         && is_in_range(e) && e!== target)
@@ -110,11 +92,20 @@ async function useTriplShot(target)
 
 async function use5Shot(target)
 {
-    if(!is_on_cooldown('5shot') && character.mp > G.skills['5shot'].mp)
+    if(!is_on_cooldown('5shot') )
     {
+        console.error('using 5shot')
         let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
         && is_in_range(e) && e!== target)
-        await use_skill('5shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("5shot", character.ping)})
+        console.warn(tartgeted_mobs.length)
+        if(tartgeted_mobs[3])
+        {
+            await use_skill('5shot', [target, tartgeted_mobs[0], tartgeted_mobs[1], tartgeted_mobs[2], tartgeted_mobs[3]]).then(function(data){ reduce_cooldown("5shot", character.ping)})
+        }
+        else
+        {
+            await use_skill('5shot', [target, tartgeted_mobs[0], tartgeted_mobs[1], tartgeted_mobs[2]]).then(function(data){ reduce_cooldown("5shot", character.ping)})
+        }
     }
 }
 
@@ -122,7 +113,7 @@ async function usePiercing(target)
 {
     if(!is_on_cooldown('piercingshot') && character.mp > G.skills['piercingshot'].mp)
     {
-        use_skill('piercingshot').then(function(data){ reduce_cooldown("piercingshot", character.ping)})
+        use_skill('piercingshot', target).then(function(data){ reduce_cooldown("piercingshot", character.ping)})
     }
 }
 
@@ -151,14 +142,12 @@ function myAttack(target){
 			character.x+(target.x-character.x)/4,
 			character.y+(target.y-character.y)/4
 			);
-		// Walk half the distance
 	}
-    if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
+    else if(character.level >= G.skills['5shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('5shot') && character.mp > 350
     && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 3)
     {
         set_message("Attacking");
-		useTriplShot(target).catch(() => {});
-		reduce_cooldown("5shot", Math.min(...parent.pings));
+		use5Shot(target).catch(() => {});
     }
 	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
     && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 2)
@@ -166,11 +155,10 @@ function myAttack(target){
 		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		set_message("Attacking");
 		useTriplShot(target).catch(() => {});
-		reduce_cooldown("3shot", Math.min(...parent.pings));
 	}
-    else if(can_attack(target) && target.armor > 300)
+    else if(can_attack(target) && target.armor && target.armor > 300)
     {
-        await use_skill('3shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("3shot", character.ping)})
+        usePiercing(target)
     }
     else if(can_attack(target) )
     {
