@@ -108,6 +108,24 @@ async function useTriplShot(target)
 }
 
 
+async function use5Shot(target)
+{
+    if(!is_on_cooldown('5shot') && character.mp > G.skills['5shot'].mp)
+    {
+        let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
+        && is_in_range(e) && e!== target)
+        await use_skill('5shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("5shot", character.ping)})
+    }
+}
+
+async function usePiercing(target)
+{
+    if(!is_on_cooldown('piercingshot') && character.mp > G.skills['piercingshot'].mp)
+    {
+        use_skill('piercingshot').then(function(data){ reduce_cooldown("piercingshot", character.ping)})
+    }
+}
+
 function kite(target)
 {
 	if(!attack_mode || !target) return
@@ -135,6 +153,13 @@ function myAttack(target){
 			);
 		// Walk half the distance
 	}
+    if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
+    && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 3)
+    {
+        set_message("Attacking");
+		useTriplShot(target).catch(() => {});
+		reduce_cooldown("5shot", Math.min(...parent.pings));
+    }
 	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
     && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 2)
 	{
@@ -143,6 +168,10 @@ function myAttack(target){
 		useTriplShot(target).catch(() => {});
 		reduce_cooldown("3shot", Math.min(...parent.pings));
 	}
+    else if(can_attack(target) && target.armor > 300)
+    {
+        await use_skill('3shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("3shot", character.ping)})
+    }
     else if(can_attack(target) )
     {
         //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
