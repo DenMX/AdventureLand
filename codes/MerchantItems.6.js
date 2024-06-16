@@ -40,7 +40,7 @@ const UPGRADE_WEAPONS = {
 	firebow: {level: 7},
 	bow: {level: 9},
 	staff: {level:9},
-	fireblade: {level: 7},
+	fireblade: {level: 8},
 	t2bow: {level: 9},
 	hbow: {level:8}
 }
