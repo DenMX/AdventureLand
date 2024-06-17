@@ -1,24 +1,58 @@
-var attack_mode=true
+const TARGETING_BLACK_LIST = ''
 
-setInterval(function(){
+async function load_module(module) {
+    try {
+        if (parent.caracAL) {
+            await parent.caracAL.load_scripts([module]);
+        } else {
+            await load_code(module);
+        }
+    } catch (ex) {
+        console.error(ex);
+    }
+}
 
-	use_hp_or_mp();
-	loot();
+async function runCharacter() {
+    // Initialize modules
+    await initialize_character();
 
-	if(!attack_mode || character.rip || is_moving(character)) return;
+}
+runCharacter();
 
-	var target=get_targeted_monster();
-	if(!target)
-	{
-		target=get_nearest_monster({min_xp:100,max_att:120});
-		if(target) change_target(target);
-		else
-		{
-			set_message("No Monsters");
-			return;
-		}
-	}
+async function initialize_character() {
+    
+	await load_module('Basics')
+    await load_module('PotionUse')
+    await load_module('State')
+    await load_module('MainBehavior')
+}
+
+function kite(target)
+{
+	if(!attack_mode || !target) return
 	
+	let distance = getDistance(target, character)
+	if(target.range<character.range && distance <= (character.range-target.range)/2 && get_target_of(target) == character)
+    {
+        move(
+            character.x+(-character.range/2+(Math.random()*character.range)),
+            character.y+(-character.range/2+(Math.random()*character.range))
+        )
+    }
+}
+
+async function useSkills(target)
+{
+	
+}
+
+function myAttack(target)
+{
+	kite(target)
+	change_target(target);
+	useSkills(target);
+
+
 	if(!is_in_range(target))
 	{
 		move(
@@ -32,8 +66,4 @@ setInterval(function(){
 		set_message("Attacking");
 		attack(target);
 	}
-
-},1000/4); // Loops every 1/4 seconds.
-
-// Learn Javascript: https://www.codecademy.com/learn/introduction-to-javascript
-// Write your own CODE: https://github.com/kaansoral/adventureland
+}

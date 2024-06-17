@@ -1,3 +1,5 @@
+const TARGETING_BLACK_LIST = ''
+
 async function load_module(module) {
     try {
         if (parent.caracAL) {
@@ -25,26 +27,6 @@ async function initialize_character() {
     await load_module('MainBehavior')
 }
 
-async function load_module(module) {
-    try {
-        if (parent.caracAL) {
-            await parent.caracAL.load_scripts([module]);
-        } else {
-            await load_code(module);
-        }
-    } catch (ex) {
-        console.error(ex);
-    }
-}
-//load_module('Basics')
-//load_module('PotionUse')
-//load_module('State')
-//load_module('Mover')
-//load_module('MainBehavior')
-
-
-
-const TARGETING_BLACK_LIST = ''
 
 setInterval(on_party_request, 1000)
 function on_party_request(name)
