@@ -43,7 +43,7 @@ function kite(target)
 
 async function useSkills(target)
 {
-	
+
 }
 
 function myAttack(target)
@@ -64,6 +64,7 @@ function myAttack(target)
 	else if(can_attack(target))
 	{
 		set_message("Attacking");
-		attack(target);
+		attack(target).catch(() => {});
+		reduce_cooldown("attack", Math.min(...parent.pings));
 	}
 }
