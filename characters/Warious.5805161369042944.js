@@ -1,6 +1,6 @@
 const TARGETING_BLACK_LIST = ''
 
-DONT_SEND_ITEMS = [HP_POT, MP_POT, 'tracker', 'Basher']
+
 
 async function load_module(module) {
     try {
@@ -28,6 +28,8 @@ async function initialize_character() {
     await load_module('State')
     await load_module('MainBehavior')
 }
+
+DONT_SEND_ITEMS = [HP_POT, MP_POT, 'tracker', 'basher']
 
 function kite(target)
 {
