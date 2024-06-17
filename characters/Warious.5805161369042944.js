@@ -1,5 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
+DONT_SEND_ITEMS = [HP_POT, MP_POT, 'tracker', 'Basher']
+
 async function load_module(module) {
     try {
         if (parent.caracAL) {
