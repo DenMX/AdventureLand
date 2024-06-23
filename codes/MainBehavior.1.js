@@ -1,7 +1,7 @@
 
 const MAX_MOB_ATTACK = 200
 
-const DONT_SEND_ITEMS = [MP_POT, HP_POT, 'tracker']
+const DONT_SEND_ITEMS = [MP_POT, HP_POT, 'tracker', 'basher']
 
 const WHITE_LIST_FOR_QUEST = {
 	goo: {coop: false},

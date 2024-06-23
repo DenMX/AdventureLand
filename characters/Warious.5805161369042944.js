@@ -1,5 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
+const MAINHAND = { name: 'xmace', lvl: 6}
+const OFFHAND = {name: 'fireblade', lvl: 7}
 
 
 async function load_module(module) {
@@ -47,7 +49,88 @@ function kite(target)
 
 async function useSkills(target)
 {
+	useStomp()
+	useShell()
+	if(!current_farm_pos.isCoop && character.level>67) useMassAgr()
+}
 
+async function useMassAgr()
+{
+	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype)).length > 2)
+	{
+		await use_skill('agitate')
+		reduce_cooldown("agitate", Math.min(...parent.pings));
+	}
+}
+
+setInterval(useCharge, 40000)
+async function useCharge()
+{
+	if(!is_on_cooldown('charge'))
+	{
+		await use_skill('charge')
+		reduce_cooldown("charge", Math.min(...parent.pings));
+	}
+}
+
+async function useShell()
+{
+	if(!is_on_cooldown('hardshell') && character.hp < character.max_hp/2)
+	{
+		await use_skill('hardshell')
+		reduce_cooldown("hardshell", Math.min(...parent.pings));
+	}
+}
+
+async function useStomp()
+{
+	
+	if(!is_on_cooldown('stomp') )
+	{
+		let switched = await switchToBasher()
+		if(switched == true)
+		{
+			await use_skill('stomp');
+			reduce_cooldown('stomp', Math.min(...parent.pings));
+			
+	}
+	}
+	else
+	{
+		await switchToMainWeapon();
+	}
+}
+
+async function switchToMainWeapon()
+{
+	let main
+	let off
+	for(let i in character.items)
+	{
+		item = character.items[i]
+		if(item && item.name == MAINHAND.name && item.level == MAINHAND.lvl) main = i
+		else if(item && item.name == OFFHAND.name && item.level == OFFHAND.lvl) off = i
+	}
+	if(main && off)
+	{
+		await equip_batch([{num: main, slot: 'mainhand'},{num: off, slot: 'offhand'}])
+	}
+}
+
+async function switchToBasher()
+{
+	if(character.slots.mainhand.name == 'basher') return true
+	for(let i in character.items)
+	{
+		item = character.items[i]
+		if(item && item.name == 'basher')
+		{
+			await unequip("offhand")
+			await equip(i)
+			return true
+		}
+	}
+	return false
 }
 
 function myAttack(target)
