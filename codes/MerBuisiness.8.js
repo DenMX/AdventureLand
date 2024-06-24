@@ -192,7 +192,7 @@ async function upgradeWeapon()
 			let grade = getGrade(gItem, item.level)
 			if(!UPGRADE_WEAPONS[item.name] || UPGRADE_WEAPONS[item.name].level<= item.level) continue
 
-			if(!character.s.massproduction) await use_skill('massproduction')
+			if(!character.s.massproductionpp) await use_skill('massproductionpp')
 			if(findScroll(grade) != null)
 			{
 				await upgrade(i, findScroll(grade))
@@ -242,7 +242,7 @@ async function upgradeArmor()
 			let gItem = G.items[item.name]
 			let grade = getGrade(gItem, item.level)
 
-			if(!character.s.massproduction) await use_skill('massproduction')
+			if(!character.s.massproductionpp) await use_skill('massproductionpp')
 
 			if(findScroll(grade) != null)
 			{
@@ -290,7 +290,7 @@ async function combineItems()
 						let grade = getGrade(gItem, lvl)
 						let cscrolls = await findCScroll(grade)
 						if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-						if(!character.s.massproduction) use_skill('massproduction')
+						if(!character.s.massproductionpp) use_skill('massproductionpp')
 						await compound(items[0],items[1],items[2],findCScroll(grade))
 						break;
 					}

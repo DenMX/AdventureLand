@@ -1,5 +1,5 @@
 const ARMOR = ['shoes', 'chest', 'helmet', 'pants','gloves','shield', 'quiver']
-const JEWELRY = ['amulet', 'ring', 'belt', 'earring']
+const JEWELRY = ['amulet', 'ring', 'belt', 'earring', 'wbook0']
 
 const ARMOR_SLOT_LIB = 
 {
