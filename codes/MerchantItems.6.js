@@ -1,5 +1,5 @@
 const ARMOR = ['shoes', 'chest', 'helmet', 'pants','gloves','shield', 'quiver']
-const JEWELRY = ['amulet', 'ring', 'belt', 'earring', 'wbook0']
+const JEWELRY = ['amulet', 'ring', 'belt', 'earring', 'source']
 
 const ARMOR_SLOT_LIB = 
 {
@@ -143,7 +143,7 @@ const NOT_SALE_ITEMS_ID =
 	firestaff: {level: 0},
 	glolipop: {level: 5},
 	tigershield: {level: 7},
-	wbook0: {level: 2},
+	wbook0: {level: 3},
 	mcape: {level: 5}
 }
 

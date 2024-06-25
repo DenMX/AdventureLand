@@ -31,7 +31,6 @@ async function initialize_character() {
     await load_module('MainBehavior')
 }
 
-DONT_SEND_ITEMS = [HP_POT, MP_POT, 'tracker', 'basher']
 
 function kite(target)
 {
