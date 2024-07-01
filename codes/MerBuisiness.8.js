@@ -1,6 +1,7 @@
 const MINUTES_TO_CHECKBANK = 60
-const ITEMS_COUNT_TO_STORE = 38
+const ITEMS_COUNT_TO_STORE = 41
 const MS_TO_CYBER_CHECK = 900000
+const ITEMS_COUNT_TO_UPGRADE = 37
 
 
 
@@ -139,7 +140,7 @@ async function storeUpgradeAndCombine()
 			}
 			
 		}
-		
+		await smart_move('main')
 		upgradeArmor()
 		combineItems()
 	}

@@ -208,6 +208,11 @@ async function checkItemsCount()
 		changeState('Going to bank...')
 		await smart_move('bank').then(storeUpgradeAndCombine)
 	}
+	else if(itemsCount()>= ITEMS_COUNT_TO_UPGRADE)
+	{
+		await upgradeArmor()
+		await combineItems()
+	}
 	setTimeout(scheduler(checkItemsCount), 2000)
 	
 }
