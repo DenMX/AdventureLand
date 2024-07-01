@@ -41,7 +41,7 @@ async function checkParty()
 				charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
 				if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot)
 				{
-					await smart_move('upgrade')
+					
 					await buy_with_gold(HP_POT, charToGo.hp_pot)
 				} 
 			}
@@ -51,7 +51,7 @@ async function checkParty()
 				charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
 				if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) 
 				{
-					await smart_move('upgrade')
+					
 					await buy_with_gold(MP_POT, charToGo.mp_pot)
 				}
 			}
@@ -100,7 +100,7 @@ async function goToChar(charToGo)
 	}
 	finally
 	{
-		await smart_move('upgrade')
+		await smart_move('main')
 		changeState(DEFAULT_STATE)	
 		setTimeout(scheduler(checkParty), 20000)
 	}	
@@ -139,9 +139,9 @@ async function storeUpgradeAndCombine()
 			}
 			
 		}
-		await smart_move('upgrade')
-		merch_queue.push(upgradeArmor)
-		merch_queue.push(combineItems)
+		
+		upgradeArmor()
+		combineItems()
 	}
 	catch(ex) {console.error(ex)}
 	finally
@@ -227,7 +227,7 @@ async function buyWeapon()
 async function upgradeArmor()
 {
 	changeState('Upgrading armor..')
-	await smart_move('upgrade')
+	
 	if(itemsCount()==42) sellItems()
 	exchangeItems()
 	for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
