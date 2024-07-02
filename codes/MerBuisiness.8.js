@@ -3,7 +3,8 @@ const ITEMS_COUNT_TO_STORE = 41
 const MS_TO_CYBER_CHECK = 900000
 const ITEMS_COUNT_TO_UPGRADE = 37
 
-
+const FISHING_POS = {x: -1366, y: 210, map: 'main'}
+const MINING_POS = {x: 279, y: -103, map: 'tunnel'}
 
 async function smart_exchange(npc, itemName, slot)
 {
@@ -15,60 +16,124 @@ async function smart_exchange(npc, itemName, slot)
 	changeState(DEFAULT_STATE)
 }
 
+mining()
+async function mining()
+{
+	if(itemsCount()==42 || is_on_cooldown('mining'))
+	{
+		scheduler(mining)
+		return
+	}
+	changeState('Going to mining..')
+	await smart_move(MINING_POS)
+	await equipTools('pickaxe')
+	while(!is_on_cooldown('mining'))
+	{
+		await use_skill('mining')
+		await sleep(2000)
+	}
+}
+
+fishing()
+async function fishing()
+{
+	if(itemsCount()==42 || is_on_cooldown('fishing')) 
+	{
+		scheduler(fishing)
+		return
+	}
+	changeState('Going to fishing')
+	await smart_move(FISHING_POS)
+	await equipTools('rod')
+	changeState('Fishing...')
+	while(!is_on_cooldown('fishing'))
+	{
+		await use_skill('fishing')
+		await sleep(15000)
+	}
+	changeState(DEFAULT_STATE)
+	await unequip('mainhand')
+	scheduler(fishing)
+}
+
+async function equipTools(tool)
+{
+	if(character.slots.mainhand && character.slots.mainhand.name == tool) return
+	for(let i in character.items)
+	{
+		item = character.items[i]
+		if(!item) continue;
+		if( item.name == tool)
+		{
+			await equip(i)
+		}
+	}
+}
 
 async function checkParty()
 {
-	if(itemsCount()>37)
-	{
-		setTimeout(scheduler(checkParty), getMsFromMinutes(2))
-		return
-	}
+	// if(itemsCount()>37)
+	// {
+	// 	setTimeout(scheduler(checkParty), getMsFromMinutes(2))
+	// 	return
+	// }
 	changeState('Checking party..')
-	let charToGo = 
-	{
-		name: null, hp_pot: null, mp_pot: null, take_items: false
-	}
 
-	
 	for (let char of getMyCharactersOnline()) {
 		if(char.name == character.name) continue
 		var member = get(char.name)
-		if(member)
+		if(member && member.s.mluck < getMsFromMinutes(10))
 		{
-			if(member.hp_pot<MAX_HP_POTIONS*BUY_HP_POTS_AT_RATIO)
-			{
-				
-				charToGo.name = member.name
-				charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
-				if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot)
-				{
-					
-					await buy_with_gold(HP_POT, charToGo.hp_pot)
-				} 
-			}
-			if(member.mp_pot<MAX_MP_POTIONS*BUY_MP_POTS_AT_RATIO)
-			{
-				charToGo.name = member.name
-				charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
-				if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) 
-				{
-					
-					await buy_with_gold(MP_POT, charToGo.mp_pot)
-				}
-			}
-			if(member.items_count>21)
-			{
-				charToGo.name = member.name
-				charToGo.take_items = true
-			}
-			if(charToGo.name)
-			{	changeState(DEFAULT_STATE)
-				setTimeout(scheduler(checkParty), 20000)
-				goToChar(charToGo)
-				return;
-			}
+			await smart_move(member)
 		}
 	}
+
+	// DEPRICATED
+	// let charToGo = 
+	// {
+	// 	name: null, hp_pot: null, mp_pot: null, take_items: false
+	// }
+
+	
+	// for (let char of getMyCharactersOnline()) {
+	// 	if(char.name == character.name) continue
+	// 	var member = get(char.name)
+	// 	if(member)
+	// 	{
+	// 		if(member.hp_pot<MAX_HP_POTIONS*BUY_HP_POTS_AT_RATIO)
+	// 		{
+				
+	// 			charToGo.name = member.name
+	// 			charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
+	// 			if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot)
+	// 			{
+					
+	// 				await buy_with_gold(HP_POT, charToGo.hp_pot)
+	// 			} 
+	// 		}
+	// 		if(member.mp_pot<MAX_MP_POTIONS*BUY_MP_POTS_AT_RATIO)
+	// 		{
+	// 			charToGo.name = member.name
+	// 			charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
+	// 			if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) 
+	// 			{
+					
+	// 				await buy_with_gold(MP_POT, charToGo.mp_pot)
+	// 			}
+	// 		}
+	// 		if(member.items_count>21)
+	// 		{
+	// 			charToGo.name = member.name
+	// 			charToGo.take_items = true
+	// 		}
+	// 		if(charToGo.name)
+	// 		{	changeState(DEFAULT_STATE)
+	// 			setTimeout(scheduler(checkParty), 20000)
+	// 			goToChar(charToGo)
+	// 			return;
+	// 		}
+	// 	}
+	// }
 	setTimeout(scheduler(checkParty), 20000)
     changeState(DEFAULT_STATE)
 }
@@ -140,7 +205,7 @@ async function storeUpgradeAndCombine()
 			}
 			
 		}
-		await smart_move('main')
+		await smart_move('upgrade')
 		upgradeArmor()
 		combineItems()
 	}

@@ -3,6 +3,13 @@ const TARGETING_BLACK_LIST = ''
 const MAINHAND = { name: 'xmace', lvl: 6}
 const OFFHAND = {name: 'fireblade', lvl: 7}
 
+const HP_POT = 'hpot1'
+const MP_POT = 'mpot1'
+
+
+const DO_NOT_SEND_ITEMS = []
+var pc = false
+
 
 async function load_module(module) {
     try {
@@ -29,6 +36,16 @@ async function initialize_character() {
     await load_module('PotionUse')
     await load_module('State')
     await load_module('MainBehavior')
+	for(let i in character.items)
+    {
+        if(!character.items[i]) continue;
+        if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
+        {
+            pc = true
+            await load_module('MerchantItems')
+            await load_module('PcOwner')
+        }
+    }
 }
 
 

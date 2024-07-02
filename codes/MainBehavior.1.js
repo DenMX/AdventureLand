@@ -1,7 +1,7 @@
 
 const MAX_MOB_ATTACK = 200
-
-const DONT_SEND_ITEMS = [MP_POT, HP_POT, 'tracker', 'basher']
+const COMMON_DONT_SEND_ITEMS =[MP_POT, HP_POT, 'tracker', 'Ancient Computer']
+const DONT_SEND_ITEMS = COMMON_DONT_SEND_ITEMS.concat(DO_NOT_SEND_ITEMS)
 
 const WHITE_LIST_FOR_QUEST = {
 	goo: {coop: false},
@@ -56,7 +56,7 @@ character.on("cm", function(data){
 				if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
 				send_item('MerchanDiser', i, item.q)
 			}
-			send_gold('MerchanDiser', character.gold)
+			send_gold('MerchanDiser', character.gold-5000000)
 			shuffleItems()
 		}
 		else if(data.message.cmd == 'monsterhunt')
@@ -107,6 +107,60 @@ function on_magiport(name)
 
 	accept_magiport(name)
 }
+
+
+sendItems()
+async function sendItems()
+{
+	if(pc) return;
+	try{
+		if(character.items.length>15)
+		{
+			for(let i of getMyCharactersOnline())
+			{
+				if(i.name == character.name) continue
+				console.warn(i.name)
+				if(i.name == 'MerchanDiser')
+				{
+					if(getDistance(get(i.name))< 650) await send() 
+					else continue;
+				}
+				char_state = get(i.name)
+				if(char_state.have_pc && getDistance(char_state, character)<1000)
+				{
+					if(char_state.items_count < 31)
+					{
+						send()
+					}
+				}
+				async function send()
+				{
+					for(let j=0; j<character.items.length; j++)
+						{
+							console.log('Searching items')
+							item = character.items[j]
+							if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
+							await send_item(char_state.name, j, item.q)
+						}
+						await send_gold(i.name, character.gold)
+						shuffleItems()
+						setTimeout(sendItems, 30000)
+						return
+				}
+			}
+		}
+	}
+	catch(ex)
+	{
+		console.error(ex)
+	}
+	finally
+	{
+		setTimeout(sendItems, 30000)
+	}
+	
+}
+
 
 
 //-------------MONSTERHUNT LOGIC-------------------//

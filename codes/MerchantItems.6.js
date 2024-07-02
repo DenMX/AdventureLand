@@ -38,11 +38,14 @@ const ITEMS_TO_EXCHANGE_IDS = [
 const UPGRADE_WEAPONS = {
 	firestaff: {level: 7},
 	firebow: {level: 7},
+	sword: {level: 7},
 	bow: {level: 9},
 	staff: {level:9},
 	fireblade: {level: 8},
 	t2bow: {level: 9},
-	hbow: {level:8}
+	hbow: {level:8},
+	candycanesword: {level: 8},
+	ornamentstaff: {level: 8}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
@@ -107,7 +110,8 @@ const SALE_ITEMS = {
 	cclaw:{level:0},
 	stinger:{level:0},
 	vitearring:{level:0},
-	vitring:{level:0}
+	vitring:{level:0},
+	slimestaff: {level: 0}
 }
 
 const NOT_SALE_ITEMS_ID = 
@@ -122,7 +126,7 @@ const NOT_SALE_ITEMS_ID =
 	hpants: {level: 6},
 	xpants: {level: 5},
 	shoes1: {level: 7},
-	wingedboots: {level: 5},
+	wingedboots: {level: 7},
 	hboots: {level: 6},
 	xboots: {level: 5},
 	intearring: {level: 3},

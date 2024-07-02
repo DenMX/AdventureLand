@@ -9,9 +9,6 @@ const MAX_MP_POTIONS = 2000
 const BUY_MP_POTS_AT_RATIO = 0.33
 const BUY_HP_POTS_AT_RATIO = 0.5
 
-const HP_POT = 'hpot1'
-const MP_POT = 'mpot1'
-
 
 
 function mpPotsCount()

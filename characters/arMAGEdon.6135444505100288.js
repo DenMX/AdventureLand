@@ -9,13 +9,13 @@ async function load_module(module) {
         console.error(ex);
     }
 }
+var pc = false
+const DO_NOT_SEND_ITEMS = []
 
-async function runCharacter() {
-    // Initialize modules
-    await initialize_character();
+const HP_POT = 'hpot1'
+const MP_POT = 'mpot1'
 
-}
-runCharacter();
+initialize_character()
 
 async function initialize_character() {
     
@@ -23,6 +23,16 @@ async function initialize_character() {
     await load_module('PotionUse')
     await load_module('State')
     await load_module('MainBehavior')
+    for(let i in character.items)
+    {
+        if(!character.items[i]) continue;
+        if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
+        {
+            pc = true
+            await load_module('MerchantItems')
+            await load_module('PcOwner')
+        }
+    }
 }
 
 const TARGETING_BLACK_LIST = ''

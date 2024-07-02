@@ -87,11 +87,15 @@ async function saveState()
 		map: character.map,
 		hp_pot: hpot,
 		mp_pot: mpot,
+		hpot_grade: HP_POT,
+		mpot_grade: MP_POT,
 		current_hp: character.hp,
 		current_mp: character.mp,
 		max_hp: character.max_hp,
 		max_mp: character.max_mp,
-		equip: character.slots
+		equip: character.slots,
+		have_pc: pc,
+		s: character.s
 	}
 
 	set(
