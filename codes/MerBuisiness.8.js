@@ -116,7 +116,7 @@ async function checkParty()
 					await buy_with_gold(MP_POT, charToGo.mp_pot)
 				}
 			}
-			if(member.items_count>21)
+			if(member.items_count>32)
 			{
 				charToGo.name = member.name
 				charToGo.take_items = true
@@ -332,7 +332,9 @@ async function combineItems()
 			for(let slot=0; slot<character.items.length; slot++)
 			{
 				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) ) continue
+				
 				let item=character.items[slot]
+				if(item.name=='hpbelt' && item.level==2) continue
 				let gItem = G.items[item.name]
 				if(NOT_SALE_ITEMS_ID[gItem.id] && item.level >= NOT_SALE_ITEMS_ID[gItem.id].level) continue
 				var items = []

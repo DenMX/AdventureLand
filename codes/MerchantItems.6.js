@@ -45,7 +45,8 @@ const UPGRADE_WEAPONS = {
 	t2bow: {level: 9},
 	hbow: {level:8},
 	candycanesword: {level: 8},
-	ornamentstaff: {level: 8}
+	ornamentstaff: {level: 8},
+	pmace: {level: 8}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
@@ -106,7 +107,6 @@ const CHARACTERS_PROGRESS =
 
 const SALE_ITEMS = {
 	hpamulet:{level:0},
-	hpbelt: {level:0},
 	cclaw:{level:0},
 	stinger:{level:0},
 	vitearring:{level:0},
@@ -147,7 +147,7 @@ const NOT_SALE_ITEMS_ID =
 	firestaff: {level: 0},
 	glolipop: {level: 5},
 	tigershield: {level: 7},
-	wbook0: {level: 3},
+	wbook0: {level: 4},
 	mcape: {level: 5}
 }
 
