@@ -135,6 +135,7 @@ async function useSkills(target)
 {
 	pullMobsFromMember();
 	useCurse(target)
+	useDarkBlessing()
 }
 
 async function pullMobsFromMember()
@@ -164,6 +165,15 @@ async function pullMobsFromMember()
 			await use_skill('absorb', member)
 			await sleep(500)
 		}
+	}
+}
+
+async function useDarkBlessing()
+{
+	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
+	{
+		await use_skill('darkblessing')
+		reduce_cooldown("darkblessing", Math.min(...parent.pings));
 	}
 }
 
