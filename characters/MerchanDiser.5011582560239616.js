@@ -6,6 +6,8 @@ let isExchanging = false
 var state='Idling'
 
 const DEFAULT_STATE = 'Idling'
+const HP_POT = 'hpot1'
+const MP_POT = 'mpot0'
 
 var cyberland_check
 var bank_check

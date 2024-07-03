@@ -51,7 +51,7 @@ const FARM_BOSSES = [
 	"a3"
 ];
 
-const LOOTER = 'arMAGEdon'
+const LOOTER = 'RangerOver'
 
 var last_farm_pos
 var current_farm_pos

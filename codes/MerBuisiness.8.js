@@ -16,7 +16,7 @@ async function smart_exchange(npc, itemName, slot)
 	changeState(DEFAULT_STATE)
 }
 
-mining()
+scheduler(mining)
 async function mining()
 {
 	if(itemsCount()==42 || is_on_cooldown('mining'))
@@ -27,14 +27,18 @@ async function mining()
 	changeState('Going to mining..')
 	await smart_move(MINING_POS)
 	await equipTools('pickaxe')
+	changeState('Mining...')
 	while(!is_on_cooldown('mining'))
 	{
 		await use_skill('mining')
-		await sleep(2000)
+		await sleep(15000)
 	}
+	changeState(DEFAULT_STATE)
+	await unequip('mainhand')
+	scheduler(mining)
 }
 
-fishing()
+scheduler(fishing)
 async function fishing()
 {
 	if(itemsCount()==42 || is_on_cooldown('fishing')) 
@@ -72,68 +76,59 @@ async function equipTools(tool)
 
 async function checkParty()
 {
-	// if(itemsCount()>37)
-	// {
-	// 	setTimeout(scheduler(checkParty), getMsFromMinutes(2))
-	// 	return
-	// }
-	changeState('Checking party..')
+	if(itemsCount()>37)
+	{
+		setTimeout(scheduler(checkParty), getMsFromMinutes(2))
+		return
+	}
+	
 
+	// DEPRICATED
+	let charToGo = 
+	{
+		name: null, hp_pot: null, mp_pot: null, take_items: false
+	}
+
+	changeState('Checking party')
 	for (let char of getMyCharactersOnline()) {
 		if(char.name == character.name) continue
 		var member = get(char.name)
-		if(member && member.s.mluck < getMsFromMinutes(10))
+		if(member)
 		{
-			await smart_move(member)
+			if(member.hp_pot<MAX_HP_POTIONS*BUY_HP_POTS_AT_RATIO)
+			{
+				
+				charToGo.name = member.name
+				charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
+				if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot)
+				{
+					await smart_move('upgrade')
+					await buy_with_gold(HP_POT, charToGo.hp_pot)
+				} 
+			}
+			if(member.mp_pot<MAX_MP_POTIONS*BUY_MP_POTS_AT_RATIO)
+			{
+				charToGo.name = member.name
+				charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
+				if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) 
+				{
+					await smart_move('upgrade')
+					await buy_with_gold(MP_POT, charToGo.mp_pot)
+				}
+			}
+			if(member.items_count>21)
+			{
+				charToGo.name = member.name
+				charToGo.take_items = true
+			}
+			if(charToGo.name)
+			{	changeState(DEFAULT_STATE)
+				setTimeout(scheduler(checkParty), 20000)
+				goToChar(charToGo)
+				return;
+			}
 		}
 	}
-
-	// DEPRICATED
-	// let charToGo = 
-	// {
-	// 	name: null, hp_pot: null, mp_pot: null, take_items: false
-	// }
-
-	
-	// for (let char of getMyCharactersOnline()) {
-	// 	if(char.name == character.name) continue
-	// 	var member = get(char.name)
-	// 	if(member)
-	// 	{
-	// 		if(member.hp_pot<MAX_HP_POTIONS*BUY_HP_POTS_AT_RATIO)
-	// 		{
-				
-	// 			charToGo.name = member.name
-	// 			charToGo.hp_pot = MAX_HP_POTIONS-member.hp_pot
-	// 			if(hpPotsCount()< MAX_HP_POTIONS-member.hp_pot)
-	// 			{
-					
-	// 				await buy_with_gold(HP_POT, charToGo.hp_pot)
-	// 			} 
-	// 		}
-	// 		if(member.mp_pot<MAX_MP_POTIONS*BUY_MP_POTS_AT_RATIO)
-	// 		{
-	// 			charToGo.name = member.name
-	// 			charToGo.mp_pot = MAX_MP_POTIONS-member.mp_pot
-	// 			if(mpPotsCount()< MAX_MP_POTIONS- member.mp_pot) 
-	// 			{
-					
-	// 				await buy_with_gold(MP_POT, charToGo.mp_pot)
-	// 			}
-	// 		}
-	// 		if(member.items_count>21)
-	// 		{
-	// 			charToGo.name = member.name
-	// 			charToGo.take_items = true
-	// 		}
-	// 		if(charToGo.name)
-	// 		{	changeState(DEFAULT_STATE)
-	// 			setTimeout(scheduler(checkParty), 20000)
-	// 			goToChar(charToGo)
-	// 			return;
-	// 		}
-	// 	}
-	// }
 	setTimeout(scheduler(checkParty), 20000)
     changeState(DEFAULT_STATE)
 }
@@ -293,7 +288,7 @@ async function buyWeapon()
 async function upgradeArmor()
 {
 	changeState('Upgrading armor..')
-	
+	await smart_move('upgrade')
 	if(itemsCount()==42) sellItems()
 	exchangeItems()
 	for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
