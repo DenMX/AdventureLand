@@ -160,7 +160,7 @@ async function pullMobsFromMember()
 	for(let member of parent.party_list)
 	{
 		if(member == character.name) continue
-		if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 1)
+		if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 0)
 		{
 			await use_skill('absorb', member)
 			await sleep(500)
