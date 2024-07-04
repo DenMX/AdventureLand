@@ -7,7 +7,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
 
-const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2', 'basher']
+const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2', 'basher', 'fireblade', 'xmace']
 var pc = false
 
 
