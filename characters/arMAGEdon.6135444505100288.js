@@ -10,7 +10,7 @@ async function load_module(module) {
     }
 }
 var pc = false
-const DO_NOT_SEND_ITEMS = []
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -33,6 +33,9 @@ async function initialize_character() {
             await load_module('PcOwner')
         }
     }
+
+    setInterval(saveSelfAss, 1000)
+    //checkQuest()
 }
 
 const TARGETING_BLACK_LIST = ''
@@ -44,6 +47,30 @@ async function useSkills(target)
     burst(target)
     energize()
     
+}
+
+useElixir()
+async function useElixir()
+{
+	if(!character.slots.elixir)
+	{
+		for(let i in character.items)
+		{
+			if(DO_NOT_SEND_ITEMS.includes(character.items[i].name)) await equip(i)
+		}
+	}
+	setTimeout(useElixir,getMsFromMinutes(60))
+}
+
+async function saveSelfAss()
+{
+	if(is_on_cooldown('scare'))
+	{
+		setTimeout(saveSelfAss, 500)
+		return
+	}
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare')
+	
 }
 
 async function burst(target)
@@ -61,13 +88,57 @@ async function energize()
         use_skill('energize', 'aRanDonDon');
 }
 
+async function reflection()
+{
+    if(is_on_cooldown('reflection')) return
+    for(member of parent.party_list)
+    {
+        if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == member).length > 3) 
+        {
+            await use_skill('reflection', member)
+        }
+    }
+}
+
+function kite(target)
+{
+	if(!attack_mode || !target) return
+	
+	let distance = getDistance(target, character)
+	if(target.range<character.range && distance <= (character.range-target.range)/2 && get_target_of(target) == character)
+    {
+        move(
+            character.x+(-60+(Math.random()*120)),
+            character.y+(-60+(Math.random()*120))
+        )
+    }
+}
+
+
 function myAttack(target){
 
+    kite(target)
 	
+	change_target(target);
+	useSkills(target);
+	if(!is_in_range(target))
+	{
+		move(
+			character.x+(target.x-character.x)/2,
+			character.y+(target.y-character.y)/2
+			);
+		// Walk half the distance
+	}
+	else if(can_attack(target))
+	{
+		set_message("Attacking");
+		attack(target).catch(() => {});
+		reduce_cooldown("attack", Math.min(...parent.pings));
+	}
 	
 }
 
-checkQuest()
+
 async function passMonsterhuntNext()
 {
 	await send_cm('aRanDonDon', {cmd: 'monsterhunt', coop:true})

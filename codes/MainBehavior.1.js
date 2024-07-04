@@ -122,7 +122,7 @@ async function sendItems()
 				console.warn(i.name)
 				if(i.name == 'MerchanDiser')
 				{
-					if(getDistance(get(i.name))< 650) await send() 
+					if(getDistance(get(i.name), character)< 650) await send() 
 					else continue;
 				}
 				char_state = get(i.name)
@@ -135,6 +135,7 @@ async function sendItems()
 				}
 				async function send()
 				{
+					
 					for(let j=0; j<character.items.length; j++)
 						{
 							console.log('Searching items')
@@ -152,7 +153,7 @@ async function sendItems()
 	}
 	catch(ex)
 	{
-		console.error(ex)
+		
 	}
 	finally
 	{

@@ -7,7 +7,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
 
-const DO_NOT_SEND_ITEMS = []
+const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2', 'basher']
 var pc = false
 
 
@@ -21,6 +21,20 @@ async function load_module(module) {
     } catch (ex) {
         console.error(ex);
     }
+}
+
+useElixir()
+async function useElixir()
+{
+	if(!character.slots.elixir)
+	{
+		let elixirs = ['elixirstr0', 'elixirstr1', 'elixirstr2']
+		for(let i in character.items)
+		{
+			if(elixirs.includes(character.items[i].name)) await equip(i)
+		}
+	}
+	setTimeout(useElixir,getMsFromMinutes(60))
 }
 
 async function runCharacter() {
@@ -66,8 +80,19 @@ function kite(target)
 async function useSkills(target)
 {
 	useStomp()
+	
 	useShell()
 	if(!current_farm_pos.isCoop && character.level>67) useMassAgr()
+}
+
+setInterval(useDash, 500)
+async function useDash()
+{
+	target = get_targeted_monster()
+	if(target && getDistance(target, character)>100)
+	{
+		await use_skill('dash', target)
+	}
 }
 
 async function useMassAgr()

@@ -60,7 +60,7 @@ async function initChar()
 	setInterval(saveState, 3000)
 }
 
-
+saveSelfAss()
 async function saveSelfAss()
 {
 	if(is_on_cooldown('scare'))
@@ -68,7 +68,7 @@ async function saveSelfAss()
 		setTimeout(saveSelfAss, 500)
 		return
 	}
-	if(Object.values(parent.entities).filter(e => e.type == 'monster' && get_target_of(e).name == character.name).length>0)	await use_skill('scare')
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare')
 	setTimeout(saveSelfAss, 1000)
 }
 

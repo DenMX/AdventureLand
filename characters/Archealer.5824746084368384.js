@@ -41,7 +41,7 @@ async function initialize_character() {
 setInterval(on_party_request, 1000)
 function on_party_request(name)
 {
-	console.log(name)
+
 	if(MY_CHARACTERS.includes(name) || ADD_PARTY.includes(name)) accept_party_request(name);
 }
 
@@ -72,6 +72,19 @@ function partyheal()
 	   }
 	   
     }
+}
+
+useElixir()
+async function useElixir()
+{
+	if(!character.slots.elixir)
+	{
+		for(let i in character.items)
+		{
+			if(DO_NOT_SEND_ITEMS.includes(character.items[i].name)) await equip(i)
+		}
+	}
+	setTimeout(useElixir,getMsFromMinutes(60))
 }
 
 function attackOrHeal(target)
