@@ -1,7 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
 const MAINHAND = { name: 'xmace', lvl: 6}
-const OFFHAND = {name: 'fireblade', lvl: 7}
+const OFFHAND = {name: 'fireblade', lvl: 8}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
