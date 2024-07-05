@@ -334,7 +334,6 @@ async function combineItems()
 				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) ) continue
 				
 				let item=character.items[slot]
-				if(item.name=='hpbelt' && item.level==2) continue
 				let gItem = G.items[item.name]
 				if(NOT_SALE_ITEMS_ID[gItem.id] && item.level >= NOT_SALE_ITEMS_ID[gItem.id].level) continue
 				var items = []
