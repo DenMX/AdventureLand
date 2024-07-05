@@ -109,6 +109,7 @@ const CHARACTERS_PROGRESS =
 
 const SALE_ITEMS = {
 	hpamulet:{level:0},
+	hpbelt: {level: 0},
 	cclaw:{level:0},
 	stinger:{level:0},
 	vitearring:{level:0},
