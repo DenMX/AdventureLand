@@ -46,7 +46,9 @@ const UPGRADE_WEAPONS = {
 	hbow: {level:8},
 	candycanesword: {level: 8},
 	ornamentstaff: {level: 8},
-	pmace: {level: 8}
+	pmace: {level: 8},
+	merry: {level:9},
+	warmscarf: {level: 9}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
