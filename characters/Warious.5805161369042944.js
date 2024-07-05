@@ -79,16 +79,18 @@ function kite(target)
 
 async function useSkills(target)
 {
-	useDash(target)
-	useStomp()
+	
+	await useStomp()
 	
 	useShell()
 	if(!current_farm_pos.isCoop && character.level>67) useMassAgr()
 	
 }
 
+setInterval(useDash, 1500)
 async function useDash(target)
 {
+	target = get_targeted_monster();
 	if(target && getDistance(target, character)>100)
 	{
 		await use_skill('dash', target)
