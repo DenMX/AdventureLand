@@ -59,6 +59,12 @@ function on_party_invite(name) {
     }
 }
 
+function on_party_request(name)
+{
+    if (MY_CHARACTERS.includes(name) || ADD_PARTY.includes(name))
+        accept_party_request(name);
+}
+
 setInterval(shuffleItems, 60000)
 function shuffleItems()
 {
@@ -101,7 +107,11 @@ function getServerPlayers() {
 gettingParty()
 function gettingParty()
 {
-	if(parent.party_list.length>0) return
+	if(parent.party_list.length>0) 
+    {
+        setTimeout(gettingParty, 1000)
+        return
+    }
 	let myChars = getMyCharactersOnline()
 	console.log(myChars)
 	if(myChars.length>0)
