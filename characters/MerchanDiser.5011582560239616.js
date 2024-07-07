@@ -9,6 +9,8 @@ const DEFAULT_STATE = 'Idling'
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot0'
 
+const EVENTS = ['snowman', 'dragold', 'goobrawl', 'icegolem']
+
 var cyberland_check
 var bank_check
 
@@ -46,8 +48,8 @@ async function initChar()
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
 
-	merch_queue.push(checkParty)
 	merch_queue.push(checkItemsCount)
+	merch_queue.push(checkParty)
 	//merch_queue.push(checkBank)
 	merch_queue.push(checkCyberTime)
 	//merch_queue.push(buyWeapon)
@@ -58,6 +60,8 @@ async function initChar()
 	setInterval(useBaff, 200)
 	checkState()
 	setInterval(saveState, 3000)
+	setInterval(checkEvents, 30000)
+	setInterval(checkElixirs, getMsFromMinutes(5))
 }
 
 saveSelfAss()
@@ -86,15 +90,24 @@ function saveState()
 	set(character.name, state)
 }
 
-// startMyChars()
-async function startMyChars()
+async function checkEvents()
 {
-	let online = getMyCharactersOnline()
-	for(let char of MY_CHARACTERS)
+	for(e of EVENTS)
 	{
-		if(char != character.name && !online.includes(char)) start_character(char)
+		if(parent.S[e])
+		send_cm(MY_CHARACTERS, {cmd: 'event', name: e, event: parent.S[e]})
 	}
 }
+
+// startMyChars()
+// async function startMyChars()
+// {
+// 	let online = getMyCharactersOnline()
+// 	for(let char of MY_CHARACTERS)
+// 	{
+// 		if(char != character.name && !online.includes(char)) start_character(char)
+// 	}
+// }
 
 async function changeState(newState)
 {
@@ -134,7 +147,20 @@ async function checkState()
 			console.error(ex)
 		}
 	}
-	setTimeout(checkState, 5000)
+	setTimeout(checkState, 1000)
+}
+
+
+
+async function checkElixirs()
+{
+	if(!character.slots.elixir)
+	{
+		for(let i in character.items)
+		{
+			if(character.items[i].name == 'bunnyelixir') await equip(i)
+		}
+	}
 }
 
 async function checkBank()
@@ -208,7 +234,12 @@ async function checkCyberTime()
 		setTimeout(scheduler(checkCyberTime), 60000)
 		return
 	}
-	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check)) await checkCyberlandCommand()
+	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check)) 
+	{
+		changeState('Going to pray...')
+		await checkCyberlandCommand()
+	}
+	changeState(DEFAULT_STATE)
 	setTimeout(scheduler(checkCyberTime), MS_TO_CYBER_CHECK)
 }
 

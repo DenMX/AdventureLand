@@ -33,6 +33,7 @@ async function initialize_character() {
             await load_module('PcOwner')
         }
     }
+	useElixir()
 
     setInterval(saveSelfAss, 1000)
     //checkQuest()
@@ -44,12 +45,12 @@ var quest_check_at
 
 async function useSkills(target)
 {
-    burst(target)
+    //burst(target)
     energize()
     
 }
 
-useElixir()
+
 async function useElixir()
 {
 	if(!character.slots.elixir)
@@ -90,13 +91,18 @@ async function energize()
 
 async function reflection()
 {
-    if(is_on_cooldown('reflection')) return
+    if(is_on_cooldown('reflection') || character.mp < G.skills.reflection.mp) return
     for(member of parent.party_list)
     {
         if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == member).length > 3) 
         {
             await use_skill('reflection', member)
+			return
         }
+		else if(parent.entities[member] &&parent.entities[member].hp < parent.entities[member].max_hp * 0.6)
+		{
+			await use_skill('reflection', member)
+		}
     }
 }
 
@@ -120,6 +126,7 @@ function myAttack(target){
     kite(target)
 	
 	change_target(target);
+	if(FARM_BOSSES.includes(target.mtype) && (!target.target || target.target == character.name)) return
 	useSkills(target);
 	if(!is_in_range(target))
 	{
@@ -154,9 +161,24 @@ async function summonMates()
 	
 	for(let member of parent.party_list)
 	{
-		if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location) continue
-		if(get(member).farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
-			getDistance(get(member), character)>799)
+		if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
+		let curState = get(member)
+		// if(((curState.current_action == action && action!='farm') || (curState.current_action == action && action == 'farm' && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0])) && getDistance(curState, character)>799)
+		// {
+		// 	console.log(member)
+		// 	console.log('Trying summon')
+		// 	await use_skill('magiport', member)
+		// 	return
+		// }
+		if(curState.current_action == action && action!='farm' && getDistance(curState, character)>799)
+		{
+			console.log(member)
+			console.log('Trying summon')
+			await use_skill('magiport', member)
+			return
+		}
+		else if (curState.current_action == action && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
+			getDistance(curState, character)>799)
 		{
 			console.log(member)
 			console.log('Trying summon')

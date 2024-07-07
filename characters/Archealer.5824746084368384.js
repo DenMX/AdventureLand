@@ -35,6 +35,7 @@ async function initialize_character() {
             await load_module('PcOwner')
         }
     }
+	useElixir()
 }
 
 
@@ -53,7 +54,7 @@ function partyheal()
 
 	  	for (i=0; i<parent.party_list.length; i++){
 			let partyMember = parent.party_list[i]
-			if(parent.entities[partyMember] && parent.entities[partyMember].hp <= parent.entities[partyMember].max_hp * 0.8) 
+			if(parent.entities[partyMember] && !parent.entities[partyMember].rip &&  parent.entities[partyMember].hp <= parent.entities[partyMember].max_hp * 0.8) 
 			{
 				count_members_on_low_hp++;
 			}
@@ -74,7 +75,7 @@ function partyheal()
     }
 }
 
-useElixir()
+
 async function useElixir()
 {
 	if(!character.slots.elixir)
@@ -97,9 +98,11 @@ function attackOrHeal(target)
 
 	for (i=0; i<parent.party_list.length; i++){
 		if(parent.entities[parent.party_list[i]] == null ) continue;
-        if(parent.party_list[i] != character.name && parent.entities[parent.party_list[i]].hp <= parent.entities[parent.party_list[i]].max_hp * 0.8) 
+		let member = parent.party_list[i]
+		entity = parent.entities[member]
+        if(!entity.rip && member != character.name && entity.hp <= entity.max_hp * 0.8) 
 	    {
-			entity = parent.entities[parent.party_list[i]]
+			
 		   if(getDistance(character, entity)>character.range)
 		   {
 			move(
@@ -110,10 +113,6 @@ function attackOrHeal(target)
 			use_skill('heal', parent.entities[parent.party_list[i]]);
 		   return;
 	    }
-		else if (parent.party_list[i] == character.name && character.hp <= character.max_hp * 0.8) {
-			use_skill('heal', character);
-			return;
-		}
 	}
 
 	change_target(target);
@@ -131,7 +130,7 @@ function attackOrHeal(target)
 		if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		set_message("Attacking");
 		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.min(...parent.pings));
+		reduce_cooldown("attack", Math.max(...parent.pings));
 	}
 
 }
@@ -153,40 +152,51 @@ async function useSkills(target)
 
 async function pullMobsFromMember()
 {
+	if(action=='farm' && !current_farm_pos.isCoop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
-	if(current_farm_pos.isCoop && get_targeted_monster().target && get_targeted_monster().target != character.name)
+	let tmp_target = get_target_of(get_targeted_monster())
+	if(current_farm_pos.isCoop &&tmp_target && tmp_target.name != character.name)
 	{
-		await use_skill('absorb', get_target_of(get_targeted_monster()))
+		if(!is_in_range(tmp_target, 'absorb'))
+		{
+			move(
+				character.x+(tmp_target.x-character.x)/2,
+				character.y+(tmp_target.y-character.y)/2
+				);
+		}
+		await use_skill('absorb', tmp_target)
+		reduce_cooldown("absorb", Math.max(...parent.pings));
 		return;
 	}
-	let mobs = Object.values(parent.entities).filter((e) => e.type == 'monster')
+	let mobs = Object.values(parent.entities).filter((e) => e.type == 'monster' && parent.party_list.includes(e.target) && e.target != character.name)
 	if(mobs.length==0) return;
-	for(let mob of mobs)
-	{
-		let mobsTarget = get_target_of(mob)
-		if(FARM_BOSSES.includes(mob.mtype) && mobsTarget != character.name && character.mp - G.skills.absorb.mp > character.max_mp*0.6 && mobsTarget.type == 'character') {
-			await use_skill('absorb', mobsTarget)
-			return
-		}
-		
-	}
 	for(let member of parent.party_list)
 	{
 		if(member == character.name) continue
+		let member_entity = parent.entities[member]
 		if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 0)
 		{
+			if(!is_in_range(member_entity, 'absorb'))
+			{
+			move(
+				character.x+(member_entity.x-character.x)/2,
+				character.y+(member_entity.y-character.y)/2
+				);
+			}
 			await use_skill('absorb', member)
-			await sleep(500)
+			reduce_cooldown("absorb", Math.max(...parent.pings));
+			return
 		}
 	}
 }
 
 async function useDarkBlessing()
 {
+	if(action=='farm' && !current_farm_pos.isCoop)return
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
 		await use_skill('darkblessing')
-		reduce_cooldown("darkblessing", Math.min(...parent.pings));
+		reduce_cooldown("darkblessing", Math.max(...parent.pings));
 	}
 }
 

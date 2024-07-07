@@ -27,36 +27,19 @@ const FARM_LOCATIONS =
 		}
 	}
 
+var boss_schedule = []
 
-const FARM_BOSSES = [
-	"mvampire",
-	"fvampire",
-	"phoenix",
-	"snowman",
-	"goldenbat",
-	"cutebee",
-	"grinch",
-	"dragold",
-	"franky",
-	"icegolem",
-	//"crabxx",
-	"jr",
-	"greenjr",
-	"pinkgoo",
-	"bgoo",
-	"wabbit",
-
-	// Crypt bosses
-	"a7",
-	"a3"
-];
 
 const LOOTER = 'RangerOver'
+const ACTIONS = ['farm', 'boss', 'event']
 
 var last_farm_pos
 var current_farm_pos
+var current_boss
+var current_event
 var attack_mode=true
 var curState
+var action
 
 
 
@@ -67,6 +50,9 @@ function getState()
 	{ 
 		curState = get(character.name)
 		current_farm_pos = curState.farm_location
+		action = curState?.current_action ? curState.current_action : 'farm'
+		current_boss = curState.current_boss ? curState.current_boss : null
+		boss_schedule = curState.bosses ? curState.bosses : []
 	}
 }
 
@@ -95,7 +81,11 @@ async function saveState()
 		max_mp: character.max_mp,
 		equip: character.slots,
 		have_pc: pc,
-		s: character.s
+		s: character.s,
+		current_action: action,
+		current_boss: current_boss,
+		bosses: boss_schedule,
+		current_event: current_event
 	}
 
 	set(
@@ -109,15 +99,43 @@ async function saveState()
 setInterval(checkState, 3000)
 async function checkState() {
 	
+	if(!action) action = 'farm'
 
-	if(attack_mode && !is_moving(character) && current_farm_pos==null)
-	{
-		current_farm_pos=FARM_LOCATIONS.nearMines
-		await smart_move(current_farm_pos.location)
+	switch(action){
+		case 'farm':
+			if(attack_mode && !is_moving(character) && current_farm_pos==null)
+			{
+				current_farm_pos=FARM_LOCATIONS.nearMines
+				await smart_move(current_farm_pos.location)
+			}
+			else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.Mobs[0]))
+				await smart_move(current_farm_pos.Mobs[0])
+			break;
+		case 'boss':
+			if(getDistance(current_boss, character)> 250 && !is_moving(character)) await smart_move(current_boss)
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => e.mtype==current_boss.name).length == 0) 
+			{
+				if(boss_schedule.length>0)
+				{
+					current_boss=boss_schedule.shift()
+					smart_move(current_boss)
+				}
+				else
+				{
+					action = 'farm'
+					current_boss = null
+				}
+			}
+			break;
+		case 'event':
+			if(getDistance(current_event, character)> 250 && !is_moving(character)) await smart_move(current_event)
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => e.mtype==current_boss.name).length == 0)
+			{
+				action = 'farm'
+				current_event = null
+			} 
+			break;
+
 	}
-	else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.Mobs[0]))
-	{
-		await smart_move(current_farm_pos.Mobs[0])
-	}
-	
 }
+

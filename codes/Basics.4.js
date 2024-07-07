@@ -1,5 +1,28 @@
 const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'aRogDonDon','RangerOver', 'Warious']
 
+const FARM_BOSSES = [
+	"mvampire",
+	"fvampire",
+	"phoenix",
+	"snowman",
+	"goldenbat",
+	"cutebee",
+	"grinch",
+	"dragold",
+	//"franky",
+	"icegolem",
+	//"crabxx",
+	"jr",
+	"greenjr",
+	"pinkgoo",
+    "skeletor",
+	"bgoo",
+	"wabbit",
+
+	// Crypt bosses
+	"a7",
+	"a3"
+];
 
 const ADD_PARTY = ['man1', 'men2', 'men3']
 
@@ -7,7 +30,12 @@ load_module('Mover')
 
 function scheduler(func)
 {
-    merch_queue.push(func)
+    if(!merch_queue.includes(func))merch_queue.push(func)
+}
+
+function handle_death()
+{
+    setTimeout(respawn, 15000)
 }
 
 function getMyCharactersOnline()

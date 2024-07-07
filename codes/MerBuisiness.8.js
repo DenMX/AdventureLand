@@ -1,10 +1,24 @@
 const MINUTES_TO_CHECKBANK = 60
-const ITEMS_COUNT_TO_STORE = 41
+const ITEMS_COUNT_TO_STORE = 38
 const MS_TO_CYBER_CHECK = 900000
 const ITEMS_COUNT_TO_UPGRADE = 37
 
 const FISHING_POS = {x: -1366, y: 210, map: 'main'}
 const MINING_POS = {x: 279, y: -103, map: 'tunnel'}
+
+const BOSS_CHECK_ROUTE = [
+	{name: "phoenix", map: "main", x: -1184, y: 784},
+	{name: "phoenix", map: "main", x: 641, y: 1803},
+	{name: "phoenix", map: "main", x: 1188, y: -193},
+	{name: "phoenix", map: "halloween", x: 8, y: 631},
+	{name: "greenjr", map: "halloween", x: -569, y: -412},
+	{name: "fvampire", map: "halloween", x: -406, y: -1643},
+	{name: "phoenix", map: "cave", x: -181, y: -1164},
+	{name: "mvampire", map: "cave", x: -181, y: -1164},
+	{name: "mvampire", map: "cave", x: 1244, y: -23},
+	{name: "jr", map: "spookytown", x: -784, y: -301},
+	{name: "skeletor", map: "arena", x: 247, y: -558}
+]
 
 async function smart_exchange(npc, itemName, slot)
 {
@@ -58,6 +72,30 @@ async function fishing()
 	changeState(DEFAULT_STATE)
 	await unequip('mainhand')
 	scheduler(fishing)
+}
+
+scheduler(checkBosses)
+async function checkBosses()
+{
+	changeState('Checking bosses')
+	for(let point of BOSS_CHECK_ROUTE)
+	{
+		await smart_move(point)
+		if(Object.values(parent.entities).filter(e=> e.mtype == point.name).length > 0)
+		{
+			game_log('Found: '+point.name)
+			console.log('Found: '+point.name)
+			await send_cm(MY_CHARACTERS,{cmd: "boss", boss: point})
+		}
+		else 
+		{
+			game_log(point.name+' not found')
+			console.log(point.name+' not found')
+		}
+	}
+	await smart_move('main')
+	changeState(DEFAULT_STATE)
+	scheduler(checkBosses)
 }
 
 async function equipTools(tool)
@@ -116,7 +154,7 @@ async function checkParty()
 					await buy_with_gold(MP_POT, charToGo.mp_pot)
 				}
 			}
-			if(member.items_count>32)
+			if(member.items_count>31)
 			{
 				charToGo.name = member.name
 				charToGo.take_items = true
@@ -201,8 +239,8 @@ async function storeUpgradeAndCombine()
 			
 		}
 		await smart_move('upgrade')
-		upgradeArmor()
-		combineItems()
+		await upgradeArmor()
+		await combineItems()
 	}
 	catch(ex) {console.error(ex)}
 	finally

@@ -47,29 +47,64 @@ character.on("cm", function(data){
 	if(!MY_CHARACTERS.includes(data.name)) return
 	if(data.message.cmd)
 	{
-		if(data.message.cmd == 'giveMeLoot')
-		{
-			for(let i=0; i<character.items.length; i++)
-			{
-				console.log('Searching items')
-				item = character.items[i]
-				if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
-				send_item('MerchanDiser', i, item.q)
-			}
-			send_gold('MerchanDiser', character.gold-5000000)
-			shuffleItems()
+		game_log(data.message.cmd)
+		switch (data.message.cmd){
+			case 'giveMeLoot':
+				if(character.name == 'Warious')
+				{
+					let weapons = [MAINHAND, OFFHAND, LOLIPOP, BASHER, AXE]
+					main: for(let i in character.items)
+					{
+						item = character.items[i]
+						if(item && !DONT_SEND_ITEMS.includes(item.name))
+						{
+							for(let weapon of weapons)
+							{
+								if(weapon.name == item.name && weapon.lvl == item.level) continue main
+							}
+							send_item('MerchanDiser', i, item.q)
+						}
+					}
+				}
+				else
+				{
+					for(let i=0; i<character.items.length; i++)
+					{
+						console.log('Searching items')
+						item = character.items[i]
+						if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
+						send_item('MerchanDiser', i, item.q)
+					}
+				}
+				
+				send_gold('MerchanDiser', character.gold-5000000);
+				shuffleItems();
+				break;
+			case 'monsterhunt':
+				checkQuest();
+				break;
+			case 'getBack':
+				let temp = current_farm_pos
+				current_farm_pos = last_farm_pos
+				last_farm_pos = temp
+				smart_move(current_farm_pos.Mobs[0])
+				break;
+			case 'farm':
+				action = 'farm'
+				smart_move(current_farm_pos.Mobs[0])
+				break;
+			case 'boss':
+				handleBoss(data.message.boss)
+				break;
+			case 'event':
+				action = 'event'
+				handleEvent(data.message.event)
+				break;
+			default:
+				console.warn('Unknown command:' + data.message.cmd)
+				break;
 		}
-		else if(data.message.cmd == 'monsterhunt')
-		{
-			checkQuest()
-		}
-		else if(data.message.cmd == 'getBack')
-		{
-			let temp = current_farm_pos
-			current_farm_pos = last_farm_pos
-			last_farm_pos = temp
-			smart_move(current_farm_pos.Mobs[0])
-		}
+		
 	}
 	else if(data.message.mob)
 	{
@@ -77,7 +112,7 @@ character.on("cm", function(data){
 		{
 			last_farm_pos = current_farm_pos
 			current_farm_pos=FARM_LOCATIONS[data.message.mob]
-			smart_move(current_farm_pos.location)
+			if(action='farm') smart_move(current_farm_pos.location)
 		}
 		else
 		{
@@ -92,7 +127,7 @@ character.on("cm", function(data){
 
 			}
 			attack_mode=true
-			smart_move(mob)
+			if(action='farm')smart_move(mob)
 		}
 	}
 	else console.warn('Unknown command')
@@ -109,6 +144,27 @@ function on_magiport(name)
 }
 
 
+async function handleBoss(boss)
+{
+	if(action == 'boss')
+	{
+		boss_schedule.push(boss)
+		return;
+	}
+	action = 'boss'
+	current_boss = boss
+	smart_move(boss)
+}
+
+async function handleEvent(name, event)
+{
+	current_event = event	
+	await smart_move(event)
+}
+
+
+
+
 sendItems()
 async function sendItems()
 {
@@ -118,48 +174,71 @@ async function sendItems()
 		{
 			for(let i of getMyCharactersOnline())
 			{
+				char_state = get(i.name)
 				if(i.name == character.name) continue
 				console.warn(i.name)
 				if(i.name == 'MerchanDiser')
 				{
-					if(getDistance(get(i.name), character)< 650) await send() 
-					else continue;
+					if(getDistance(get(i.name), character)< 500) 
+					{
+						send(char_state.name) 
+					}
 				}
-				char_state = get(i.name)
-				if(char_state.have_pc && getDistance(char_state, character)<1000)
+				else if(char_state.have_pc && getDistance(char_state, character)<500)
 				{
 					if(char_state.items_count < 31)
 					{
-						send()
+						send(char_state.name)
 					}
 				}
-				async function send()
-				{
-					
-					for(let j=0; j<character.items.length; j++)
-						{
-							console.log('Searching items')
-							item = character.items[j]
-							if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
-							await send_item(char_state.name, j, item.q)
-						}
-						await send_gold(i.name, character.gold)
-						shuffleItems()
-						setTimeout(sendItems, 30000)
-						return
-				}
+				
 			}
+			
 		}
 	}
 	catch(ex)
 	{
-		
+		console.warn('Error while sending items')
+		console.warn(ex)
 	}
 	finally
 	{
 		setTimeout(sendItems, 30000)
 	}
 	
+}
+
+async function send(name)
+{
+	if(character.name == 'Warious')
+	{
+		let weapons = [MAINHAND, OFFHAND, LOLIPOP, BASHER, AXE]
+		main: for(let j in character.items)
+		{
+			item = character.items[j]
+			if(item && !DONT_SEND_ITEMS.includes(item.name))
+			{
+				for(let weapon of weapons)
+				{
+					if(weapon.name == item.name && weapon.lvl == item.level) 
+					continue main
+				}
+				await send_item(name, j, item.q)
+			}
+		}
+	}
+	else
+	{
+		for(let j in character.items)
+		{
+			console.log('Searching items')
+			item = character.items[j]
+			if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
+			await send_item(name, j, item.q)
+		}
+	}
+	await send_gold(name, character.gold)
+	shuffleItems()
 }
 
 
@@ -218,60 +297,111 @@ function getXYOfMonster(monster, map)
 }
 
 
+async function dontStack()
+{
+	let near_players =Object.values(parent.entities).filter(e => e.player)
+	for(let i in near_players)
+	{
+		let player = near_players[i]
+		if(getDistance(character, player) < 15)
+		{
+			move(
+				character.x + (-50 +(Math.random()*50)),
+				character.y + (-50 +(Math.random()*50))
+			)
+		}
+	}
+}
+
 //--------COMBAT SECTION--------//
-setInterval(getTartget, 200);
-function getTartget()
+setInterval(getTartget, 300);
+async function getTartget()
 {
 	if(!attack_mode || character.rip || is_moving(character) || !current_farm_pos ) return;
 	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
 	let target = get_targeted_monster()
-	for(let i in parent.party_list)
-	{
-		let member = parent.party_list[i]
-		if(parent.entities[member] && getDistance(character, parent.entities[member]) < 30)
-		{
-			move(
-				character.x + (-50 +(Math.random()*125)),
-				character.y + (-50 +(Math.random()*125))
-			)
-		}
-	}
+	
+
+	dontStack()
+
 	if(!target)
 	{
-		
-		if(parent.entities['Archealer'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Archealer'])
-		else 
+		switch(action)
 		{
-			game_log('Searching target...')
-			let monsters_in_range = Object.values(parent.entities).filter((e) => e.type === "monster" && is_in_range(e) && (current_farm_pos.Mobs.includes(e.mtype)) || FARM_BOSSES.includes(e.mtype))
-			let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.Mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
-
-			let all_monsters = [monsters_in_range, monsters]
-
-			if(monsters.length>0)
-			{
-				outer: for(let i=0; i<all_monsters.length; i++)
+			case 'farm':
+				if(parent.entities['Archealer'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Archealer'])
+				else 
 				{
-					for(let monster of all_monsters[i])
+					game_log('Searching target...')
+					let monsters_in_range = Object.values(parent.entities).filter((e) => e.type === "monster" && is_in_range(e) && (current_farm_pos.Mobs.includes(e.mtype)) || FARM_BOSSES.includes(e.mtype))
+					let bosses = Object.values(parent.entities).filter((e) => FARM_BOSSES.includes(e.mtype))
+					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.Mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).sort()
+
+					let all_monsters = monsters_in_range.concat(monsters)
+
+					if(monsters.length>0)
 					{
-						if(TARGETING_BLACK_LIST && monster[TARGETING_BLACK_LIST]) continue
-						if(FARM_BOSSES.includes(monster.mtype))
+						if(bosses.length>0) target = bosses[0]
+						else
 						{
-							target=monster
-							break outer;
-						}
-						if(current_farm_pos.Mobs.includes(monster.mtype) && monster.visible) 
-						{
-							target = monster
-							break outer;
+							all_monsters.sort(
+								function(current, next) {
+									let dist_current = getDistance(character, current);
+									let dist_next = getDistance(character, next);
+
+									if(parent.party_list.includes(current.target) != parent.party_list.includes(next.target))
+									{
+										return (parent.party_list.includes(current.target) && !parent.party_list.includes(next.target)) ? -1 : 1;
+									}
+
+									if(dist_current != dist_next){
+										return (dist_current< dist_next) ? -1 : 1;
+									}
+									
+									return 0;
+								}
+							)
+							target = all_monsters[0]
+							// outer: for(let i=0; i<all_monsters.length; i++)
+							// {
+							// 	for(let monster of all_monsters[i])
+							// 	{
+							// 		if(TARGETING_BLACK_LIST && monster[TARGETING_BLACK_LIST]) continue
+							// 		if(Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)))
+							// 		{
+							// 			target = Object.values()
+							// 		}
+							// 		if(FARM_BOSSES.includes(monster.mtype))
+							// 		{
+							// 			target=monster
+							// 			break outer;
+							// 		}
+							// 		if(current_farm_pos.Mobs.includes(monster.mtype) && monster.visible) 
+							// 		{
+							// 			target = monster
+							// 			break outer;
+							// 		}
+							// 	}
+							// }
 						}
 					}
+					else{
+						await smart_move(current_farm_pos.Mobs[0])
+					}
 				}
-			}
-			else{
-				smart_move(current_farm_pos.Mobs[0])
-			}
-		}				
+				break;
+			case 'boss':
+				let near_boss = Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype))
+				if(near_boss.length>0)
+				{
+					target = near_boss[0]
+				}
+				else if(character.map != current_boss.map || getDistance(character, current_boss)>500)
+				{
+					await smart_move(current_boss)
+				}
+		}
+					
 	}
 		
 	

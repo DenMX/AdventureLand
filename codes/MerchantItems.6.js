@@ -15,7 +15,7 @@ const DISMANTLE_POSITION = {x: -4, y: 443}
 
 const MAX_LVL_TO_UPGRADE=9
 
-const MAX_LVL_TO_UPGRADE_EQUIP=8
+const MAX_LVL_TO_UPGRADE_EQUIP=9
 
 const MAX_LVL_TO_UPGRADE_JEWELRY=4
 
@@ -44,6 +44,8 @@ const UPGRADE_WEAPONS = {
 	fireblade: {level: 8},
 	t2bow: {level: 9},
 	hbow: {level:8},
+	basher: {level: 5},
+	ololipop: {level: 5},
 	candycanesword: {level: 8},
 	ornamentstaff: {level: 8},
 	pmace: {level: 8},
@@ -119,19 +121,20 @@ const SALE_ITEMS = {
 
 const NOT_SALE_ITEMS_ID = 
 {
-	helmet1: {level: 7},
+	helmet1: {level: 8},
 	hhelmet: {level: 6},
 	xhelmet: {level: 5},
-	coat1: {level: 7},
+	coat1: {level: 8},
 	harmor: {level: 6},
 	xarmor: {level: 5},
-	pants1: {level: 7},
+	pants1: {level: 8},
 	hpants: {level: 6},
 	xpants: {level: 5},
-	shoes1: {level: 7},
+	shoes1: {level: 8},
 	wingedboots: {level: 7},
 	hboots: {level: 6},
 	xboots: {level: 5},
+	gloves1: {leve: 8},
 	intearring: {level: 3},
 	dexearring: {level: 3},
 	strearring: {level: 3},
@@ -151,7 +154,7 @@ const NOT_SALE_ITEMS_ID =
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	wbook0: {level: 4},
-	mcape: {level: 5}
+	mcape: {level: 7}
 }
 
 const ITEMS_TO_BUY_PONTY =

@@ -1,13 +1,16 @@
 const TARGETING_BLACK_LIST = ''
 
-const MAINHAND = { name: 'xmace', lvl: 6}
-const OFFHAND = {name: 'fireblade', lvl: 8}
+const MAINHAND = {name: 'fireblade', lvl: 8}
+const OFFHAND = { name: 'xmace', lvl: 6}
+const BASHER = {name: 'basher', lvl: 4}
+const LOLIPOP = {name: 'ololipop', lvl: 4}
+const AXE = {name: '', lvl: 0}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
 
-const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2', 'basher', 'fireblade', 'xmace']
+const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
 var pc = false
 
 
@@ -23,7 +26,7 @@ async function load_module(module) {
     }
 }
 
-useElixir()
+
 async function useElixir()
 {
 	if(!character.slots.elixir)
@@ -36,6 +39,8 @@ async function useElixir()
 	}
 	setTimeout(useElixir,getMsFromMinutes(60))
 }
+
+
 
 async function runCharacter() {
     // Initialize modules
@@ -60,6 +65,7 @@ async function initialize_character() {
             await load_module('PcOwner')
         }
     }
+	useElixir()
 }
 
 
@@ -99,7 +105,7 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype)).length > 2)
+	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype)).length > 2 && !current_farm_pos.isCoop)
 	{
 		await use_skill('agitate')
 		reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -118,7 +124,7 @@ async function useCharge()
 
 async function useShell()
 {
-	if(!is_on_cooldown('hardshell') && character.hp < character.max_hp/2)
+	if(!is_on_cooldown('hardshell') && character.hp < character.max_hp*0.3)
 	{
 		await use_skill('hardshell')
 		reduce_cooldown("hardshell", Math.min(...parent.pings));
@@ -134,9 +140,8 @@ async function useStomp()
 		if(switched == true)
 		{
 			await use_skill('stomp');
-			reduce_cooldown('stomp', Math.min(...parent.pings));
-			
-	}
+			reduce_cooldown('stomp', Math.max(...parent.pings));
+		}
 	}
 	else
 	{
@@ -146,18 +151,40 @@ async function useStomp()
 
 async function switchToMainWeapon()
 {
-	let main
-	let off
-	for(let i in character.items)
+	let curr_main = character.slots.mainhand
+	let curr_off = character.slots?.offhand
+	let desired_main = MAINHAND
+	let desired_off = (!current_farm_pos.isCoop && action=='farm') ? LOLIPOP : OFFHAND
+	if((curr_main && curr_off) && (curr_main.name == desired_main.name && curr_main.level == desired_main.lvl) && (curr_off.name == desired_off.name && curr_off.level == desired_off.lvl)) return
+	if((curr_main.name == desired_main.name && curr_main.level == desired_main.lvl) && (!curr_off || curr_off.name != desired_off.name || curr_off.level != desired_off.lvl))
 	{
-		item = character.items[i]
-		if(item && item.name == MAINHAND.name && item.level == MAINHAND.lvl) main = i
-		else if(item && item.name == OFFHAND.name && item.level == OFFHAND.lvl) off = i
+		for(let i in character.items)
+		{
+			let item = character.items[i]
+			if(!item) continue
+			if(item.name == desired_off.name && item.level == desired_off.lvl) 
+			{
+				await equip(i, 'offhand')
+				console.log(1)
+			}
+		}
 	}
-	if(main && off)
+	else if(!curr_main || !curr_off || (curr_main.name != desired_main.name || curr_main.level != desired_main.lvl) && (curr_off.name != desired_off.name || curr_off.level != desired_off.lvl))
 	{
-		await equip_batch([{num: main, slot: 'mainhand'},{num: off, slot: 'offhand'}])
+		let main_slot
+		let off_slot
+		for(let i in character.items)
+		{
+			item = character.items[i]
+			if(item && item.name == MAINHAND.name && item.level == MAINHAND.lvl) main_slot = i
+			else if(item && item.name == OFFHAND.name && item.level == OFFHAND.lvl) off_slot = i
+		}
+		if(main_slot && off_slot)
+		{
+			await equip_batch([{num: main_slot, slot: 'mainhand'},{num: off_slot, slot: 'offhand'}])
+		}
 	}
+	
 }
 
 async function switchToBasher()
@@ -168,7 +195,7 @@ async function switchToBasher()
 		item = character.items[i]
 		if(item && item.name == 'basher')
 		{
-			await unequip("offhand")
+			if(character.slots.offhand)await unequip("offhand")
 			await equip(i)
 			return true
 		}
