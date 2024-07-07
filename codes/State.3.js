@@ -108,11 +108,11 @@ async function checkState() {
 				current_farm_pos=FARM_LOCATIONS.nearMines
 				await smart_move(current_farm_pos.location)
 			}
-			else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.Mobs[0]))
+			else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.Mobs[0]) && !smart.moving)
 				await smart_move(current_farm_pos.Mobs[0])
 			break;
 		case 'boss':
-			if(getDistance(current_boss, character)> 250 && !is_moving(character)) await smart_move(current_boss)
+			if(getDistance(current_boss, character)> 250 && !is_moving(character) && !smart.moving) await smart_move(current_boss)
 			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => e.mtype==current_boss.name).length == 0) 
 			{
 				if(boss_schedule.length>0)
