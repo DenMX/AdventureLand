@@ -128,11 +128,20 @@ async function checkState() {
 			}
 			break;
 		case 'event':
-			if(getDistance(current_event, character)> 250 && !is_moving(character)) await smart_move(current_event)
-			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => e.mtype==current_boss.name).length == 0)
+			if(getDistance(current_event, character)> 250 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype)) await smart_move(current_event)
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0)
 			{
-				action = 'farm'
-				current_event = null
+				if(boss_schedule.length>0 && !current_boss)
+				{
+					current_boss=boss_schedule.shift()
+					action='boss'
+				}
+				else if(current_boss) action = 'boss'
+				else
+				{
+					action = 'farm'
+					current_event = null
+				}
 			} 
 			break;
 

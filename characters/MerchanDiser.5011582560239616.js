@@ -14,6 +14,8 @@ const EVENTS = ['snowman', 'dragold', 'goobrawl', 'icegolem']
 var cyberland_check
 var bank_check
 
+var check_bosses = true
+
 var merch_queue = []
 
 async function load_module(module) {
@@ -62,6 +64,7 @@ async function initChar()
 	setInterval(saveState, 3000)
 	setInterval(checkEvents, 30000)
 	setInterval(checkElixirs, getMsFromMinutes(5))
+	scheduler(checkBosses)
 }
 
 saveSelfAss()
@@ -95,19 +98,23 @@ async function checkEvents()
 	for(e of EVENTS)
 	{
 		if(parent.S[e])
-		send_cm(MY_CHARACTERS, {cmd: 'event', name: e, event: parent.S[e]})
+		{
+			send_cm(MY_CHARACTERS, {cmd: 'event', name: e, event: parent.S[e]})
+			check_bosses = false
+			waitEventEnds(e)
+		}
 	}
 }
 
-// startMyChars()
-// async function startMyChars()
-// {
-// 	let online = getMyCharactersOnline()
-// 	for(let char of MY_CHARACTERS)
-// 	{
-// 		if(char != character.name && !online.includes(char)) start_character(char)
-// 	}
-// }
+async function waitEventEnds(name)
+{
+	while(parent.S[name])
+	{
+		await sleep(1000)
+	}
+	check_bosses = true
+}
+
 
 async function changeState(newState)
 {

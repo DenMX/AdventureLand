@@ -97,8 +97,7 @@ character.on("cm", function(data){
 				handleBoss(data.message.boss)
 				break;
 			case 'event':
-				action = 'event'
-				handleEvent(data.message.event)
+				handleEvent(data.message.name, data.message.event)
 				break;
 			default:
 				console.warn('Unknown command:' + data.message.cmd)
@@ -112,7 +111,7 @@ character.on("cm", function(data){
 		{
 			last_farm_pos = current_farm_pos
 			current_farm_pos=FARM_LOCATIONS[data.message.mob]
-			if(action='farm') smart_move(current_farm_pos.location)
+			if(action='farm' && !smart.moving) smart_move(current_farm_pos.location)
 		}
 		else
 		{
@@ -136,17 +135,20 @@ character.on("cm", function(data){
 function on_magiport(name)
 {
 	if(name!='arMAGEdon' || goingForQuest) return
-	if(smart.moving) stop('smart')
-	stop('teleport')
-	stop('move')
+	accept_magiport(name).then(async() => {
+		await sleep(500)	
+		if(smart.moving) stop('smart')
+		stop('teleport')
+		if(character.moving)stop('move')
+		});
 
-	accept_magiport(name)
+	
 }
 
 
 async function handleBoss(boss)
 {
-	if(action == 'boss')
+	if(action == 'boss' || action == 'event')
 	{
 		boss_schedule.push(boss)
 		return;
@@ -158,8 +160,8 @@ async function handleBoss(boss)
 
 async function handleEvent(name, event)
 {
-	current_event = event	
-	await smart_move(event)
+	current_event = { name: name, event: event }	
+	if(!FARM_BOSSES.includes(get_targeted_monster().mtype)) await smart_move(event)
 }
 
 
@@ -385,7 +387,8 @@ async function getTartget()
 							// }
 						}
 					}
-					else{
+					else if(!smart.moving)
+					{
 						await smart_move(current_farm_pos.Mobs[0])
 					}
 				}
@@ -396,7 +399,7 @@ async function getTartget()
 				{
 					target = near_boss[0]
 				}
-				else if(character.map != current_boss.map || getDistance(character, current_boss)>500)
+				else if(character.map != current_boss.map || getDistance(character, current_boss)>500 && !smart.moving)
 				{
 					await smart_move(current_boss)
 				}

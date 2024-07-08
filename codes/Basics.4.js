@@ -93,7 +93,7 @@ function on_party_request(name)
         accept_party_request(name);
 }
 
-setInterval(shuffleItems, 60000)
+
 function shuffleItems()
 {
     for(let i in character.items)

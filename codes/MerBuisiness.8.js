@@ -74,10 +74,15 @@ async function fishing()
 	scheduler(fishing)
 }
 
-scheduler(checkBosses)
+
 async function checkBosses()
 {
 	changeState('Checking bosses')
+	if(!check_bosses)
+	{
+		scheduler(checkBosses)
+		return;
+	}
 	for(let point of BOSS_CHECK_ROUTE)
 	{
 		await smart_move(point)
@@ -245,6 +250,7 @@ async function storeUpgradeAndCombine()
 	catch(ex) {console.error(ex)}
 	finally
 	{
+		shuffleItems()
 		changeState(DEFAULT_STATE)
 	}
     
