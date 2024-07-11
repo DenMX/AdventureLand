@@ -155,13 +155,22 @@ async function handleBoss(boss)
 	}
 	action = 'boss'
 	current_boss = boss
+	if(character.name == 'Warious' && Object.values(parent.entities).filter(e => e.target == 'Archealer').length > 2 && character.mp > G.skills.agitate) await use_skill('agitate')
+	else if(character.name == 'Warious' && Object.values(parent.entities).filter(e => e.target == 'Archealer').length > 2 && character.mp < G.skills.agitate)
+	{
+		while(character.mp < G.skills.agitate)
+		{
+			await sleep(100)
+		}
+		await use_skill('agitate')
+	}
 	smart_move(boss)
 }
 
 async function handleEvent(name, event)
 {
 	current_event = { name: name, event: event }	
-	if(!FARM_BOSSES.includes(get_targeted_monster().mtype)) await smart_move(event)
+	if(!FARM_BOSSES.includes(get_targeted_monster().mtype)) await smart_move(name)
 }
 
 
@@ -275,27 +284,6 @@ async function checkQuest()
 		await smart_move({x:108, y: -374, map: 'main'}).then(function(param) { parent.socket.emit('monsterhunt') }).then(checkQuest)
 	}
 	else if(character.s.monsterhunt && character.s.monsterhunt.c>0) setTimeout(checkQuest, 5000)
-}
-
-
-
-
-function getMapOfMonster(monster)
-{
-	for(let i in G.maps)
-	{
-		if(!G.maps[i].ignore && !G.maps[i].pvp && Object.values(G.maps[i].monsters).filter((e) => e.type == monster).length>0) return G.maps[i]
-	}
-	return
-}
-
-function getXYOfMonster(monster, map)
-{
-	for(let i of map.monsters)
-	{
-		if(i.type == monster) return {x: i.boundary[2]- i.boundary[0], y: i.boundary[3]- i.boundary[1]}
-	}
-	return
 }
 
 

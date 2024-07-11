@@ -50,7 +50,8 @@ const UPGRADE_WEAPONS = {
 	ornamentstaff: {level: 8},
 	pmace: {level: 8},
 	merry: {level:9},
-	warmscarf: {level: 9}
+	warmscarf: {level: 9},
+	bataxe: {level: 5}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
@@ -137,7 +138,10 @@ const SALE_ITEMS = {
 	shoes1: {level: 0},
 	ringsj: {level: 0},
 	dagger: {level: 0},
-	hotchocolate: {level: 0}
+	hotchocolate: {level: 0},
+	throwingstars: {level: 0},
+	rapier: {level: 0},
+	staffofthedead: {level: 0}
 }
 
 const NOT_SALE_ITEMS_ID = 
@@ -167,7 +171,8 @@ const NOT_SALE_ITEMS_ID =
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	wbook0: {level: 4},
-	mcape: {level: 7}
+	mcape: {level: 7},
+	bataxe: {level: 5}
 }
 
 const ITEMS_TO_BUY_PONTY =

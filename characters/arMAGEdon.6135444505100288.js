@@ -85,8 +85,8 @@ async function energize()
 
     if(parent.entities.Archealer && parent.entities.Archealer.mp < parent.entities.Archealer.max_mp*0.3) 
         use_skill('energize', 'Archealer');
-    else if(parent.entities.aRanDonDon && parent.entities.aRanDonDon.mp> parent.entities.aRanDonDon.max_mp*0.85) 
-        use_skill('energize', 'aRanDonDon');
+    else if(parent.entities.Warious && parent.entities.Warious.mp> parent.entities.Warious.max_mp*0.60) 
+        use_skill('energize', 'Warious');
 }
 
 async function reflection()

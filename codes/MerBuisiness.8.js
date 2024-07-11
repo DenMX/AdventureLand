@@ -339,8 +339,8 @@ async function upgradeArmor()
 	{
 		for(let i=0; i<character.items.length; i++)
 		{
-			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || 
-				(NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] && NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j)){
+			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[character.items[i]] 
+			|| NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j){
 				continue;
 			} 
 			let item = character.items[i]

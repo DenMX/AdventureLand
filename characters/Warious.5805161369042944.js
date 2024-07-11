@@ -4,7 +4,7 @@ const MAINHAND = {name: 'fireblade', lvl: 8}
 const OFFHAND = { name: 'xmace', lvl: 6}
 const BASHER = {name: 'basher', lvl: 4}
 const LOLIPOP = {name: 'ololipop', lvl: 5}
-const AXE = {name: '', lvl: 0}
+const AXE = {name: 'bataxe', lvl: 5}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -87,9 +87,11 @@ async function useSkills(target)
 {
 	
 	await useStomp()
-	
+	await useCleave(target)
 	useShell()
 	if(!current_farm_pos.isCoop && character.level>67) useMassAgr()
+	
+	await switchToMainWeapon();
 	
 }
 
@@ -97,7 +99,7 @@ setInterval(useDash, 1500)
 async function useDash(target)
 {
 	target = get_targeted_monster();
-	if(target && getDistance(target, character)>100)
+	if(target && getDistance(target, character)>100 && character.mp-G.skills.dash.mp > character.max_mp*0.1)
 	{
 		await use_skill('dash', target)
 	}
@@ -105,7 +107,7 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype)).length > 2 && !current_farm_pos.isCoop)
+	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype) && (e.target!=character.name || e.target!='Archealer') && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.isCoop)
 	{
 		await use_skill('agitate')
 		reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -115,7 +117,7 @@ async function useMassAgr()
 setInterval(useCharge, 40000)
 async function useCharge()
 {
-	if(!is_on_cooldown('charge'))
+	if(!is_on_cooldown('charge') && character.mp - G.skills.charge.mp > character.max_mp*0.1)
 	{
 		await use_skill('charge')
 		reduce_cooldown("charge", Math.min(...parent.pings));
@@ -124,7 +126,7 @@ async function useCharge()
 
 async function useShell()
 {
-	if(!is_on_cooldown('hardshell') && character.hp < character.max_hp*0.3)
+	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.3 || Object.values(parent.entities).filter(e => e.target == character.name).length>3))
 	{
 		await use_skill('hardshell')
 		reduce_cooldown("hardshell", Math.min(...parent.pings));
@@ -134,7 +136,7 @@ async function useShell()
 async function useStomp()
 {
 	
-	if(!is_on_cooldown('stomp') )
+	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 )
 	{
 		let switched = await switchToBasher()
 		if(switched == true)
@@ -146,6 +148,23 @@ async function useStomp()
 	else
 	{
 		await switchToMainWeapon();
+	}
+}
+
+async function useCleave(target)
+{
+	if(!is_on_cooldown('cleave') && !FARM_BOSSES.includes(target.mtype) &&character.mp-G.skills.cleave.mp > character.max_mp*0.1)
+	{
+		let switched = await switchToCleave()
+		if(switched == true)
+		{
+			await use_skill('cleave');
+			reduce_cooldown('cleave', Math.max(...parent.pings));
+		}
+	}
+	else
+	{
+		
 	}
 }
 
@@ -187,13 +206,29 @@ async function switchToMainWeapon()
 	
 }
 
-async function switchToBasher()
+async function switchToCleave()
 {
-	if(character.slots.mainhand.name == 'basher') return true
+	if(character.slots.mainhand.name == AXE.name) return true
 	for(let i in character.items)
 	{
 		item = character.items[i]
-		if(item && item.name == 'basher')
+		if(item && item.name == AXE.name && item.level == AXE.lvl)
+		{
+			if(character.slots.offhand)await unequip("offhand")
+			await equip(i)
+			return true
+		}
+	}
+	return false
+}
+
+async function switchToBasher()
+{
+	if(character.slots.mainhand.name == BASHER.name) return true
+	for(let i in character.items)
+	{
+		item = character.items[i]
+		if(item && item.name == BASHER.name && item.level == BASHER.lvl)
 		{
 			if(character.slots.offhand)await unequip("offhand")
 			await equip(i)
@@ -220,8 +255,7 @@ function myAttack(target)
 	}
 	else if(can_attack(target))
 	{
-		set_message("Attacking");
 		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.min(...parent.pings));
+		reduce_cooldown("attack", Math.max(...parent.pings));
 	}
 }

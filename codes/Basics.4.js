@@ -62,7 +62,7 @@ async function sleep(ms)
 
 function getDistance(a, b)
 {
-    if(!a) return null
+    if(!a || !b || (a.map && b.map && a.map!=b.map)) return 9999999
     let x =a.x-b.x;
     let y = a.y-b.y;
 
