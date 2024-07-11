@@ -116,11 +116,11 @@ character.on("cm", function(data){
 		else
 		{
 			let mob = data.message.mob
-			let map = getMapOfMonster(data.message.mob)
+			let map = null
 			last_farm_pos = current_farm_pos
 			current_farm_pos =
 			{
-					location: {x:getXYOfMonster(mob, map).x, y: getXYOfMonster(mob, map).y, map: map.name},
+					location: {x:0, y: 0, map: map},
 					Mobs: [mob],
 					isCoop: data.message.coop
 
