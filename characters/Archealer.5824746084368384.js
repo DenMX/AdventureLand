@@ -164,7 +164,7 @@ async function pullMobsFromMember()
 				character.y+(tmp_target.y-character.y)/2
 				);
 		}
-		await use_skill('absorb', tmp_target)
+		await use_skill('absorb', tmp_target).catch(() => {})
 		reduce_cooldown("absorb", Math.max(...parent.pings));
 		return;
 	}
@@ -183,7 +183,7 @@ async function pullMobsFromMember()
 				character.y+(member_entity.y-character.y)/2
 				);
 			}
-			await use_skill('absorb', member)
+			await use_skill('absorb', member).catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
 			return
 		}
@@ -195,7 +195,7 @@ async function useDarkBlessing()
 	if(action=='farm' && !current_farm_pos.isCoop)return
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
-		await use_skill('darkblessing')
+		await use_skill('darkblessing').catch(() => {})
 		reduce_cooldown("darkblessing", Math.max(...parent.pings));
 	}
 }
@@ -204,5 +204,5 @@ async function useCurse(target)
 {
 	if(!is_on_cooldown('curse')) return
 	if( FARM_BOSSES.includes(target) && character.mp - G.skills.curse.mp> character.max_mp*0.4) await use_skill('curse', target)
-	else if (current_farm_pos.isCoop) await use_skill('curse', target)
+	else if (current_farm_pos.isCoop) await use_skill('curse', target).catch(() => {})
 }

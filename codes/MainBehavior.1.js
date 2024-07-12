@@ -42,9 +42,9 @@ function followHealer(){
 
 //----------ON EVENTS---------//
 character.on("cm", function(data){
-	console.warn(data.name)
-	console.log(data)
+	
 	if(!MY_CHARACTERS.includes(data.name)) return
+	console.log(data.message)
 	if(data.message.cmd)
 	{
 		game_log(data.message.cmd)
@@ -70,7 +70,6 @@ character.on("cm", function(data){
 				{
 					for(let i=0; i<character.items.length; i++)
 					{
-						console.log('Searching items')
 						item = character.items[i]
 						if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
 						send_item('MerchanDiser', i, item.q)
@@ -148,6 +147,7 @@ function on_magiport(name)
 
 async function handleBoss(boss)
 {
+	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
 	if(action == 'boss' || action == 'event')
 	{
 		boss_schedule.push(boss)
@@ -169,6 +169,7 @@ async function handleBoss(boss)
 
 async function handleEvent(name, event)
 {
+	console.log('Got an event: '+name)
 	current_event = { name: name, event: event }	
 	if(!FARM_BOSSES.includes(get_targeted_monster().mtype)) await smart_move(name)
 }
@@ -187,7 +188,6 @@ async function sendItems()
 			{
 				char_state = get(i.name)
 				if(i.name == character.name) continue
-				console.warn(i.name)
 				if(i.name == 'MerchanDiser')
 				{
 					if(getDistance(get(i.name), character)< 500) 
@@ -242,7 +242,6 @@ async function send(name)
 	{
 		for(let j in character.items)
 		{
-			console.log('Searching items')
 			item = character.items[j]
 			if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
 			await send_item(name, j, item.q)

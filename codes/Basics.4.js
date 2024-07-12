@@ -141,17 +141,16 @@ function gettingParty()
         return
     }
 	let myChars = getMyCharactersOnline()
-	console.log(myChars)
+	
 	if(myChars.length>0)
 	{
 		for(let char of myChars)
 		{
-			console.warn(char)
 			send_party_request(char.name)
 			
 		}
 	}
-	setTimeout(gettingParty, 1000)
+	setTimeout(gettingParty, 400)
 }
 
 function getMsFromMinutes(minutes)

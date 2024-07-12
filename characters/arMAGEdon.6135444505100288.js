@@ -70,13 +70,13 @@ async function saveSelfAss()
 		setTimeout(saveSelfAss, 500)
 		return
 	}
-	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare')
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare').catch(() => {})
 	
 }
 
 async function burst(target)
 {
-    if(character.mp > character.max_mp*0.9 && target.hp > character.mp*1.5) await use_skill('burst', target)
+    if(character.mp > character.max_mp*0.9 && target.hp > character.mp*1.5) await use_skill('burst', target).catch(() => {})
 }
 
 async function energize()
@@ -84,9 +84,9 @@ async function energize()
     if(is_on_cooldown('energize')) return
 
     if(parent.entities.Archealer && parent.entities.Archealer.mp < parent.entities.Archealer.max_mp*0.3) 
-        use_skill('energize', 'Archealer');
+        use_skill('energize', 'Archealer').catch(() => {})
     else if(parent.entities.Warious && parent.entities.Warious.mp> parent.entities.Warious.max_mp*0.60) 
-        use_skill('energize', 'Warious');
+        use_skill('energize', 'Warious').catch(() => {})
 }
 
 async function reflection()
@@ -96,12 +96,12 @@ async function reflection()
     {
         if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == member).length > 3) 
         {
-            await use_skill('reflection', member)
+            await use_skill('reflection', member).catch(() => {})
 			return
         }
 		else if(parent.entities[member] &&parent.entities[member].hp < parent.entities[member].max_hp * 0.6)
 		{
-			await use_skill('reflection', member)
+			await use_skill('reflection', member).catch(() => {})
 		}
     }
 }
@@ -150,7 +150,7 @@ async function passMonsterhuntNext()
 {
 	await send_cm('aRanDonDon', {cmd: 'monsterhunt', coop:true})
 	setTimeout(checkQuest, character.s.monsterhunt.ms)
-	console.log('Send CM to ranger')
+	console.log('Send monsterhunt to ranger')
 }
 
 
@@ -163,26 +163,17 @@ async function summonMates()
 	{
 		if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
 		let curState = get(member)
-		// if(((curState.current_action == action && action!='farm') || (curState.current_action == action && action == 'farm' && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0])) && getDistance(curState, character)>799)
-		// {
-		// 	console.log(member)
-		// 	console.log('Trying summon')
-		// 	await use_skill('magiport', member)
-		// 	return
-		// }
 		if(curState.current_action == action && action!='farm' && getDistance(curState, character)>799)
 		{
-			console.log(member)
-			console.log('Trying summon')
-			await use_skill('magiport', member)
+			console.log('Trying summon '+member)
+			await use_skill('magiport', member).catch(() => {})
 			return
 		}
 		else if (curState.current_action == action && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
 			getDistance(curState, character)>799)
 		{
-			console.log(member)
-			console.log('Trying summon')
-			await use_skill('magiport', member)
+			console.log('Trying summon '+member)
+			await use_skill('magiport', member).catch(() => {})
 			return
 		}
 	}

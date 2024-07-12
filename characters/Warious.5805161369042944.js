@@ -109,7 +109,7 @@ async function useMassAgr()
 {
 	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype) && (e.target!=character.name || e.target!='Archealer') && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.isCoop)
 	{
-		await use_skill('agitate')
+		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.min(...parent.pings));
 	}
 }
@@ -119,7 +119,7 @@ async function useCharge()
 {
 	if(!is_on_cooldown('charge') && character.mp - G.skills.charge.mp > character.max_mp*0.1)
 	{
-		await use_skill('charge')
+		await use_skill('charge').catch(() => {})
 		reduce_cooldown("charge", Math.min(...parent.pings));
 	}
 }
@@ -128,7 +128,7 @@ async function useShell()
 {
 	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.3 || Object.values(parent.entities).filter(e => e.target == character.name).length>3))
 	{
-		await use_skill('hardshell')
+		await use_skill('hardshell').catch(() => {})
 		reduce_cooldown("hardshell", Math.min(...parent.pings));
 	}
 }
@@ -141,7 +141,7 @@ async function useStomp()
 		let switched = await switchToBasher()
 		if(switched == true)
 		{
-			await use_skill('stomp');
+			await use_skill('stomp').catch(() => {})
 			reduce_cooldown('stomp', Math.max(...parent.pings));
 		}
 	}
@@ -158,7 +158,7 @@ async function useCleave(target)
 		let switched = await switchToCleave()
 		if(switched == true)
 		{
-			await use_skill('cleave');
+			await use_skill('cleave').catch(() => {})
 			reduce_cooldown('cleave', Math.max(...parent.pings));
 		}
 	}
@@ -184,7 +184,6 @@ async function switchToMainWeapon()
 			if(item.name == desired_off.name && item.level == desired_off.lvl) 
 			{
 				await equip(i, 'offhand')
-				console.log(1)
 			}
 		}
 	}

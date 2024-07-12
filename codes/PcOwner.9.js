@@ -16,9 +16,6 @@ async function checkPots()
 	{
 		if(character.name == i.name || i.name == 'MerchanDiser') continue;
 		let char_state = await get(i.name)
-		console.log("name:"+i.name)
-		console.log("state:")
-		console.log(char_state)
 		if(!char_state.have_pc && getDistance(char_state, character) < 650)
 		{
 			let hp_pots_count = MAX_HP_POTIONS - char_state.hp_pot
@@ -133,7 +130,6 @@ async function upgradeArmor()
 			} 
 			let item = character.items[i]
 			let gItem = G.items[item.name]
-			console.log(item)
 			let grade = getGrade(gItem, item.level)
 
 
