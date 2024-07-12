@@ -145,7 +145,7 @@ async function passMonsterhuntNext()
 
 async function useSkills(target)
 {
-	pullMobsFromMember();
+	pullMobs();
 	useCurse(target)
 	useDarkBlessing()
 }
@@ -185,6 +185,25 @@ async function pullMobsFromMember()
 			}
 			await use_skill('absorb', member).catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
+			return
+		}
+	}
+}
+
+async function pullMobs()
+{
+	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (action='farm' && !current_farm_pos.isCoop)) return;
+	let near_members = Object.values(parent.entities).filter(e=> (MY_CHARACTERS.includes(e.name) || ADD_PARTY.includes(e.name)) && is_in_range(e, 'absorb'))
+	for(let i of near_members)
+	{
+		if(i.ctype == 'warrior' && i.hp < i.max_hp*0.4 && Object.values(parent.entities).filter(e => e.target == i.name).length >2)
+		{ 
+			await use_skill('absorb', i.name).catch(() => {}) 
+			return
+		}
+		else if(i.ctype != 'warrior' && Object.values(parent.entities).filter(e => e.target == i.name).length>0) 
+		{
+			await use_skill('absorb', i.name).catch(() => {})
 			return
 		}
 	}
