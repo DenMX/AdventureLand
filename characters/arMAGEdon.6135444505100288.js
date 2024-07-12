@@ -18,7 +18,7 @@ const MP_POT = 'mpot1'
 initialize_character()
 
 async function initialize_character() {
-    
+    await load_module('Mover')
 	await load_module('Basics')
     await load_module('PotionUse')
     await load_module('State')

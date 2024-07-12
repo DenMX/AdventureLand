@@ -26,7 +26,7 @@ const FARM_BOSSES = [
 
 const ADD_PARTY = ['man1', 'men2', 'men3']
 
-load_module('Mover')
+
 
 function scheduler(func)
 {
