@@ -113,7 +113,7 @@ async function checkState() {
 			break;
 		case 'boss':
 			if(getDistance(current_boss, character)> 250 && !is_moving(character) && !smart.moving) await smart_move(current_boss)
-			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => e.mtype==current_boss.name).length == 0) 
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
 			{
 				if(boss_schedule.length>0)
 				{
