@@ -171,7 +171,7 @@ async function handleEvent(name, event)
 {
 	console.log('Got an event: '+name)
 	current_event = { name: name, event: event }	
-	if(!FARM_BOSSES.includes(get_targeted_monster().mtype)) await smart_move(name)
+	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)) && !character.moving) await smart_move(name)
 }
 
 
