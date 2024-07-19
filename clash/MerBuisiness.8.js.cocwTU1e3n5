@@ -90,7 +90,7 @@ async function checkBosses()
 		{
 			game_log('Found: '+point.name)
 			console.log('Found: '+point.name)
-			await send_cm('arMAGEdon',{cmd: "boss", boss: point})
+			await send_cm(MY_CHARACTERS,{cmd: "boss", boss: point})
 		}
 		else 
 		{

@@ -36,7 +36,6 @@ async function initialize_character() {
 	useElixir()
 
     setInterval(saveSelfAss, 1000)
-	summonMates()
     //checkQuest()
 }
 
@@ -58,7 +57,7 @@ async function useElixir()
 	{
 		for(let i in character.items)
 		{
-			if(character.items[i] && DO_NOT_SEND_ITEMS.includes(character.items[i].name)) await equip(i)
+			if(DO_NOT_SEND_ITEMS.includes(character.items[i].name)) await equip(i)
 		}
 	}
 	setTimeout(useElixir,getMsFromMinutes(60))
@@ -154,69 +153,29 @@ async function passMonsterhuntNext()
 	console.log('Send monsterhunt to ranger')
 }
 
-async function mageHandleBoss(boss)
-{
-	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
-	if((action == 'boss' || action == 'event') && !boss_schedule.includes(boss))
-	{
-		boss_schedule.push(boss)
-		return;
-	}
-	action = 'boss'
-	current_boss = boss
-	smart_move(boss)
-}
 
-
+setInterval(summonMates,2000)
 async function summonMates()
 {
-	if(is_on_cooldown('magiport') || character.mp<900 || is_moving(character) || goingForQuest) 
+	if(is_on_cooldown('magiport') || character.mp<900 || is_moving(character) || goingForQuest) return
+	
+	for(let member of parent.party_list)
 	{
-		setTimeout(summonMates, 2000)
-		return
-	}
-	try
-	{
-		for(let member of parent.party_list)
+		if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
+		let curState = get(member)
+		if(curState.current_action == action && action!='farm' && getDistance(curState, character)>799)
 		{
-			if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
-			let curState = get(member)
-			let distance = getDistance(curState, character)
-			
-			if(action == 'boss' && distance>250)
-			{
-				await use_skill('magiport', member).catch(() => {})
-				await send_cm(member, {cmd: action, boss: current_boss})
-				return
-			}
-			else if(curState.current_action == action && action == 'farm' && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && distance > 500)
-			{
-				await use_skill('magiport', member).catch(() => {})
-				return
-			}
-			// if(curState.current_action == action && action!='farm' && getDistance(curState, character)>799)
-			// {
-			// 	console.log('Trying summon '+member)
-			// 	await use_skill('magiport', member).catch(() => {})
-			// 	return
-			// }
-			// else if (curState.current_action == action && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
-			// 	getDistance(curState, character)>799)
-			// {
-			// 	console.log('Trying summon '+member)
-			// 	await use_skill('magiport', member).catch(() => {})
-			// 	return
-			// }
+			console.log('Trying summon '+member)
+			await use_skill('magiport', member).catch(() => {})
+			return
 		}
-	}
-	catch(ex)
-	{
-		console.error('Error while summoning')
-		console.error(ex)
-	}
-	finally
-	{
-		setTimeout(summonMates, 2000)
+		else if (curState.current_action == action && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
+			getDistance(curState, character)>799)
+		{
+			console.log('Trying summon '+member)
+			await use_skill('magiport', member).catch(() => {})
+			return
+		}
 	}
 }
 

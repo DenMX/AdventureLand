@@ -50,7 +50,7 @@ function getState()
 	{ 
 		curState = get(character.name)
 		current_farm_pos = curState.farm_location
-		action = (ACTIONS.includes(curState.current_action)) ? curState.current_action : 'farm'
+		action = curState?.current_action ? curState.current_action : 'farm'
 		current_boss = curState.current_boss ? curState.current_boss : null
 		boss_schedule = curState.bosses ? curState.bosses : []
 	}
@@ -96,10 +96,10 @@ async function saveState()
 
 
 
-setInterval(checkState, 1000)
+setInterval(checkState, 3000)
 async function checkState() {
 	
-	if(!ACTIONS.includes(action)) action = 'farm'
+	if(!action) action = 'farm'
 
 	switch(action){
 		case 'farm':

@@ -45,15 +45,13 @@ const UPGRADE_WEAPONS = {
 	t2bow: {level: 9},
 	hbow: {level:8},
 	basher: {level: 5},
-	ololipop: {level: 6},
+	ololipop: {level: 5},
 	candycanesword: {level: 8},
 	ornamentstaff: {level: 8},
 	pmace: {level: 8},
 	merry: {level:9},
 	warmscarf: {level: 9},
-	bataxe: {level: 5},
-	xmace: {level: 6},
-	oozingterror: {level: 5}
+	bataxe: {level: 5}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']

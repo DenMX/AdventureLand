@@ -93,7 +93,7 @@ character.on("cm", function(data){
 				smart_move(current_farm_pos.Mobs[0])
 				break;
 			case 'boss':
-				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)
+				handleBoss(data.message.boss)
 				break;
 			case 'event':
 				handleEvent(data.message.name, data.message.event)
@@ -148,8 +148,23 @@ function on_magiport(name)
 async function handleBoss(boss)
 {
 	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
+	if(action == 'boss' || action == 'event')
+	{
+		boss_schedule.push(boss)
+		return;
+	}
 	action = 'boss'
-	current_boss = boss	
+	current_boss = boss
+	if(character.name == 'Warious' && Object.values(parent.entities).filter(e => e.target == 'Archealer').length > 2 && character.mp > G.skills.agitate) await use_skill('agitate')
+	else if(character.name == 'Warious' && Object.values(parent.entities).filter(e => e.target == 'Archealer').length > 2 && character.mp < G.skills.agitate)
+	{
+		while(character.mp < G.skills.agitate)
+		{
+			await sleep(100)
+		}
+		await use_skill('agitate')
+	}
+	smart_move(boss)
 }
 
 async function handleEvent(name, event)
