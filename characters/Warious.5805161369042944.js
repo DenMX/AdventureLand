@@ -3,7 +3,7 @@ const TARGETING_BLACK_LIST = ''
 const MAINHAND = {name: 'fireblade', lvl: 8}
 const OFFHAND = { name: 'xmace', lvl: 6}
 const BASHER = {name: 'basher', lvl: 4}
-const LOLIPOP = {name: 'ololipop', lvl: 6}
+const LOLIPOP = {name: 'ololipop', lvl: 7}
 const AXE = {name: 'bataxe', lvl: 5}
 
 const HP_POT = 'hpot1'
