@@ -153,7 +153,7 @@ async function useStomp()
 
 async function useCleave(target)
 {
-	if(!is_on_cooldown('cleave') && !FARM_BOSSES.includes(target.mtype) &&character.mp-G.skills.cleave.mp > character.max_mp*0.1)
+	if(!is_on_cooldown('cleave') && action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1)
 	{
 		let switched = await switchToCleave()
 		if(switched == true)
@@ -240,7 +240,7 @@ async function switchToBasher()
 function myAttack(target)
 {
 	if((action == 'boss' || action =='event') && getDistance(get('Archealer'), character)> 300) return
-	kite(target)
+	// kite(target)
 	change_target(target);
 	useSkills(target);
 

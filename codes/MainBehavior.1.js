@@ -336,27 +336,6 @@ async function getTartget()
 								}
 							)
 							target = all_monsters[0]
-							// outer: for(let i=0; i<all_monsters.length; i++)
-							// {
-							// 	for(let monster of all_monsters[i])
-							// 	{
-							// 		if(TARGETING_BLACK_LIST && monster[TARGETING_BLACK_LIST]) continue
-							// 		if(Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)))
-							// 		{
-							// 			target = Object.values()
-							// 		}
-							// 		if(FARM_BOSSES.includes(monster.mtype))
-							// 		{
-							// 			target=monster
-							// 			break outer;
-							// 		}
-							// 		if(current_farm_pos.Mobs.includes(monster.mtype) && monster.visible) 
-							// 		{
-							// 			target = monster
-							// 			break outer;
-							// 		}
-							// 	}
-							// }
 						}
 					}
 					else if(!smart.moving)
@@ -371,7 +350,7 @@ async function getTartget()
 				{
 					target = near_boss[0]
 				}
-				else if(character.map != current_boss.map || getDistance(character, current_boss)>500 && !smart.moving)
+				else if(getDistance(character, current_boss)>500 && !character.moving)
 				{
 					await smart_move(current_boss)
 				}

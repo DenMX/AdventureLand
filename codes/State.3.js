@@ -118,7 +118,7 @@ async function checkState() {
 				if(boss_schedule.length>0)
 				{
 					current_boss=boss_schedule.shift()
-					smart_move(current_boss)
+					await smart_move(current_boss)
 				}
 				else
 				{
@@ -141,6 +141,7 @@ async function checkState() {
 					current_boss=boss_schedule.shift()
 					console.log('Switching action '+action+' to boss')
 					action='boss'
+					current_event = null
 				}
 				else if(current_boss) action = 'boss'
 				else
