@@ -77,12 +77,13 @@ async function fishing()
 
 async function checkBosses()
 {
-	changeState('Checking bosses')
+	
 	if(!check_bosses)
 	{
 		scheduler(checkBosses)
 		return;
 	}
+	changeState('Checking bosses')
 	for(let point of BOSS_CHECK_ROUTE)
 	{
 		await smart_move(point)
@@ -250,7 +251,7 @@ async function storeUpgradeAndCombine()
 	catch(ex) {console.error(ex)}
 	finally
 	{
-		shuffleItems()
+		
 		changeState(DEFAULT_STATE)
 	}
     
@@ -436,6 +437,7 @@ async function sellItems()
 		let item = character.items[i]
 		if(item && SALE_ITEMS[G.items[item.name].id] && SALE_ITEMS[G.items[item.name].id].level <= item.level) await sell(i, item.q)
 	}
+	shuffleItems()
 }
 
 

@@ -129,7 +129,11 @@ async function checkState() {
 			}
 			break;
 		case 'event':
-			if(getDistance(current_event, character)> 250 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype)) await smart_move(current_event.name)
+			if(getDistance(current_event.event, character)> 250 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
+				{ 
+					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
+					else await smart_move(current_event.event)
+				}
 			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0)
 			{
 				if(boss_schedule.length>0 && !current_boss)

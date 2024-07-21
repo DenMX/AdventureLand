@@ -8,12 +8,13 @@ var state='Idling'
 const DEFAULT_STATE = 'Idling'
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot0'
+const MINUTES_TO_RESET_STATE = 20
 
 const EVENTS = ['snowman', 'dragold', 'goobrawl', 'icegolem']
 
 var cyberland_check
 var bank_check
-
+var last_state_change
 var check_bosses = true
 
 var merch_queue = []
@@ -53,10 +54,10 @@ async function initChar()
 
 	merch_queue.push(checkItemsCount)
 	merch_queue.push(checkParty)
-	//merch_queue.push(checkBank)
+	// merch_queue.push(checkBank)
 	merch_queue.push(checkCyberTime)
 	//merch_queue.push(buyWeapon)
-	console.log(merch_queue)
+	// console.log(merch_queue)
 	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
 
 	
@@ -66,6 +67,15 @@ async function initChar()
 	setInterval(checkEvents, 30000)
 	setInterval(checkElixirs, getMsFromMinutes(5))
 	scheduler(checkBosses)
+	setInterval(antiFreezingState,getMsFromMinutes(10))
+}
+
+function antiFreezingState()
+{
+	if(Date.now-last_state_change>getMsFromMinutes(MINUTES_TO_RESET_STATE))
+	{
+		changeState(DEFAULT_STATE)
+	}
 }
 
 saveSelfAss()
@@ -119,13 +129,10 @@ async function waitEventEnds(name)
 
 async function changeState(newState)
 {
-	if(newState==DEFAULT_STATE)
-	{
-		state=DEFAULT_STATE
-	}
-	else if(state!=newState)
+	if(state!=newState)
 	{
 		state=newState
+		last_state_change = Date.now()
 	}
 	
 	game_log(state, '#FF7F50')

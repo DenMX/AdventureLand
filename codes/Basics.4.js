@@ -26,7 +26,21 @@ const FARM_BOSSES = [
 
 const ADD_PARTY = ['man1', 'men2', 'men3']
 
+var death = false
 
+setInterval(isIDead, 5000)
+function isIDead()
+{
+    if(!death && character.rip)
+    {
+        try{
+            respawn()
+        }
+        catch(ex){
+            game_log('Error while respawning: \r\n'+ex)
+        }
+    }
+}
 
 function scheduler(func)
 {
@@ -35,6 +49,7 @@ function scheduler(func)
 
 function handle_death()
 {
+    death = true
     setTimeout(respawn, 15000)
 }
 
