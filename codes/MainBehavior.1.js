@@ -135,10 +135,10 @@ function on_magiport(name)
 {
 	if(name!='arMAGEdon' || goingForQuest) return
 	accept_magiport(name).then(async() => {
-		await sleep(500)	
-		if(smart.moving) stop('smart')
-		stop('teleport')
-		if(character.moving)stop('move')
+		await sleep(700)	
+		if(smart.moving) stop('smart').catch(() => {})
+		stop('teleport').catch(() => {})
+		if(character.moving) stop('move').catch(() => {})
 		});
 
 	

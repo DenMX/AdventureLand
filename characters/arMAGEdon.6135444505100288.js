@@ -186,7 +186,7 @@ async function summonMates()
 			if(action == 'boss' && distance>250)
 			{
 				await use_skill('magiport', member).catch(() => {})
-				await send_cm(member, {cmd: action, boss: current_boss})
+				await send_cm(member, {cmd: 'boss', boss: current_boss})
 				return
 			}
 			else if(curState.current_action == action && action == 'farm' && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && distance > 500)
