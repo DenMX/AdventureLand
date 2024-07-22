@@ -153,7 +153,8 @@ async function useStomp()
 
 async function useCleave(target)
 {
-	if(!is_on_cooldown('cleave') && action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1)
+	if(!is_on_cooldown('cleave') && action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1 
+	&& Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype) && is_in_range(e, 'cleave')).length > 2)
 	{
 		let switched = await switchToCleave()
 		if(switched == true)
