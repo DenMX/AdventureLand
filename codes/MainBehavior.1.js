@@ -141,9 +141,7 @@ function on_magiport(name)
 		if(character.moving) stop('move').catch(() => {})
 		});
 
-	console.warn(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} moving: ${character.moving}
-		action: ${action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map}
-		boss_name: ${current_boss.name}`)
+	console.error(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} action: ${action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map} boss_name: ${current_boss.name}`)
 }
 
 
