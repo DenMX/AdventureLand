@@ -44,7 +44,7 @@ const UPGRADE_WEAPONS = {
 	fireblade: {level: 8},
 	t2bow: {level: 9},
 	hbow: {level:8},
-	basher: {level: 5},
+	basher: {level: 6},
 	ololipop: {level: 7},
 	glolipop: {level: 7},
 	candycanesword: {level: 8},

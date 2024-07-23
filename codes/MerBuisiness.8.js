@@ -20,6 +20,8 @@ const BOSS_CHECK_ROUTE = [
 	{name: "skeletor", map: "arena", x: 247, y: -558}
 ]
 
+const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'gem', 'quest', 'pscroll', 'token']
+
 async function smart_exchange(npc, itemName, slot)
 {
 	await smart_move(npc)
@@ -91,6 +93,7 @@ async function checkBosses()
 		{
 			game_log('Found: '+point.name)
 			console.log('Found: '+point.name)
+			if(point.name == 'skeletor' && Object.values(parent.entities).filter(e => e.mtype == 'skeletor' && e.hp_level>5).length>0)continue;
 			await send_cm('arMAGEdon',{cmd: "boss", boss: point})
 		}
 		else 
@@ -229,14 +232,9 @@ async function storeUpgradeAndCombine()
 			if(character.items[i] === null || ITEMS_TO_EXCHANGE_IDS.includes(G.items[character.items[i].name].id)) continue;
 			let item = character.items[i]
 			let gItem = G.items[character.items[i].name]
-			switch(gItem.type){
-				case 'material':
-				case 'gem': 
-				case 'quest':
-				case 'pscroll':
-				case 'token':
-					bank_store(i) 
-					break;
+			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
+				bank_store(i) 
+				break;
 			}
 			if(JEWELRY.includes(gItem.type) && item.level==MAX_LVL_TO_UPGRADE_JEWELRY)
 			{
