@@ -167,7 +167,7 @@ async function sendItems()
 {
 	if(pc) return;
 	try{
-		if(character.items.length>15)
+		if(character.items.length>8)
 		{
 			for(let i of getMyCharactersOnline())
 			{
@@ -182,7 +182,7 @@ async function sendItems()
 				}
 				else if(char_state.have_pc && getDistance(char_state, character)<500)
 				{
-					if(char_state.items_count < 31)
+					if(char_state.items_count < 40)
 					{
 						send(char_state.name)
 					}

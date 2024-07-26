@@ -1,7 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
 const MAINHAND = {name: 'fireblade', lvl: 8}
-const OFFHAND = { name: 'xmace', lvl: 6}
+const OFFHAND = { name: 'xmace', lvl: 7}
 const BASHER = {name: 'basher', lvl: 5}
 const LOLIPOP = {name: 'ololipop', lvl: 7}
 const AXE = {name: 'bataxe', lvl: 5}
@@ -50,7 +50,7 @@ async function runCharacter() {
 runCharacter();
 
 async function initialize_character() {
-    await load_module('Mover')
+    // await load_module('Mover')
 	await load_module('Basics')
     await load_module('PotionUse')
     await load_module('State')

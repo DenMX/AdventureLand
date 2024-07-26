@@ -114,6 +114,8 @@ const CHARACTERS_PROGRESS =
 }
 
 const SALE_ITEMS = {
+	xmassweater: {level:0},
+	pmaceofthedead: {level: 0},
 	hpamulet:{level:0},
 	hpbelt: {level: 0},
 	cclaw:{level:0},
