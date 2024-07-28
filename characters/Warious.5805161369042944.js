@@ -71,20 +71,6 @@ async function initialize_character() {
 }
 
 
-function kite(target)
-{
-	if(!attack_mode || !target) return
-	
-	let distance = getDistance(target, character)
-	if(target.range<character.range && distance <= (character.range-target.range)/2 && get_target_of(target) == character)
-    {
-        move(
-            character.x+(-character.range/2+(Math.random()*character.range)),
-            character.y+(-character.range/2+(Math.random()*character.range))
-        )
-    }
-}
-
 async function useSkills(target)
 {
 	
@@ -109,7 +95,7 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && (e.target!=character.name || e.target!='Archealer') && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.isCoop)
+	if(!is_on_cooldown('agitate') && action == 'farm' && Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && e.target!=character.name && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.massFarm)
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -119,7 +105,7 @@ async function useMassAgr()
 setInterval(useCharge, 40000)
 async function useCharge()
 {
-	if(!is_on_cooldown('charge') && character.mp - G.skills.charge.mp > character.max_mp*0.1)
+	if(!is_on_cooldown('charge') && character.mp - G.skills.charge.mp > character.max_mp*0.4)
 	{
 		await use_skill('charge').catch(() => {})
 		reduce_cooldown("charge", Math.min(...parent.pings));
@@ -128,7 +114,7 @@ async function useCharge()
 
 async function useShell()
 {
-	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.3 || Object.values(parent.entities).filter(e => e.target == character.name).length>3))
+	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == character.name && getDistance(character, e)<=e.range).length>3))
 	{
 		await use_skill('hardshell').catch(() => {})
 		reduce_cooldown("hardshell", Math.min(...parent.pings));
@@ -165,9 +151,10 @@ async function useCleave(target)
 			reduce_cooldown('cleave', Math.max(...parent.pings));
 		}
 	}
-	else
+	else if(!is_on_cooldown('cleave') && action == 'event' && current_event == 'Goo Brawl')
 	{
-		
+		await use_skill('cleave').catch(() => {})
+			reduce_cooldown('cleave', Math.max(...parent.pings));
 	}
 }
 
@@ -176,7 +163,7 @@ async function switchToMainWeapon()
 	let curr_main = character.slots.mainhand
 	let curr_off = character.slots?.offhand
 	let desired_main = MAINHAND
-	let desired_off = (!current_farm_pos.isCoop && action=='farm') ? LOLIPOP : OFFHAND
+	let desired_off = ((!current_farm_pos.massFarm && action=='farm') || (action == 'event' && current_event == 'Goo Brawl')) ? LOLIPOP : OFFHAND
 	if((curr_main && curr_off) && (curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (curr_off.name == desired_off.name && curr_off.level == desired_off.level)) return
 	if((curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (!curr_off || curr_off.name != desired_off.name || curr_off.level != desired_off.level))
 	{
