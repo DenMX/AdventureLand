@@ -1,8 +1,3 @@
-
-const MAX_MOB_ATTACK = 200
-const COMMON_DONT_SEND_ITEMS =[MP_POT, HP_POT, 'tracker', 'Ancient Computer']
-const DONT_SEND_ITEMS = COMMON_DONT_SEND_ITEMS.concat(DO_NOT_SEND_ITEMS)
-
 const WHITE_LIST_FOR_QUEST = {
 	goo: {coop: false},
 	bee:  {coop: false},
@@ -40,96 +35,6 @@ function followHealer(){
 	}
 }
 
-//----------ON EVENTS---------//
-character.on("cm", function(data){
-	
-	if(!MY_CHARACTERS.includes(data.name)) return
-	console.log(data.message)
-	if(data.message.cmd)
-	{
-		game_log(data.message.cmd)
-		switch (data.message.cmd){
-			case 'giveMeLoot':
-				if(character.name == 'Warious')
-				{
-					let weapons = [MAINHAND, OFFHAND, LOLIPOP, BASHER, AXE]
-					main: for(let i in character.items)
-					{
-						item = character.items[i]
-						if(item && !DONT_SEND_ITEMS.includes(item.name))
-						{
-							for(let weapon of weapons)
-							{
-								if(weapon.name == item.name && weapon.lvl == item.level) continue main
-							}
-							send_item('MerchanDiser', i, item.q)
-						}
-					}
-				}
-				else
-				{
-					for(let i=0; i<character.items.length; i++)
-					{
-						item = character.items[i]
-						if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
-						send_item('MerchanDiser', i, item.q)
-					}
-				}
-				
-				send_gold('MerchanDiser', character.gold-5000000);
-				shuffleItems();
-				break;
-			case 'monsterhunt':
-				checkQuest();
-				break;
-			case 'getBack':
-				let temp = current_farm_pos
-				current_farm_pos = last_farm_pos
-				last_farm_pos = temp
-				smart_move(current_farm_pos.Mobs[0])
-				break;
-			case 'farm':
-				action = 'farm'
-				smart_move(current_farm_pos.Mobs[0])
-				break;
-			case 'boss':
-				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)
-				break;
-			case 'event':
-				handleEvent(data.message.name, data.message.event)
-				break;
-			default:
-				console.warn('Unknown command:' + data.message.cmd)
-				break;
-		}
-		
-	}
-	else if(data.message.mob)
-	{
-		if(FARM_LOCATIONS[data.message.mob]) 
-		{
-			last_farm_pos = current_farm_pos
-			current_farm_pos=FARM_LOCATIONS[data.message.mob]
-			if(action='farm' && !smart.moving) smart_move(current_farm_pos.location)
-		}
-		else
-		{
-			let mob = data.message.mob
-			let map = null
-			last_farm_pos = current_farm_pos
-			current_farm_pos =
-			{
-					location: {x:0, y: 0, map: map},
-					Mobs: [mob],
-					isCoop: data.message.coop
-
-			}
-			attack_mode=true
-			if(action='farm')smart_move(mob)
-		}
-	}
-	else console.warn('Unknown command')
-})
 
 function on_magiport(name)
 {
@@ -145,98 +50,67 @@ function on_magiport(name)
 }
 
 
-async function handleBoss(boss)
-{
-	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
-	action = 'boss'
-	current_boss = boss	
-}
-
-async function handleEvent(name, event)
-{
-	console.log('Got an event: '+name)
-	current_event = { name: name, event: event }	
-	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)) && !character.moving) await smart_move(name)
-}
 
 
-
-
-sendItems()
-async function sendItems()
-{
-	if(pc) return;
-	try{
-		if(character.items.length>8)
-		{
-			for(let i of getMyCharactersOnline())
-			{
-				char_state = get(i.name)
-				if(i.name == character.name) continue
-				if(i.name == 'MerchanDiser')
-				{
-					if(getDistance(get(i.name), character)< 500) 
-					{
-						send(char_state.name) 
-					}
-				}
-				else if(char_state.have_pc && getDistance(char_state, character)<500)
-				{
-					if(char_state.items_count < 40)
-					{
-						send(char_state.name)
-					}
-				}
-				
-			}
-			
-		}
-	}
-	catch(ex)
-	{
-		console.warn('Error while sending items')
-		console.warn(ex)
-	}
-	finally
-	{
-		setTimeout(sendItems, 30000)
-	}
+setInterval(checkState, 1000)
+async function checkState() {
 	
-}
+	if(!ACTIONS.includes(action)) action = 'farm'
 
-async function send(name)
-{
-	if(character.name == 'Warious')
-	{
-		let weapons = [MAINHAND, OFFHAND, LOLIPOP, BASHER, AXE]
-		main: for(let j in character.items)
-		{
-			item = character.items[j]
-			if(item && !DONT_SEND_ITEMS.includes(item.name))
+	switch(action){
+		case 'farm':
+			if(attack_mode && !is_moving(character) && current_farm_pos==null)
 			{
-				for(let weapon of weapons)
-				{
-					if(weapon.name == item.name && weapon.lvl == item.level) 
-					continue main
-				}
-				await send_item(name, j, item.q)
+				current_farm_pos=FARM_LOCATIONS.nearMines
+				await smart_move(current_farm_pos.location)
 			}
-		}
+			else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.mobs[0]) && !smart.moving)
+				await smart_move(current_farm_pos.mobs[0])
+			break;
+		case 'boss':
+			if(getDistance(current_boss, character)> 250 && !is_moving(character) && !smart.moving) await smart_move(current_boss)
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
+			{
+				if(boss_schedule.length>0)
+				{
+					current_boss=boss_schedule.shift()
+					await smart_move(current_boss)
+				}
+				else
+				{
+					console.log('Switching action '+action+' to farm')
+					action = 'farm'
+					current_boss = null
+				}
+			}
+			break;
+		case 'event':
+			if(getDistance(current_event.event, character)> 250 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
+				{ 
+					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
+					else await smart_move(current_event.event)
+				}
+			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0)
+			{
+				if(boss_schedule.length>0 && !current_boss)
+				{
+					current_boss=boss_schedule.shift()
+					console.log('Switching action '+action+' to boss')
+					action='boss'
+					current_event = null
+				}
+				else if(current_boss) action = 'boss'
+				else
+				{
+					console.log('Switching action '+action+' to farm')
+					action = 'farm'
+					current_event = null
+				}
+			} 
+			break;
+
 	}
-	else
-	{
-		for(let j in character.items)
-		{
-			item = character.items[j]
-			if(!item || DONT_SEND_ITEMS.includes(item.name)) continue;
-			await send_item(name, j, item.q)
-		}
-	}
-	await send_gold(name, character.gold)
-	shuffleItems()
 }
-
-
 
 //-------------MONSTERHUNT LOGIC-------------------//
 
@@ -307,9 +181,9 @@ async function getTartget()
 				else 
 				{
 					game_log('Searching target...')
-					let monsters_in_range = Object.values(parent.entities).filter((e) => e.type === "monster" && is_in_range(e) && (current_farm_pos.Mobs.includes(e.mtype)) || FARM_BOSSES.includes(e.mtype))
+					let monsters_in_range = Object.values(parent.entities).filter((e) => e.type === "monster" && is_in_range(e) && (current_farm_pos.mobs.includes(e.mtype)) || FARM_BOSSES.includes(e.mtype))
 					let bosses = Object.values(parent.entities).filter((e) => FARM_BOSSES.includes(e.mtype))
-					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.Mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).sort()
+					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).sort()
 
 					let all_monsters = monsters_in_range.concat(monsters)
 
@@ -340,7 +214,7 @@ async function getTartget()
 					}
 					else if(!smart.moving)
 					{
-						await smart_move(current_farm_pos.Mobs[0])
+						await smart_move(current_farm_pos.mobs[0])
 					}
 				}
 				break;

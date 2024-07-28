@@ -1,10 +1,12 @@
 const TARGETING_BLACK_LIST = ''
 
-const MAINHAND = {name: 'fireblade', lvl: 8}
-const OFFHAND = { name: 'xmace', lvl: 7}
-const BASHER = {name: 'basher', lvl: 5}
-const LOLIPOP = {name: 'ololipop', lvl: 7}
-const AXE = {name: 'bataxe', lvl: 5}
+const MAINHAND = {name: 'fireblade', level: 8}
+const OFFHAND = { name: 'xmace', level: 7}
+const BASHER = {name: 'basher', level: 5}
+const LOLIPOP = {name: 'ololipop', level: 7}
+const AXE = {name: 'bataxe', level: 5}
+
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -86,7 +88,7 @@ function kite(target)
 async function useSkills(target)
 {
 	
-	await useStomp()
+	//await useStomp()
 	await useCleave(target)
 	useShell()
 	if(!current_farm_pos.isCoop && character.level>67) useMassAgr()
@@ -107,7 +109,7 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype) && (e.target!=character.name || e.target!='Archealer') && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.isCoop)
+	if(!is_on_cooldown('agitate') && Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && (e.target!=character.name || e.target!='Archealer') && is_in_range(e, 'agitate')).length > 2 && !current_farm_pos.isCoop)
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -154,7 +156,7 @@ async function useStomp()
 async function useCleave(target)
 {
 	if(!is_on_cooldown('cleave') && action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1 
-	&& Object.values(parent.entities).filter(e => current_farm_pos.Mobs.includes(e.mtype) && is_in_range(e, 'cleave')).length > 2)
+	&& Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && is_in_range(e, 'cleave')).length > 2)
 	{
 		let switched = await switchToCleave()
 		if(switched == true)
@@ -175,28 +177,28 @@ async function switchToMainWeapon()
 	let curr_off = character.slots?.offhand
 	let desired_main = MAINHAND
 	let desired_off = (!current_farm_pos.isCoop && action=='farm') ? LOLIPOP : OFFHAND
-	if((curr_main && curr_off) && (curr_main.name == desired_main.name && curr_main.level == desired_main.lvl) && (curr_off.name == desired_off.name && curr_off.level == desired_off.lvl)) return
-	if((curr_main.name == desired_main.name && curr_main.level == desired_main.lvl) && (!curr_off || curr_off.name != desired_off.name || curr_off.level != desired_off.lvl))
+	if((curr_main && curr_off) && (curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (curr_off.name == desired_off.name && curr_off.level == desired_off.level)) return
+	if((curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (!curr_off || curr_off.name != desired_off.name || curr_off.level != desired_off.level))
 	{
 		for(let i in character.items)
 		{
 			let item = character.items[i]
 			if(!item) continue
-			if(item.name == desired_off.name && item.level == desired_off.lvl) 
+			if(item.name == desired_off.name && item.level == desired_off.level) 
 			{
 				await equip(i, 'offhand')
 			}
 		}
 	}
-	else if(!curr_main || !curr_off || (curr_main.name != desired_main.name || curr_main.level != desired_main.lvl) && (curr_off.name != desired_off.name || curr_off.level != desired_off.lvl))
+	else if(!curr_main || !curr_off || (curr_main.name != desired_main.name || curr_main.level != desired_main.level) && (curr_off.name != desired_off.name || curr_off.level != desired_off.level))
 	{
 		let main_slot
 		let off_slot
 		for(let i in character.items)
 		{
 			item = character.items[i]
-			if(item && item.name == MAINHAND.name && item.level == MAINHAND.lvl) main_slot = i
-			else if(item && item.name == OFFHAND.name && item.level == OFFHAND.lvl) off_slot = i
+			if(item && item.name == MAINHAND.name && item.level == MAINHAND.level) main_slot = i
+			else if(item && item.name == OFFHAND.name && item.level == OFFHAND.level) off_slot = i
 		}
 		if(main_slot && off_slot)
 		{
@@ -212,7 +214,7 @@ async function switchToCleave()
 	for(let i in character.items)
 	{
 		item = character.items[i]
-		if(item && item.name == AXE.name && item.level == AXE.lvl)
+		if(item && item.name == AXE.name && item.level == AXE.level)
 		{
 			if(character.slots.offhand)await unequip("offhand")
 			await equip(i)
@@ -228,7 +230,7 @@ async function switchToBasher()
 	for(let i in character.items)
 	{
 		item = character.items[i]
-		if(item && item.name == BASHER.name && item.level == BASHER.lvl)
+		if(item && item.name == BASHER.name && item.level == BASHER.level)
 		{
 			if(character.slots.offhand)await unequip("offhand")
 			await equip(i)

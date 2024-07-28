@@ -2,6 +2,8 @@ const TARGETING_BLACK_LIST = ''
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 var pc = false
 
+const PERSONAL_ITEMS = []
+
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
@@ -138,19 +140,19 @@ function attackOrHeal(target)
 
 async function passMonsterhuntNext()
 {
-	await smart_move(current_farm_pos.Mobs[0])
+	await smart_move(current_farm_pos.mobs[0])
 }
 
 
 
 async function useSkills(target)
 {
-	pullMobs();
+	pullmobs();
 	useCurse(target)
 	useDarkBlessing()
 }
 
-async function pullMobsFromMember()
+async function pullmobsFromMember()
 {
 	if(action=='farm' && !current_farm_pos.isCoop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
@@ -190,7 +192,7 @@ async function pullMobsFromMember()
 	}
 }
 
-async function pullMobs()
+async function pullmobs()
 {
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (action=='farm' && !current_farm_pos.isCoop)) return;
 	let near_members = Object.values(parent.entities).filter(e=> (MY_CHARACTERS.includes(e.name) || ADD_PARTY.includes(e.name)) && is_in_range(e, 'absorb'))

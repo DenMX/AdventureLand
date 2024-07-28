@@ -10,7 +10,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot0'
 const MINUTES_TO_RESET_STATE = 20
 
-const EVENTS = ['snowman', 'dragold', 'goobrawl', 'icegolem']
+
 
 var cyberland_check
 var bank_check
@@ -108,11 +108,11 @@ async function checkEvents()
 {
 	for(e of EVENTS)
 	{
-		if(parent.S[e])
+		if(parent.S[e.name])
 		{
-			send_cm(MY_CHARACTERS, {cmd: 'event', name: e, event: parent.S[e]})
+			send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
 			check_bosses = false
-			waitEventEnds(e)
+			waitEventEnds(e.name)
 		}
 	}
 }

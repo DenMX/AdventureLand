@@ -263,7 +263,8 @@ async function exchangeItems()
 	let exchangeItem = false
 	for(let i in character.items)
 	{
-		if(character.items[i] && ['box','gem','quest'].includes(G.items[character.items[i].name].type)) 
+		if(character.items[i] && ['box','gem','quest'].includes(G.items[character.items[i].name].type) 
+			&& character.items[i].q >= G.items[character.items[i].name].e) 
 		{
 			let e  = await exchange(i)
 			if(e.success = true) exchangeItem = true

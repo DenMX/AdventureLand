@@ -12,6 +12,8 @@ async function load_module(module) {
 var pc = false
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 
+const PERSONAL_ITEMS = []
+
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
@@ -189,7 +191,7 @@ async function summonMates()
 				await send_cm(member, {cmd: 'boss', boss: current_boss})
 				return
 			}
-			else if(curState.current_action == action && action == 'farm' && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && distance > 500)
+			else if(curState.current_action == action && action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && distance > 500)
 			{
 				await use_skill('magiport', member).catch(() => {})
 				return
@@ -200,7 +202,7 @@ async function summonMates()
 			// 	await use_skill('magiport', member).catch(() => {})
 			// 	return
 			// }
-			// else if (curState.current_action == action && curState.farm_location.Mobs[0] == current_farm_pos.Mobs[0] && 
+			// else if (curState.current_action == action && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && 
 			// 	getDistance(curState, character)>799)
 			// {
 			// 	console.log('Trying summon '+member)
