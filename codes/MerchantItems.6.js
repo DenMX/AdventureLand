@@ -58,6 +58,17 @@ const UPGRADE_WEAPONS = {
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
+const ITEMS_TO_SALE = [
+	'frogt', 
+	'pstem', 
+	'carrot', 
+	'crabclaw',
+	'smoke', 
+	'elixirvit0', 
+	'elixirvit1', 
+	'elixirvit2', 
+	'elixirvit3',
+	'ink']
 
 const CHARACTERS_PROGRESS_TIERS = ['start', 'mid', 'top', 'god']
 

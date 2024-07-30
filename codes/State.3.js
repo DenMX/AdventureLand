@@ -242,21 +242,25 @@ async function sendItems()
 			{
 				char_state = get(i.name)
 				if(i.name == character.name) continue
-				if(i.name == 'MerchanDiser')
+				if((i.name == 'MerchanDiser' && getDistance(get(i.name), character)< 500)  ||
+				  (char_state.have_pc && getDistance(char_state, character)<500))
 				{
-					if(getDistance(get(i.name), character)< 500) 
-					{
-						send(char_state.name) 
-					}
+					outer: for(it in character.items)
+						{
+							item = character.items[it]
+							if(!item) continue
+							if(!DONT_SEND_ITEMS.includes(item.name)){
+								for(let pi of PERSONAL_ITEMS)
+								{
+									if(item.name == pi.name && item.level == pi.level) continue outer
+								}
+								send_item(i.name, it, item.q)
+							}
+						}
+					await send_gold(i.name, character.gold)
+					shuffleItems()
 				}
-				else if(char_state.have_pc && getDistance(char_state, character)<500)
-				{
-					if(char_state.items_count < 40)
-					{
-						send(char_state.name)
-					}
-				}
-				
+			
 			}
 			
 		}
@@ -268,26 +272,9 @@ async function sendItems()
 	}
 	finally
 	{
-		setTimeout(sendItems, 30000)
+		setTimeout(sendItems, 3000)
 	}
 	
 }
 
-async function send(name)
-{
-	outer: for(i in character.items)
-		{
-			item = character.items[i]
-			if(!item) continue
-			if(!DONT_SEND_ITEMS.includes(item.name)){
-				for(let pi of PERSONAL_ITEMS)
-				{
-					if(item.name == pi.name && item.level == pi.level) continue outer
-				}
-				send_item(data.name, i)
-			}
-		}
-	await send_gold(name, character.gold)
-	shuffleItems()
-}
 

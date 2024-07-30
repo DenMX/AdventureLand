@@ -92,6 +92,7 @@ async function checkState() {
 				}
 			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0)
 			{
+				if(current_event.name == 'icegolem') await town()
 				if(boss_schedule.length>0 && !current_boss)
 				{
 					current_boss=boss_schedule.shift()

@@ -2,7 +2,7 @@ const TARGETING_BLACK_LIST = ''
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 var pc = false
 
-const PERSONAL_ITEMS = []
+const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'

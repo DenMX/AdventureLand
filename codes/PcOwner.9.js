@@ -253,7 +253,8 @@ async function sellItems()
 	for(let i in character.items)
 	{
 		let item = character.items[i]
-		if(item && SALE_ITEMS[G.items[item.name].id] && SALE_ITEMS[G.items[item.name].id].level <= item.level) await sell(i, item.q)
+		if(!item) continue
+		if((SALE_ITEMS[item.name] && SALE_ITEMS[item.name].level <= item.level) || ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 }
 

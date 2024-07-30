@@ -338,8 +338,8 @@ async function upgradeArmor()
 	{
 		for(let i=0; i<character.items.length; i++)
 		{
-			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[character.items[i]] 
-			|| NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j){
+			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j 
+			|| !NOT_SALE_ITEMS_ID[character.items[i].name] || NOT_SALE_ITEMS_ID[character.items[i].name].level <=j){
 				continue;
 			} 
 			let item = character.items[i]
@@ -433,7 +433,8 @@ async function sellItems()
 	for(let i in character.items)
 	{
 		let item = character.items[i]
-		if(item && SALE_ITEMS[G.items[item.name].id] && SALE_ITEMS[G.items[item.name].id].level <= item.level) await sell(i, item.q)
+		if(!item) continue
+		if((SALE_ITEMS[item.name] && SALE_ITEMS[item.name].level <= item.level) || ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 	shuffleItems()
 }
