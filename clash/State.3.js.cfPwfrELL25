@@ -48,13 +48,6 @@ const FARM_LOCATIONS =
 			isCoop: true,
 			massFarm: true,
 			canSolo: false
-		},
-		boar: {
-			location: {x: 153, y: -910, map: 'winterland'},
-			mobs: ['boar'],
-			isCoop: true,
-			massFarm: true,
-			canSolo: false
 		}
 	}
 

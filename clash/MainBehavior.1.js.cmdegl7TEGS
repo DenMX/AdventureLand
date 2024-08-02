@@ -46,32 +46,28 @@ function on_magiport(name)
 		if(character.moving) stop('move').catch(() => {})
 		});
 
-	if(action == 'boss')
-	  console.error(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} action: ${action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map} boss_name: ${current_boss.name}`)
+	console.error(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} action: ${action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map} boss_name: ${current_boss.name}`)
 }
 
 
 
 
-setInterval(checkState, 300)
+setInterval(checkState, 1000)
 async function checkState() {
 	
 	if(!ACTIONS.includes(action)) action = 'farm'
 
 	switch(action){
 		case 'farm':
-			set_message('Farming...')
 			if(attack_mode && !is_moving(character) && current_farm_pos==null)
 			{
-				current_farm_pos=FARM_LOCATIONS.bitch
+				current_farm_pos=FARM_LOCATIONS.nearMines
 				await smart_move(current_farm_pos.location)
 			}
-			else if(attack_mode && !is_moving(character) && Object.values(parent.entities).filter((e) => e.type == 'monster' && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).length==0 && !smart.moving)
-				current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
-			else getTartget()
+			else if(attack_mode && !is_moving(character) && !Object.values(parent.entities).filter((e) => e.type == 'monster' && e.id == current_farm_pos.mobs[0]) && !smart.moving)
+				await smart_move(current_farm_pos.mobs[0])
 			break;
 		case 'boss':
-			set_message('Bossing...')
 			if(getDistance(current_boss, character)> 250 && !is_moving(character) && !smart.moving) await smart_move(current_boss)
 			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
 			{
@@ -87,10 +83,8 @@ async function checkState() {
 					current_boss = null
 				}
 			}
-			else getTartget()
 			break;
 		case 'event':
-			set_message('Event')
 			if(getDistance(current_event.event, character)> 250 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
 				{ 
 					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
@@ -113,9 +107,7 @@ async function checkState() {
 					action = 'farm'
 					current_event = null
 				}
-				
 			} 
-			else getTartget()
 			break;
 
 	}
@@ -170,17 +162,12 @@ async function dontStack()
 	}
 }
 
-setInterval(looting, 333)
-function looting(){
-	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
-}
-
 //--------COMBAT SECTION--------//
-// setInterval(getTartget, 300);
+setInterval(getTartget, 300);
 async function getTartget()
 {
 	if(!attack_mode || character.rip || is_moving(character) || !current_farm_pos ) return;
-	
+	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
 	let target = get_targeted_monster()
 	
 
@@ -195,47 +182,79 @@ async function getTartget()
 				else 
 				{
 					game_log('Searching target...')
-					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
+					let monsters_in_range = Object.values(parent.entities).filter((e) => e.type === "monster" && is_in_range(e) && (current_farm_pos.mobs.includes(e.mtype)) || FARM_BOSSES.includes(e.mtype))
+					let bosses = Object.values(parent.entities).filter((e) => FARM_BOSSES.includes(e.mtype))
+					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).sort()
+
+					let all_monsters = monsters_in_range.concat(monsters)
 
 					if(monsters.length>0)
 					{
-						monsters.sort(
-							function(current, next) {
-								let dist_current = getDistance(character, current);
-								let dist_next = getDistance(character, next);
-								if(FARM_BOSSES.includes(current.mtype)!=FARM_BOSSES.includes(next.mtype)) {
-									return (FARM_BOSSES.includes(current.mtype) && !FARM_BOSSES.includes(next.mtype)) ? -1 : 1;
-								}
-								if(parent.party_list.includes(current.target) != parent.party_list.includes(next.target))
-								{
-									return (parent.party_list.includes(current.target) && !parent.party_list.includes(next.target)) ? -1 : 1;
-								}
+						if(bosses.length>0) target = bosses[0]
+						else
+						{
+							all_monsters.sort(
+								function(current, next) {
+									let dist_current = getDistance(character, current);
+									let dist_next = getDistance(character, next);
 
-								if(dist_current != dist_next){
-									return (dist_current< dist_next) ? -1 : 1;
+									if(parent.party_list.includes(current.target) != parent.party_list.includes(next.target))
+									{
+										return (parent.party_list.includes(current.target) && !parent.party_list.includes(next.target)) ? -1 : 1;
+									}
+
+									if(dist_current != dist_next){
+										return (dist_current< dist_next) ? -1 : 1;
+									}
+									
+									return 0;
 								}
-								
-								return 0;
-							}
-						)
-						target = monsters[0]
+							)
+							target = all_monsters[0]
+						}
+					}
+					else if(!smart.moving)
+					{
+						await smart_move(current_farm_pos.mobs[0])
 					}
 				}
 				break;
 			case 'boss':
-			case 'event':
-				near_boss = Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype))
-				if(near_boss.length>0) target = near_boss[0]
-				break;
+				let near_boss = Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype))
+				if(near_boss.length>0)
+				{
+					target = near_boss[0]
+				}
+				else if(getDistance(character, current_boss)>500 && !character.moving)
+				{
+					await smart_move(current_boss)
+				}
 		}
 					
-	}		
+	}
+		
 	
-	if(!target && character.name != 'Archealer') return;
+	if(!target)
+	{
+		set_message("No Monsters");
+		return;
+	}
 	else if (character.name=='Archealer') attackOrHeal(target)
 	else myAttack(target)
 	
 }
 
+
+
+
+function circleMove(target)
+{
+	// move(
+	// 	character.x+((character.range/3) + (target.y-character.y)),
+	// 	character.y+((character.range/3)+(target.x-character.x))
+	// 	// character.x-(character.range/4/(target.x-character.x)*(character.range/4/(target.x-character.x))),
+	// 	// character.y-(character.range/4/(target.y-character.y)*(character.range/4/(target.y-character.y)))
+	// )
+}
 
 

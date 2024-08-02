@@ -116,7 +116,7 @@ function attackOrHeal(target)
 		   return;
 	    }
 	}
-	if(!target) return;
+
 	change_target(target);
 	useSkills(target);
 	if(!is_in_range(target))
