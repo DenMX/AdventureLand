@@ -142,7 +142,7 @@ async function useShell()
 
 async function useStomp(target)
 {
-	
+	if(!target) return
 	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 &&
 	 (FARM_BOSSES.includes(target.mtype) || 
 	 Object.values(parent.entities).filter(e=> e.target == character.name )))
