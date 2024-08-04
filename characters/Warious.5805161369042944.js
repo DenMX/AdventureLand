@@ -198,11 +198,11 @@ async function switchToMainWeapon()
 			}
 			break;
 		case 'farm':
-			if(current_farm_pos.massFarm && !current_farm_pos.isCoop) {
+			if(current_farm_pos.massFarm && !current_farm_pos.isCoop && !FARM_BOSSES.includes(parent.ctarget.mtype)) {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
-			else if(current_farm_pos.massFarm && current_farm_pos.isCoop && getDistance(get('Archealer'), character)< 250 && !parent.entities.Archealer?.rip) {
+			else if(current_farm_pos.massFarm && current_farm_pos.isCoop && getDistance(get('Archealer'), character)< 250 && !parent.entities.Archealer?.rip && !FARM_BOSSES.includes(parent.ctarget.mtype)) {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
