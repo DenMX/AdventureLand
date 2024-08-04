@@ -52,15 +52,15 @@ setInterval(UseFlask, 300)
 function UseFlask(){
 
 	if(character.c?.town) return
-  if (!character.rip && character.hp < character.max_hp * use_hp_flask_at_percent) {
+  	if (!character.rip && (character.hp < character.max_hp * use_hp_flask_at_percent) || (character.name == 'MerchanDiser' && character.hp < character.max_hp*0.9)) {
 	  if (can_use("use_hp")) {
 	    use_skill('use_hp');
-    }
-  }
+    	}
+ 	}
 
-  if (character.mp < character.max_mp * 0.8 && !character.rip) {
-    if (can_use("use_mp")) {
-      use_skill('use_mp');
-    }
-  }
+	if (character.mp < character.max_mp * 0.8 && !character.rip) {
+		if (can_use("use_mp")) {
+		use_skill('use_mp');
+		}
+	}
 }

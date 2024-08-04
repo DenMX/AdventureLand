@@ -3,12 +3,14 @@ let isGoingToBank = false
 let isExchanging = false
 // let isCombining = false
 
+
+
 var state='Idling'
 
 const DEFAULT_STATE = 'Idling'
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot0'
-const MINUTES_TO_RESET_STATE = 20
+const MINUTES_TO_RESET_STATE = 10
 
 
 
@@ -41,7 +43,7 @@ runCharacter();
 
 async function initChar()
 {
-	// await load_module('Mover')
+	await load_module('Mover')
 	await load_module('PotionUse')
 	await load_module('Basics')
 	await load_module('MerBuisiness')
@@ -51,7 +53,6 @@ async function initChar()
 	//if(getState?.merchant_merch_queue) merch_queue = getState.merchant_merch_queue
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
-
 	merch_queue.push(checkItemsCount)
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
@@ -134,7 +135,7 @@ async function changeState(newState)
 		state=newState
 		last_state_change = Date.now()
 	}
-	
+	set_message(state)
 	game_log(state, '#FF7F50')
 }
 
@@ -173,7 +174,7 @@ async function checkElixirs()
 	{
 		for(let i in character.items)
 		{
-			if(character.items[i].name == 'bunnyelixir') await equip(i)
+			if(character.items[i] && character.items[i].name == 'bunnyelixir') await equip(i)
 		}
 	}
 }

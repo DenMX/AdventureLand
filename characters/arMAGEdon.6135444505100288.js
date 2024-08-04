@@ -20,7 +20,7 @@ const MP_POT = 'mpot1'
 initialize_character()
 
 async function initialize_character() {
-    // await load_module('Mover')
+    await load_module('Mover')
 	await load_module('Basics')
     await load_module('PotionUse')
     await load_module('State')
@@ -88,8 +88,8 @@ async function energize()
 
     if(parent.entities.Archealer && parent.entities.Archealer.mp < parent.entities.Archealer.max_mp*0.3) 
         use_skill('energize', 'Archealer').catch(() => {})
-    else if(parent.entities.Warious && parent.entities.Warious.mp> parent.entities.Warious.max_mp*0.60) 
-        use_skill('energize', 'Warious').catch(() => {})
+    else if(parent.entities.Warious && is_in_range('energize', parent.entities.Warious)) 
+        use_skill('energize', 'Warious', 1).catch(() => {})
 }
 
 async function reflection()
@@ -141,7 +141,6 @@ function myAttack(target){
 	}
 	else if(can_attack(target))
 	{
-		set_message("Attacking");
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.min(...parent.pings));
 	}
@@ -158,13 +157,13 @@ async function passMonsterhuntNext()
 
 async function mageHandleBoss(boss)
 {
-	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
-	if((action == 'boss' || action == 'event') && !boss_schedule.includes(boss))
+	console.log('Get a boss: '+boss.name+' current action:'+char_action+'\nBosses in progress: '+boss_schedule.length)
+	if((char_action == 'boss' || char_action == 'event') && !boss_schedule.includes(boss))
 	{
 		boss_schedule.push(boss)
 		return;
 	}
-	action = 'boss'
+	char_action = 'boss'
 	current_boss = boss
 	smart_move(boss)
 }
@@ -185,24 +184,24 @@ async function summonMates()
 			let curState = get(member)
 			let distance = getDistance(curState, character)
 			
-			if(action == 'boss' && distance>250)
+			if(char_action == 'boss' && distance>250)
 			{
 				await use_skill('magiport', member).catch(() => {})
 				await send_cm(member, {cmd: 'boss', boss: current_boss})
 				return
 			}
-			else if(curState.current_action == action && action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && distance > 500)
+			else if(curState.current_action == char_action && char_action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && distance > 500)
 			{
 				await use_skill('magiport', member).catch(() => {})
 				return
 			}
-			// if(curState.current_action == action && action!='farm' && getDistance(curState, character)>799)
+			// if(curState.current_action == char_action && char_action!='farm' && getDistance(curState, character)>799)
 			// {
 			// 	console.log('Trying summon '+member)
 			// 	await use_skill('magiport', member).catch(() => {})
 			// 	return
 			// }
-			// else if (curState.current_action == action && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && 
+			// else if (curState.current_action == char_action && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && 
 			// 	getDistance(curState, character)>799)
 			// {
 			// 	console.log('Trying summon '+member)

@@ -129,8 +129,8 @@ function attackOrHeal(target)
 	}
 	else if(can_attack(target))
 	{
-		if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-		set_message("Attacking");
+		// if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+		
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
 	}
@@ -194,7 +194,7 @@ async function pullmobsFromMember()
 
 async function pullmobs()
 {
-	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (action=='farm' && !current_farm_pos.isCoop)) return;
+	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (char_action=='farm' && !current_farm_pos.isCoop)) return;
 	let near_members = Object.values(parent.entities).filter(e=> (MY_CHARACTERS.includes(e.name) || ADD_PARTY.includes(e.name)) && is_in_range(e, 'absorb'))
 	for(let i of near_members)
 	{
@@ -213,7 +213,7 @@ async function pullmobs()
 
 async function useDarkBlessing()
 {
-	if(action=='farm' && !current_farm_pos.isCoop)return
+	if(char_action=='farm' && !current_farm_pos.isCoop)return
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
 		await use_skill('darkblessing').catch(() => {})

@@ -21,19 +21,6 @@ const WHITE_LIST_FOR_QUEST = {
 }
 
 
-//-------------CREATE PARTY---------------//
-
-setInterval(followHealer, 500)
-function followHealer(){
-	let healer = parent.entities['Archealer']
-	if(!character.rip && healer && distance(healer, character) >= character.range/2 && attack_mode && distance(character.position, current_farm_pos.position) < character.range*2)
-	{
-		move(
-			character.x+(healer.x-character.x)/2,
-			character.y+(healer.y-character.y)/2
-			);
-	}
-}
 
 
 function on_magiport(name)
@@ -46,33 +33,27 @@ function on_magiport(name)
 		if(character.moving) stop('move').catch(() => {})
 		});
 
-	if(action == 'boss')
-	  console.error(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} action: ${action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map} boss_name: ${current_boss.name}`)
+	if(char_action == 'boss')
+	  console.error(`MAGIPORT ACCEPTED smart.moving: ${smart.moving} action: ${char_action} current_boss: x: ${current_boss.x}, y: ${current_boss.y}, map: ${current_boss.map} boss_name: ${current_boss.name}`)
 }
-
 
 
 
 setInterval(checkState, 300)
 async function checkState() {
 	
-	if(!ACTIONS.includes(action)) action = 'farm'
-
-	switch(action){
+	if(!ACTIONS.includes(char_action)) char_action = 'farm'
+	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bitch
+	switch(char_action){
 		case 'farm':
 			set_message('Farming...')
-			if(attack_mode && !is_moving(character) && current_farm_pos==null)
-			{
-				current_farm_pos=FARM_LOCATIONS.bitch
-				await smart_move(current_farm_pos.location)
-			}
-			else if(attack_mode && !is_moving(character) && Object.values(parent.entities).filter((e) => e.type == 'monster' && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype))).length==0 && !smart.moving)
+			if(attack_mode && !smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
 				current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
 			else getTartget()
 			break;
 		case 'boss':
 			set_message('Bossing...')
-			if(getDistance(current_boss, character)> 250 && !is_moving(character) && !smart.moving) await smart_move(current_boss)
+			if(getDistance(current_boss, character)> 250 && !smart.moving) await smart_move(current_boss)
 			else if(getDistance(current_boss, character)< 250 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
 			{
 				if(boss_schedule.length>0)
@@ -82,8 +63,8 @@ async function checkState() {
 				}
 				else
 				{
-					console.log('Switching action '+action+' to farm')
-					action = 'farm'
+					console.log('Switching action '+char_action+' to farm')
+					char_action = 'farm'
 					current_boss = null
 				}
 			}
@@ -102,15 +83,15 @@ async function checkState() {
 				if(boss_schedule.length>0 && !current_boss)
 				{
 					current_boss=boss_schedule.shift()
-					console.log('Switching action '+action+' to boss')
-					action='boss'
+					console.log('Switching action '+char_action+' to boss')
+					char_action='boss'
 					current_event = null
 				}
-				else if(current_boss) action = 'boss'
+				else if(current_boss) char_action = 'boss'
 				else
 				{
-					console.log('Switching action '+action+' to farm')
-					action = 'farm'
+					console.log('Switching action '+char_action+' to farm')
+					char_action = 'farm'
 					current_event = null
 				}
 				
@@ -176,10 +157,9 @@ function looting(){
 }
 
 //--------COMBAT SECTION--------//
-// setInterval(getTartget, 300);
 async function getTartget()
 {
-	if(!attack_mode || character.rip || is_moving(character) || !current_farm_pos ) return;
+	if(!attack_mode || character.rip || smart.moving ) return;
 	
 	let target = get_targeted_monster()
 	
@@ -188,10 +168,10 @@ async function getTartget()
 
 	if(!target)
 	{
-		switch(action)
+		switch(char_action)
 		{
 			case 'farm':
-				if(parent.entities['Archealer'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Archealer'])
+				if(character.name != 'Warious' && parent.entities['Warious'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Warious'])
 				else 
 				{
 					game_log('Searching target...')

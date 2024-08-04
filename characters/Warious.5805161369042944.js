@@ -69,13 +69,14 @@ async function initialize_character() {
         }
     }
 	useElixir()
+	setInterval(useSkills, 1000)
 }
 
-setInterval(useSkills, 1000)
+
 async function useSkills()
 {
 	target = parent.ctarget
-	if((action == 'boss' || action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
+	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
 	await useStomp(target)
 	useShell()
 	useMassAgr()
@@ -89,7 +90,7 @@ async function useWarcry(){
 		if(!is_on_cooldown('warcry') && !character.s.warcry && character.mp > G.skills.warcry.mp)
 		{
 			await use_skill('warcry').catch(() => {})
-			reduce_cooldown("warcry", Math.min(...parent.pings));
+			// reduce_cooldown("warcry", Math.min(...parent.pings));
 		}
 	}
 	catch {}
@@ -98,7 +99,7 @@ async function useWarcry(){
 	}
 }
 
-setInterval(useDash, 1500)
+// setInterval(useDash, 1500)
 async function useDash(target)
 {
 	target = get_targeted_monster();
@@ -110,12 +111,12 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && action == 'farm' && 
+	if(!is_on_cooldown('agitate') && char_action == 'farm' && 
 	 Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) 
 	   && e.target!=character.name && is_in_range(e, 'agitate')).length > 2 && current_farm_pos.massFarm)
 	{
 		await use_skill('agitate').catch(() => {})
-		reduce_cooldown("agitate", Math.min(...parent.pings));
+		// reduce_cooldown("agitate", Math.min(...parent.pings));
 	}
 }
 
@@ -125,17 +126,17 @@ async function useCharge()
 	if(!is_on_cooldown('charge') && character.mp - G.skills.charge.mp > character.max_mp*0.4)
 	{
 		await use_skill('charge').catch(() => {})
-		reduce_cooldown("charge", Math.min(...parent.pings));
+		// reduce_cooldown("charge", Math.min(...parent.pings));
 	}
 }
 
 async function useShell()
 {
 	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.5 
-		|| Object.values(parent.entities).filter(e => e.target == character.name).length>2))
+		|| ( character.hp < character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.target == character.name).length>2)))
 	{
 		await use_skill('hardshell').catch(() => {})
-		reduce_cooldown("hardshell", Math.min(...parent.pings));
+		// reduce_cooldown("hardshell", Math.min(...parent.pings));
 	}
 }
 
@@ -150,14 +151,14 @@ async function useStomp(target)
 		if(switched == true)
 		{
 			await use_skill('stomp').catch(() => {})
-			reduce_cooldown('stomp', Math.max(...parent.pings));
+			// reduce_cooldown('stomp', Math.max(...parent.pings));
 		}
 	}
 }
 
 async function useCleave(target)
 {
-	if(!is_on_cooldown('cleave') && action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1 
+	if(!is_on_cooldown('cleave') && char_action == 'farm' && getDistance(get('Archealer'), character)<250 && character.mp-G.skills.cleave.mp > character.max_mp*0.1 
 	&& Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && is_in_range(e, 'cleave')).length > 2)
 	{
 		let switched = await switchToCleave()
@@ -167,25 +168,25 @@ async function useCleave(target)
 			reduce_cooldown('cleave', Math.max(...parent.pings));
 		}
 	}
-	else if(!is_on_cooldown('cleave') && action == 'event' && current_event.name == 'goobrawl')
+	else if(!is_on_cooldown('cleave') && char_action == 'event' && current_event.name == 'goobrawl')
 	{
 		await use_skill('cleave').catch(() => {})
-			reduce_cooldown('cleave', Math.max(...parent.pings));
+		// reduce_cooldown('cleave', Math.max(...parent.pings));
 	}
 }
 
-setInterval(switchToMainWeapon, 250)
+setInterval(switchToMainWeapon, 750)
 async function switchToMainWeapon()
 {
 	let curr_main = character.slots.mainhand
 	let curr_off = character.slots?.offhand
 	let desired_main
 	let desired_off 
-	// = ((current_farm_pos.massFarm && action=='farm' && !current_farm_pos.isCoop) ||
-	// (current_farm_pos.massFarm && action=='farm' && current_farm_pos.isCoop && getDistance(get('Archealer'),character)<300) ||
-	// (action == 'event' && current_event.name == 'goobrawl')) ? LOLIPOP : OFFHAND
+	// = ((current_farm_pos.massFarm && char_action=='farm' && !current_farm_pos.isCoop) ||
+	// (current_farm_pos.massFarm && char_action=='farm' && current_farm_pos.isCoop && getDistance(get('Archealer'),character)<300) ||
+	// (char_action == 'event' && current_event.name == 'goobrawl')) ? LOLIPOP : OFFHAND
 
-	switch(action){
+	switch(char_action){
 		case 'event':
 			if(current_event.name == 'goobrawl') {
 				desired_main = MASS_MAINHAND
@@ -237,14 +238,15 @@ async function switchToMainWeapon()
 		{
 			item = character.items[i]
 			if(item && item.name == desired_main.name && item.level == desired_main.level && !main_slot) {
-				await equip(i, 'mainhand')
-				if(off_slot) await equip(off_slot, 'offhand')
+				main_slot = i
+				if(off_slot) break;
 			}
-			else if(item && item.name == desired_off.name && item.level == desired_off.level ) {
-				if(character.slots.mainhand.name == desired_main.name) equip (i, 'offhand')
-				else off_slot = i
+			else if(item && item.name == desired_off.name && item.level == desired_off.level && i != main_slot) {
+				off_slot = i
+				if(main_slot>0 && off_slot>0) break
 			}
 		}
+		await equip_batch([{num: main_slot, slot: "mainhand"}, {num: off_slot, slot: "offhand"}])
 	}
 }
 
@@ -282,7 +284,7 @@ async function switchToBasher()
 
 function myAttack(target)
 {
-	if((action == 'boss' || action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
+	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
 	change_target(target);
 
 
@@ -297,6 +299,18 @@ function myAttack(target)
 	else if(can_attack(target))
 	{
 		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.max(...parent.pings));
+		reduce_cooldown("attack", Math.avg(...parent.pings));
+		swing()
+	}
+}
+
+async function swing()
+{
+	if(!character.s.hardshell && Object.values(parent.entities).filter(e => e.target == character.name).length>2)
+	{
+		move(
+			character.x+(target.x-character.x)+10,
+			character.y+(target.y-character.y)+10
+		)
 	}
 }

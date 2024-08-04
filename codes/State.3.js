@@ -73,7 +73,7 @@ var current_boss
 var current_event
 var attack_mode=true
 var curState
-var action
+var char_action
 
 
 
@@ -84,7 +84,7 @@ function getState()
 	{ 
 		curState = get(character.name)
 		current_farm_pos = curState.farm_location
-		action = (ACTIONS.includes(curState.current_action)) ? curState.current_action : 'farm'
+		char_action = (ACTIONS.includes(curState.current_action)) ? curState.current_action : 'farm'
 		current_boss = curState.current_boss ? curState.current_boss : null
 		boss_schedule = curState.bosses ? curState.bosses : []
 	}
@@ -116,7 +116,7 @@ async function saveState()
 		equip: character.slots,
 		have_pc: pc,
 		s: character.s,
-		current_action: action,
+		current_action: char_action,
 		current_boss: current_boss,
 		bosses: boss_schedule,
 		current_event: current_event
@@ -156,7 +156,7 @@ character.on("cm", function(data){
 						{
 							if(item.name == pi.name && item.level == pi.level) continue outer
 						}
-						send_item(data.name, i)
+						send_item(data.name, i, item.q)
 					}
 				}
 				break;
@@ -170,7 +170,7 @@ character.on("cm", function(data){
 				smart_move(current_farm_pos.mobs[0])
 				break;
 			case 'farm':
-				action = 'farm'
+				char_action = 'farm'
 				smart_move(current_farm_pos.mobs[0])
 				break;
 			case 'boss':
@@ -191,7 +191,7 @@ character.on("cm", function(data){
 		{
 			last_farm_pos = current_farm_pos
 			current_farm_pos=FARM_LOCATIONS[data.message.mob]
-			if(action=='farm' && !smart.moving && getDistance(character, current_farm_pos.location)> 500) smart_move(current_farm_pos.location)
+			if(char_action=='farm' && !smart.moving && getDistance(character, current_farm_pos.location)> 500) smart_move(current_farm_pos.location)
 		}
 		else
 		{
@@ -205,16 +205,21 @@ character.on("cm", function(data){
 
 			}
 			attack_mode=true
-			if(action=='farm')smart_move(mob)
+			if(char_action=='farm')smart_move(mob)
 		}
 	}
 	else console.warn('Unknown command')
 })
 
+//function for faster command from browser
+function farm(pos) {
+	send_cm(parent.party_list, pos)
+}
+
 async function handleBoss(boss)
 {
-	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
-	action = 'boss'
+	console.log('Get a boss: '+boss.name+' current action:'+char_action+'\nBosses in progress: '+boss_schedule.length)
+	char_action = 'boss'
 	current_boss = boss	
 }
 
@@ -261,7 +266,7 @@ async function sendItems()
 								{
 									if(item.name == pi.name && item.level == pi.level) continue outer
 								}
-								send_item(i.name, it, item.q)
+								await send_item(i.name, it, item.q).catch(() => {})
 							}
 						}
 					await send_gold(i.name, character.gold)
@@ -279,7 +284,7 @@ async function sendItems()
 	}
 	finally
 	{
-		setTimeout(sendItems, 3000)
+		setTimeout(sendItems, 30000)
 	}
 	
 }
