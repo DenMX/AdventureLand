@@ -227,6 +227,7 @@ async function handleEvent(name, event)
 {
 	console.log('Got an event: '+name)
 	current_event = { name: name, event: event }
+	char_action = 'event'
 	if(['icegolem','goobrawl'].includes(name)){
 		join(name)
 		return;
