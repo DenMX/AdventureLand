@@ -68,7 +68,12 @@ const ITEMS_TO_SALE = [
 	'elixirvit1', 
 	'elixirvit2', 
 	'elixirvit3',
-	'ink']
+	'ink',
+	'rednose',
+	'iceskates',
+	'xmasshoes',
+	'xmassweater'
+]
 
 const CHARACTERS_PROGRESS_TIERS = ['start', 'mid', 'top', 'god']
 
@@ -190,8 +195,8 @@ const NOT_SALE_ITEMS_ID =
 	wbook0: {level: 4},
 	mcape: {level: 7},
 	bataxe: {level: 5},
-	cape: {level: 5},
-	bcape: {level: 5}
+	cape: {level: 7},
+	bcape: {level: 7}
 }
 
 const ITEMS_TO_BUY_PONTY =

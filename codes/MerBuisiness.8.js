@@ -64,9 +64,10 @@ async function fishing()
 	}
 	changeState('Going to fishing')
 	await smart_move(FISHING_POS)
-	await equipTools('rod')
+	let rod = await equipTools('rod')
+	
 	changeState('Fishing...')
-	while(!is_on_cooldown('fishing'))
+	while(rod && !is_on_cooldown('fishing'))
 	{
 		await use_skill('fishing')
 		await sleep(15000)
