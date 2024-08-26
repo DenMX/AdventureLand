@@ -165,7 +165,7 @@ async function getTartget()
 	
 	let target = get_targeted_monster()
 	
-	if(target.map != character.map || getDistance(target, character) > 500) change_target(null)
+	if(target && target.map != character.map || getDistance(target, character) > 500) change_target(null)
 	dontStack()
 
 	if(!target)
