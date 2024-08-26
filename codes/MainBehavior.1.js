@@ -43,13 +43,15 @@ setInterval(checkState, 300)
 async function checkState() {
 	
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
-	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bitch
+	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bigbird
+	bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
+	if(bosses.length > 0) return
 	switch(char_action){
 		case 'farm':
 			set_message('Farming...')
-			if(attack_mode && !smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
+			if(Object.values(parent.entities).filter(e=> current_farm_pos.mobs.includes(e.mtype)).length>0) return
+			else if(!smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
 				current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
-			else getTartget()
 			break;
 		case 'boss':
 			set_message('Bossing...')
@@ -68,16 +70,15 @@ async function checkState() {
 					current_boss = null
 				}
 			}
-			else getTartget()
 			break;
 		case 'event':
 			set_message('Event')
-			if(getDistance(current_event.event, character)> 500 && !smart.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
+			if(getDistance(current_event.event, character)> 500 && !character.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
 				{ 
 					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
 					else await smart_move(current_event.event)
 				}
-			else if(getDistance(current_event.event, character)<= 500 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0)
+			else if(getDistance(current_event.event, character)<= 500 && bosses.length == 0)
 			{
 				if(current_event.name == 'icegolem') await town()
 				if(boss_schedule.length>0 && !current_boss)
@@ -96,7 +97,6 @@ async function checkState() {
 				}
 				
 			} 
-			else getTartget()
 			break;
 
 	}
@@ -156,6 +156,7 @@ function looting(){
 	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
 }
 
+setInterval(getTartget, 300)
 //--------COMBAT SECTION--------//
 async function getTartget()
 {
@@ -168,9 +169,6 @@ async function getTartget()
 
 	if(!target)
 	{
-		switch(char_action)
-		{
-			case 'farm':
 				if(character.name != 'Warious' && parent.entities['Warious'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Warious'])
 				else 
 				{
@@ -201,20 +199,11 @@ async function getTartget()
 						target = monsters[0]
 					}
 				}
-				break;
-			case 'boss':
-			case 'event':
-				near_boss = Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype))
-				if(near_boss.length>0) target = near_boss[0]
-				break;
-		}
 					
 	}		
-	
 	if(!target && character.name != 'Archealer') return;
 	else if (character.name=='Archealer') attackOrHeal(target)
 	else myAttack(target)
-	
 }
 
 

@@ -55,6 +55,13 @@ const FARM_LOCATIONS =
 			isCoop: true,
 			massFarm: true,
 			canSolo: false
+		},
+		stoneworm: {
+			location: {x:850, y:-80, map: 'spookytown'},
+			mobs: ['stoneworm'],
+			isCoop: true,
+			massFarm: false,
+			canSolo: false
 		}
 	}
 
@@ -158,6 +165,7 @@ character.on("cm", function(data){
 						}
 						send_item(data.name, i, item.q)
 					}
+					send_gold(data.name, character.gold-10000000)
 				}
 				break;
 			case 'monsterhunt':

@@ -9,7 +9,7 @@ var state='Idling'
 
 const DEFAULT_STATE = 'Idling'
 const HP_POT = 'hpot1'
-const MP_POT = 'mpot0'
+const MP_POT = 'mpot1'
 const MINUTES_TO_RESET_STATE = 10
 
 
@@ -40,6 +40,12 @@ async function runCharacter() {
 }
 runCharacter();
 
+setInterval(useCourage, 10000)
+async function useCourage(){
+	if(character.mp > G.skills.mcourage.mp && !character.s.mcourage && character.moving){
+		await use_skill('mcourage')
+	}
+}
 
 async function initChar()
 {

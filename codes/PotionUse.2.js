@@ -1,5 +1,5 @@
 let use_hp_flask_at_percent = 0.5
-let user_mp_flask_at_percent = 0.85
+let user_mp_flask_at_percent = 0.9
 
 
 

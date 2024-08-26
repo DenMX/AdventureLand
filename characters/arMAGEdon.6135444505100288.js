@@ -158,7 +158,7 @@ async function passMonsterhuntNext()
 async function mageHandleBoss(boss)
 {
 	console.log('Get a boss: '+boss.name+' current action:'+char_action+'\nBosses in progress: '+boss_schedule.length)
-	if((char_action == 'boss' || char_action == 'event') && !boss_schedule.includes(boss))
+	if((char_action == 'boss' || char_action == 'event') && !bossReceived(boss))
 	{
 		boss_schedule.push(boss)
 		return;
@@ -168,6 +168,13 @@ async function mageHandleBoss(boss)
 	smart_move(boss)
 }
 
+function bossReceived(boss)
+{
+	for(let b of boss_schedule) {
+		if(b.name==boss.name) return true
+	}
+	return false
+}
 
 async function summonMates()
 {
@@ -195,19 +202,6 @@ async function summonMates()
 				await use_skill('magiport', member).catch(() => {})
 				return
 			}
-			// if(curState.current_action == char_action && char_action!='farm' && getDistance(curState, character)>799)
-			// {
-			// 	console.log('Trying summon '+member)
-			// 	await use_skill('magiport', member).catch(() => {})
-			// 	return
-			// }
-			// else if (curState.current_action == char_action && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && 
-			// 	getDistance(curState, character)>799)
-			// {
-			// 	console.log('Trying summon '+member)
-			// 	await use_skill('magiport', member).catch(() => {})
-			// 	return
-			// }
 		}
 	}
 	catch(ex)

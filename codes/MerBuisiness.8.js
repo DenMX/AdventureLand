@@ -50,7 +50,7 @@ async function mining()
 		await sleep(15000)
 	}
 	changeState(DEFAULT_STATE)
-	await unequip('mainhand')
+	await equipTools('broom')
 	scheduler(mining)
 }
 
@@ -64,17 +64,27 @@ async function fishing()
 	}
 	changeState('Going to fishing')
 	await smart_move(FISHING_POS)
-	let rod = await equipTools('rod')
-	
-	changeState('Fishing...')
-	while(rod && !is_on_cooldown('fishing'))
-	{
-		await use_skill('fishing')
-		await sleep(15000)
+	try {
+		let rod = await equipTools('rod')
+		if(rod) {
+			changeState('Fishing...')
+			while(!is_on_cooldown('fishing'))
+			{
+				await use_skill('fishing')
+				await sleep(15000)
+			}
+		}
 	}
-	changeState(DEFAULT_STATE)
-	await unequip('mainhand')
-	scheduler(fishing)
+	catch(Ex)
+	{
+		console.warn('Error fishing')
+		console.error(Ex)
+	}
+	finally {
+		changeState(DEFAULT_STATE)
+		await equipTools('broom')
+		scheduler(fishing)
+	}
 }
 
 

@@ -72,7 +72,40 @@ const ITEMS_TO_SALE = [
 	'rednose',
 	'iceskates',
 	'xmasshoes',
-	'xmassweater'
+	'xmassweater',
+	'pmaceofthedead',
+	'hpamulet',
+	'hpbelt',
+	'cclaw',
+	'stinger',
+	'vitearring',
+	'vitring',
+	'slimestaff',
+	'helmet',
+	'wcap',
+	'coat',
+	'wattire',
+	'helmet1',
+	'pants1',
+	'dexring',
+	'dexearring',
+	'dexamulet',
+	'gloves1',
+	'pants',
+	'wbreeches',
+	'gloves',
+	'wgloves',
+	'coat1',
+	'shoes',
+	'wshoes',
+	'shoes1',
+	'ringsj',
+	'dagger',
+	'hotchocolate',
+	'throwingstars',
+	'rapier',
+	'staffofthedead',
+	'spear'
 ]
 
 const CHARACTERS_PROGRESS_TIERS = ['start', 'mid', 'top', 'god']
@@ -130,40 +163,7 @@ const CHARACTERS_PROGRESS =
 }
 
 const SALE_ITEMS = {
-	xmassweater: {level:0},
-	pmaceofthedead: {level: 0},
-	hpamulet:{level:0},
-	hpbelt: {level: 0},
-	cclaw:{level:0},
-	stinger:{level:0},
-	vitearring:{level:0},
-	vitring:{level:0},
-	slimestaff: {level: 0},
-	helmet: {level: 0},
-	wcap: {level:0},
-	coat: {level: 0},
-	wattire: {level: 0},
-	helmet1: {level:0},
-	pants1: {level: 0},
-	dexring: {level: 0},
-	dexearring: {level: 0},
-	dexamulet: {level:0},
-	gloves1: {level: 0},
-	pants: {level: 0},
-	wbreeches: {level: 0},
-	gloves: {level: 0},
-	wgloves: {level: 0},
-	coat1: {level: 0},
-	shoes: {level: 0},
-	wshoes: {level: 0},
-	shoes1: {level: 0},
-	ringsj: {level: 0},
-	dagger: {level: 0},
-	hotchocolate: {level: 0},
-	throwingstars: {level: 0},
-	rapier: {level: 0},
-	staffofthedead: {level: 0},
-	spear: {level: 0}
+
 }
 
 const NOT_SALE_ITEMS_ID = 
@@ -174,7 +174,7 @@ const NOT_SALE_ITEMS_ID =
 	xarmor: {level: 5},
 	hpants: {level: 6},
 	xpants: {level: 5},
-	wingedboots: {level: 7},
+	wingedboots: {level: 8},
 	hboots: {level: 6},
 	xboots: {level: 5},
 	intearring: {level: 3},
@@ -196,7 +196,8 @@ const NOT_SALE_ITEMS_ID =
 	mcape: {level: 7},
 	bataxe: {level: 5},
 	cape: {level: 7},
-	bcape: {level: 7}
+	bcape: {level: 7},
+	mittens: {level: 6}
 }
 
 const ITEMS_TO_BUY_PONTY =

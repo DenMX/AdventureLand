@@ -38,7 +38,7 @@ var death = false
 setInterval(isIDead, 5000)
 function isIDead()
 {
-    if(!death && character.rip)
+    if(character.rip)
     {
         try{
             respawn()
