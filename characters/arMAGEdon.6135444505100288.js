@@ -211,6 +211,7 @@ async function summonMates()
 	}
 	finally
 	{
+		change_target(null)
 		setTimeout(summonMates, 2000)
 	}
 }
