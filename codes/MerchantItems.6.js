@@ -56,7 +56,8 @@ const UPGRADE_WEAPONS = {
 	xmace: {level: 6},
 	oozingterror: {level: 5},
 	harbringer: {level: 5},
-	spearofthedead: {level: 7 }
+	spearofthedead: {level: 7},
+	t3bow: {level: 7}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
@@ -122,6 +123,7 @@ const ITEMS_TO_SALE = [
 	'throwingstars',
 	'rapier',
 	'spear',
+	'swifty',
 	//weapon of dead
 	'pmaceofthedead',
 	'swordofthedead',
