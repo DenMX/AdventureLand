@@ -91,6 +91,7 @@ const ITEMS_TO_SALE = [
 	'vitring',
 	'dexring',
 	'dexearring',
+	'dexbelt',
 	'dexamulet',
 	'ringsj',
 
