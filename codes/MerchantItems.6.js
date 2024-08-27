@@ -60,6 +60,7 @@ const UPGRADE_WEAPONS = {
 const NOT_SALE_ITEM_TYPES = ['cape']
 const ITEMS_TO_SALE = [
 	'frogt', 
+	'xmashat',
 	'pstem', 
 	'carrot', 
 	'crabclaw',
@@ -98,6 +99,8 @@ const ITEMS_TO_SALE = [
 	'coat1',
 	'shoes',
 	'wshoes',
+	'snowball',
+	'forscroll',
 	'shoes1',
 	'ringsj',
 	'dagger',
@@ -180,6 +183,7 @@ const NOT_SALE_ITEMS_ID =
 	intearring: {level: 3},
 	strearring: {level: 3},
 	intring: {level: 4},
+	hgloves: {level: 6},
 	strring: {level: 4},
 	intamulet: {level: 3},
 	stramulet: {level: 3},

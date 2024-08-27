@@ -284,7 +284,7 @@ async function switchToBasher()
 
 function myAttack(target)
 {
-	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
+	if((char_action == 'boss' || char_action =='event') && (!parent.entities.Archealer || (getDistance(parent.entities.Archealer, character)> 300 || parent.entities.Archealer.rip))) return
 	change_target(target);
 
 
