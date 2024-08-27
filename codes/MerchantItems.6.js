@@ -36,17 +36,17 @@ const ITEMS_TO_EXCHANGE_IDS = [
 ]
 
 const UPGRADE_WEAPONS = {
-	firestaff: {level: 7},
+	firestaff: {level: 9},
 	firebow: {level: 7},
-	sword: {level: 7},
+	sword: {level: 9},
 	bow: {level: 9},
 	staff: {level:9},
-	fireblade: {level: 8},
+	fireblade: {level: 9},
 	t2bow: {level: 9},
 	hbow: {level:8},
 	basher: {level: 6},
-	ololipop: {level: 7},
-	glolipop: {level: 7},
+	ololipop: {level: 8},
+	glolipop: {level: 8},
 	candycanesword: {level: 8},
 	ornamentstaff: {level: 8},
 	pmace: {level: 8},
@@ -54,61 +54,81 @@ const UPGRADE_WEAPONS = {
 	warmscarf: {level: 9},
 	bataxe: {level: 5},
 	xmace: {level: 6},
-	oozingterror: {level: 5}
+	oozingterror: {level: 5},
+	harbringer: {level: 5},
+	spearofthedead: {level: 7 }
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
 const ITEMS_TO_SALE = [
+	//materials
 	'frogt', 
 	'xmashat',
 	'pstem', 
 	'carrot', 
 	'crabclaw',
 	'smoke', 
+	'ink',
+	'snowball',
+
+	//Elexirs
 	'elixirvit0', 
 	'elixirvit1', 
 	'elixirvit2', 
 	'elixirvit3',
-	'ink',
+
+	//xmass set
 	'rednose',
 	'iceskates',
 	'xmasshoes',
 	'xmassweater',
-	'pmaceofthedead',
+
+	//Jewelery
 	'hpamulet',
 	'hpbelt',
-	'cclaw',
-	'stinger',
 	'vitearring',
 	'vitring',
+	'dexring',
+	'dexearring',
+	'dexamulet',
+	'ringsj',
+
+	//begginers shit
+	'cclaw',
+	'stinger',
 	'slimestaff',
 	'helmet',
 	'wcap',
 	'coat',
 	'wattire',
-	'helmet1',
-	'pants1',
-	'dexring',
-	'dexearring',
-	'dexamulet',
-	'gloves1',
 	'pants',
 	'wbreeches',
 	'gloves',
 	'wgloves',
-	'coat1',
 	'shoes',
 	'wshoes',
-	'snowball',
-	'forscroll',
+
+	//Rugged set
+	'helmet1',
+	'pants1',
+	'gloves1',
 	'shoes1',
-	'ringsj',
+	'coat1',
+
+	//useless weapons
+	'forscroll',
 	'dagger',
 	'hotchocolate',
 	'throwingstars',
 	'rapier',
+	'spear',
+	//weapon of dead
+	'pmaceofthedead',
+	'swordofthedead',
 	'staffofthedead',
-	'spear'
+	'daggerofthedead',
+	'maceofthedead'
+	
 ]
 
 const CHARACTERS_PROGRESS_TIERS = ['start', 'mid', 'top', 'god']

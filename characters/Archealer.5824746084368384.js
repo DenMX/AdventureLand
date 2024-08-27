@@ -22,7 +22,7 @@ async function load_module(module) {
 initialize_character()
 
 async function initialize_character() {
-    // await load_module('Mover')
+    await load_module('Mover')
 	await load_module('Basics')
     await load_module('PotionUse')
     await load_module('State')
@@ -38,6 +38,7 @@ async function initialize_character() {
         }
     }
 	useElixir()
+	usePhaseOut()
 }
 
 
@@ -137,6 +138,24 @@ function attackOrHeal(target)
 
 }
 
+async function usePhaseOut(){
+	if(character.hp<character.max_hp*0.35 && !character.s.phasedout && locate_item('shadowstone')!= -1)
+	{
+		try{
+			await use_skill('phaseout')
+			reduce_cooldown("phaseout", Math.max(...parent.pings))
+		}
+		catch(exception)
+		{
+			console.warn('While phasing out caught exception')
+			console.warn(exception)
+		}
+		finally {
+			setTimeout(usePhaseOut, 4000)
+		}
+	}
+	else setTimeout(usePhaseOut, 1000)
+}
 
 async function passMonsterhuntNext()
 {
