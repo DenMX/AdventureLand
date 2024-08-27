@@ -71,6 +71,7 @@ const ITEMS_TO_SALE = [
 	'smoke', 
 	'ink',
 	'snowball',
+	'dstones',
 
 	//Elexirs
 	'elixirvit0', 
@@ -95,6 +96,10 @@ const ITEMS_TO_SALE = [
 	'dexamulet',
 	'ringsj',
 
+	//scrolls
+	'vitscroll',
+	'forscroll',
+
 	//begginers shit
 	'cclaw',
 	'stinger',
@@ -118,7 +123,6 @@ const ITEMS_TO_SALE = [
 	'coat1',
 
 	//useless weapons
-	'forscroll',
 	'dagger',
 	'hotchocolate',
 	'throwingstars',
