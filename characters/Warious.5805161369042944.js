@@ -202,7 +202,7 @@ async function switchToMainWeapon()
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
-			else if(current_farm_pos.massFarm && current_farm_pos.isCoop && getDistance(get('Archealer'), character)< 250 && !parent.entities.Archealer?.rip && !FARM_BOSSES.includes(parent.ctarget.mtype)) {
+			else if(current_farm_pos.massFarm && current_farm_pos.isCoop && parent.entities.Archealer && getDistance(parent.entities.Archealer, character)< 250 && !parent.entities.Archealer?.rip && (!parent.ctarget || !FARM_BOSSES.includes(parent.ctarget.mtype))) {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}

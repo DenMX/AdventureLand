@@ -120,7 +120,7 @@ async function checkBosses()
 
 async function equipTools(tool)
 {
-	if(character.slots.mainhand && character.slots.mainhand.name == tool) return
+	if(character.slots.mainhand && character.slots.mainhand.name == tool) return true
 	for(let i in character.items)
 	{
 		item = character.items[i]
@@ -128,8 +128,10 @@ async function equipTools(tool)
 		if( item.name == tool)
 		{
 			await equip(i)
+			return true
 		}
 	}
+	return false
 }
 
 async function checkParty()
