@@ -57,7 +57,8 @@ const UPGRADE_WEAPONS = {
 	oozingterror: {level: 5},
 	harbringer: {level: 5},
 	spearofthedead: {level: 7},
-	t3bow: {level: 7}
+	t3bow: {level: 7},
+	crossbow: {level: 7}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
