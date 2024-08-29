@@ -129,6 +129,8 @@ const ITEMS_TO_SALE = [
 	'rapier',
 	'spear',
 	'swifty',
+	'phelmet',
+	
 	//weapon of dead
 	'pmaceofthedead',
 	'swordofthedead',
@@ -210,7 +212,7 @@ const NOT_SALE_ITEMS_ID =
 	intearring: {level: 3},
 	strearring: {level: 3},
 	intring: {level: 4},
-	hgloves: {level: 6},
+	hgloves: {level: 5},
 	strring: {level: 4},
 	intamulet: {level: 3},
 	stramulet: {level: 3},
