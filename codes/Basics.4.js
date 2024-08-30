@@ -155,24 +155,21 @@ function getServerPlayers() {
 }
 
 gettingParty()
-function gettingParty()
+async function gettingParty()
 {
-	if(parent.party_list.length>0) 
+    let party = Object.values(await getServerPlayers()).filter(c => c.name == 'Archealer')
+    my_chars = await getMyCharactersOnline()
+    if(character.party=='') ( party.length > 0 ) ? send_party_request('Archealer') : send_party_request(my_chars[0].name)
+    else if(party && (party[0].party!='' && party[0].party != character.party))
     {
-        setTimeout(gettingParty, 1000)
-        return
+        leave_party()
+        send_party_request('Archealer')
     }
-	let myChars = getMyCharactersOnline()
-	
-	if(myChars.length>0)
-	{
-		for(let char of myChars)
-		{
-			send_party_request(char.name)
-			
-		}
-	}
-	setTimeout(gettingParty, 400)
+    else if(!party && character.party=='')
+    {
+        send_party_request(my_chars[0].name)
+    }
+    setTimeout(gettingParty,5000)
 }
 
 function getMsFromMinutes(minutes)
