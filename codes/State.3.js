@@ -62,6 +62,81 @@ const FARM_LOCATIONS =
 			isCoop: true,
 			massFarm: false,
 			canSolo: false
+		},
+		goo: {
+			location: {x:-34, y:810, map: 'main'}, 
+			mobs: ['goo'],
+			coop: false, 
+			mass_farm: true,
+			canSolo: true
+		},
+		crab:  {
+			location: {x: -1215, y: -9, map: 'main'}, 
+			mobs: ['crab'],
+			coop: false, 
+			mass_farm: true,
+			canSolo: true
+		},
+		arcticbee:  {
+			location: {x: 1000, y: -873, map: 'winterland'},
+			mobs: ['arcticbee'],
+			coop: false,
+			massFarm: true,
+			canSolo: true
+		},
+		osnake:  
+		{
+			location: {x: -590, y: -335, map: 'spookyforest'},
+			mobs: ['osnake'],
+			coop: false,
+			massFarm: true,
+			canSolo: true
+		},
+		// squig:  {coop: false},
+		// armadillo:  {coop: false},
+		rat:  {
+			location: {x: -53, y: -284, map: 'mansion'},
+			mobs: ['rat'],
+			coop: true,
+			massFarm: true,
+			canSolo: true
+		},
+		// croc:  {coop: false},
+		iceroamer:  {
+			location: {x: 1100, y: -3, map: 'winterland'},
+			mobs: ['iceroamer'],
+			coop: true,
+			massFarm: true,
+			canSolo: false
+		},
+		// squigtoad:  {coop: false},
+		poisio:  {
+			location: {x: -121, y: 1360, map: 'main'},
+			mobs: ['poisio'],
+			coop: true,
+			massFarm: true,
+			canSolo: false
+		},
+		scorpion:  {
+			location: {x: 1491, y: -187, map: 'main'},
+			mobs: ['scorpion'],
+			coop: true,
+			massFarm: true,
+			canSolo: false
+		},
+		gscorpion:  {
+			location: {x: 391, y: -1422, map: 'desertland'},
+			mobs: ['gscorpion'],
+			coop: true,
+			massFarm: true,
+			canSolo: false
+		},
+		porcupine:  {
+			location: {x: -829, y: 135, map: 'desertland'},
+			mobs: ['porcupine'],
+			coop: true,
+			massFarm: true,
+			canSolo: true
 		}
 	}
 
@@ -165,8 +240,8 @@ character.on("cm", function(data){
 						}
 						send_item(data.name, i, item.q)
 					}
-					send_gold(data.name, character.gold-10000000)
 				}
+				send_gold(data.name, character.gold-10000000)
 				break;
 			case 'monsterhunt':
 				checkQuest();
@@ -175,11 +250,11 @@ character.on("cm", function(data){
 				let temp = current_farm_pos
 				current_farm_pos = last_farm_pos
 				last_farm_pos = temp
-				smart_move(current_farm_pos.mobs[0])
+				smart_move(current_farm_pos.location)
 				break;
 			case 'farm':
 				char_action = 'farm'
-				smart_move(current_farm_pos.mobs[0])
+				smart_move(current_farm_pos.location)
 				break;
 			case 'boss':
 				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)

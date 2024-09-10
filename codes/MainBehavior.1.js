@@ -1,7 +1,7 @@
 const WHITE_LIST_FOR_QUEST = {
-	goo: {coop: false},
-	bee:  {coop: false},
-	crab:  {coop: false},
+	goo: {name: 'goo', coop: false, mass_farm: true},
+	bee:  {name: 'bee', coop: false, mass_farm: true},
+	crab:  {name: 'crab', coop: false, mass_farm: true},
 	arcticbee:  {coop: false},
 	snake:  {coop: false},
 	osnake:  {coop: false},
@@ -111,7 +111,7 @@ async function checkQuest()
 {
 	if(!character.s.monsterhunt)
 	{
-		attack_mode=false
+		// attack_mode=false
 		goingForQuest = true
 		game_log('try going to monsterhunt')
 		await smart_move({x:108, y: -374, map: 'main'}).then(function(param) { parent.socket.emit('monsterhunt') })
@@ -124,7 +124,7 @@ async function checkQuest()
 		}
 		else  await	passMonsterhuntNext()
 		goingForQuest = false
-		attack_mode=true
+		// attack_mode=true
 	}
 	else if(character.s.monsterhunt?.c == 0)
 	{

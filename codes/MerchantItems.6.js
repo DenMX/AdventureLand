@@ -54,8 +54,8 @@ const UPGRADE_WEAPONS = {
 	warmscarf: {level: 9},
 	bataxe: {level: 5},
 	xmace: {level: 6},
-	oozingterror: {level: 5},
-	harbringer: {level: 5},
+	oozingterror: {level: 7},
+	harbringer: {level: 7},
 	spearofthedead: {level: 7},
 	t3bow: {level: 7},
 	crossbow: {level: 7}

@@ -255,15 +255,15 @@ async function storeUpgradeAndCombine()
 			}
 			
 		}
-		await smart_move('upgrade')
-		await upgradeArmor()
-		await combineItems()
+		
 	}
 	catch(ex) {console.error(ex)}
 	finally
 	{
-		
-		changeState(DEFAULT_STATE)
+
+		await smart_move('upgrade')
+		await upgradeArmor()
+		await combineItems()
 	}
     
 }
@@ -321,7 +321,7 @@ async function upgradeWeapon()
 			}
 		}
 	}
-	changeState(DEFAULT_STATE)
+	if(!character.q)changeState(DEFAULT_STATE)
 }
 
 
@@ -372,7 +372,7 @@ async function upgradeArmor()
 			}			
 		}
 	}
-	changeState(DEFAULT_STATE)
+	if(!character.q)changeState(DEFAULT_STATE)
 	upgradeWeapon()
 	
 }
@@ -419,7 +419,7 @@ async function combineItems()
 	catch(ex) {console.error(ex)}
 	finally
 	{
-		changeState(DEFAULT_STATE)
+		if(!character.q)changeState(DEFAULT_STATE)
 		sellItems()
 	}
 	
