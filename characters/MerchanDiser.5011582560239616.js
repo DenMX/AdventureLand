@@ -56,7 +56,6 @@ async function initChar()
 	await load_module('MerchantItems')
 
 	let getState = get(character.name)
-	//if(getState?.merchant_merch_queue) merch_queue = getState.merchant_merch_queue
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
 	merch_queue.push(checkItemsCount)
@@ -105,8 +104,7 @@ function saveState()
 		y: character.y,
 		map: character.map,
 		last_cyber_check: cyberland_check,
-		last_bank_check: bank_check,
-		merchant_merch_queue: merch_queue
+		last_bank_check: bank_check
 	}
 	set(character.name, state)
 }

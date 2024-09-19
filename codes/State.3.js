@@ -306,16 +306,16 @@ async function handleBoss(boss)
 	current_boss = boss	
 }
 
-async function handleEvent(name, event)
+async function handleEvent(eventName, gevent)
 {
-	console.log('Got an event: '+name)
-	current_event = { name: name, event: event }
+	console.log('Got an event: '+eventName)
+	current_event = { name: eventName, event: gevent }
 	char_action = 'event'
-	if(['icegolem','goobrawl'].includes(name)){
-		join(name)
+	if(['icegolem','goobrawl'].includes(eventName)){
+		join(eventName)
 		return;
 	}
-	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(event)
+	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(gevent)
 }
 
 

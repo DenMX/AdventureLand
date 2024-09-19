@@ -188,7 +188,7 @@ async function switchToMainWeapon()
 
 	switch(char_action){
 		case 'event':
-			if(current_event.name == 'goobrawl') {
+			if(current_event?.name == 'goobrawl') {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
