@@ -30,7 +30,6 @@ async function checkPots()
 				await buy_with_gold(char_state.mpot_grade, mp_pots_count)
 				sendPots(char_state.name, char_state.mpot_grade, mp_pots_count)
 			}
-			sendElixir(i.name)
 		}
 	}
 	setTimeout(checkPots, getMsFromMinutes(1))
@@ -46,27 +45,6 @@ async function sendPots(char, pot, count)
 		{
 			await send_item(char, i, count);
 			return;
-		}
-	}
-}
-
-async function sendElixir(name) {
-	if(!parent.entities[name]) return
-	ctype = parent.entities[name].ctype
-	for(let i in character.items) {
-		item = character.items[i]
-		if(!item) continue
-		switch (ctype) {
-			case 'warrior':
-				if(item.name.includes('elixirstr'))
-				await send_item(name, i, item.q)
-			break;
-			case 'mage':
-				if(!parent.entities[name].slots.elixir) {
-					if(item.name.includes('elixirint'))
-					await send_item(name, i, item.q/2)
-				}
-			break;
 		}
 	}
 }

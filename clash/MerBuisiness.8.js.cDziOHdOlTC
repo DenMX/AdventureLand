@@ -50,7 +50,7 @@ async function mining()
 		await sleep(15000)
 	}
 	changeState(DEFAULT_STATE)
-	await equipTools('broom')
+	await unequip('mainhand')
 	scheduler(mining)
 }
 
@@ -64,27 +64,16 @@ async function fishing()
 	}
 	changeState('Going to fishing')
 	await smart_move(FISHING_POS)
-	try {
-		let rod = await equipTools('rod')
-		if(rod) {
-			changeState('Fishing...')
-			while(!is_on_cooldown('fishing'))
-			{
-				await use_skill('fishing')
-				await sleep(15000)
-			}
-		}
-	}
-	catch(Ex)
+	await equipTools('rod')
+	changeState('Fishing...')
+	while(!is_on_cooldown('fishing'))
 	{
-		console.warn('Error fishing')
-		console.error(Ex)
+		await use_skill('fishing')
+		await sleep(15000)
 	}
-	finally {
-		changeState(DEFAULT_STATE)
-		await equipTools('broom')
-		scheduler(fishing)
-	}
+	changeState(DEFAULT_STATE)
+	await unequip('mainhand')
+	scheduler(fishing)
 }
 
 
@@ -120,7 +109,7 @@ async function checkBosses()
 
 async function equipTools(tool)
 {
-	if(character.slots.mainhand && character.slots.mainhand.name == tool) return true
+	if(character.slots.mainhand && character.slots.mainhand.name == tool) return
 	for(let i in character.items)
 	{
 		item = character.items[i]
@@ -128,10 +117,8 @@ async function equipTools(tool)
 		if( item.name == tool)
 		{
 			await equip(i)
-			return true
 		}
 	}
-	return false
 }
 
 async function checkParty()
@@ -255,15 +242,15 @@ async function storeUpgradeAndCombine()
 			}
 			
 		}
-		
+		await smart_move('upgrade')
+		await upgradeArmor()
+		await combineItems()
 	}
 	catch(ex) {console.error(ex)}
 	finally
 	{
-
-		await smart_move('upgrade')
-		await upgradeArmor()
-		await combineItems()
+		
+		changeState(DEFAULT_STATE)
 	}
     
 }
@@ -321,7 +308,7 @@ async function upgradeWeapon()
 			}
 		}
 	}
-	if(!character.q)changeState(DEFAULT_STATE)
+	changeState(DEFAULT_STATE)
 }
 
 
@@ -372,7 +359,7 @@ async function upgradeArmor()
 			}			
 		}
 	}
-	if(!character.q)changeState(DEFAULT_STATE)
+	changeState(DEFAULT_STATE)
 	upgradeWeapon()
 	
 }
@@ -419,7 +406,7 @@ async function combineItems()
 	catch(ex) {console.error(ex)}
 	finally
 	{
-		if(!character.q)changeState(DEFAULT_STATE)
+		changeState(DEFAULT_STATE)
 		sellItems()
 	}
 	

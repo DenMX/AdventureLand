@@ -22,7 +22,7 @@ async function load_module(module) {
 initialize_character()
 
 async function initialize_character() {
-    await load_module('Mover')
+    // await load_module('Mover')
 	await load_module('Basics')
     await load_module('PotionUse')
     await load_module('State')
@@ -38,7 +38,6 @@ async function initialize_character() {
         }
     }
 	useElixir()
-	usePhaseOut()
 }
 
 
@@ -117,7 +116,7 @@ function attackOrHeal(target)
 		   return;
 	    }
 	}
-	if(!target) return;
+
 	change_target(target);
 	useSkills(target);
 	if(!is_in_range(target))
@@ -130,32 +129,14 @@ function attackOrHeal(target)
 	}
 	else if(can_attack(target))
 	{
-		// if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-		
+		if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+		set_message("Attacking");
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
 	}
 
 }
 
-async function usePhaseOut(){
-	if(character.hp<character.max_hp*0.35 && !character.s.phasedout && locate_item('shadowstone')!= -1)
-	{
-		try{
-			await use_skill('phaseout')
-			reduce_cooldown("phaseout", Math.max(...parent.pings))
-		}
-		catch(exception)
-		{
-			console.warn('While phasing out caught exception')
-			console.warn(exception)
-		}
-		finally {
-			setTimeout(usePhaseOut, 4000)
-		}
-	}
-	else setTimeout(usePhaseOut, 1000)
-}
 
 async function passMonsterhuntNext()
 {
@@ -213,7 +194,7 @@ async function pullmobsFromMember()
 
 async function pullmobs()
 {
-	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (char_action=='farm' && !current_farm_pos.isCoop)) return;
+	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (action=='farm' && !current_farm_pos.isCoop)) return;
 	let near_members = Object.values(parent.entities).filter(e=> (MY_CHARACTERS.includes(e.name) || ADD_PARTY.includes(e.name)) && is_in_range(e, 'absorb'))
 	for(let i of near_members)
 	{
@@ -232,7 +213,7 @@ async function pullmobs()
 
 async function useDarkBlessing()
 {
-	if(char_action=='farm' && !current_farm_pos.isCoop)return
+	if(action=='farm' && !current_farm_pos.isCoop)return
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
 		await use_skill('darkblessing').catch(() => {})

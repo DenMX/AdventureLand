@@ -38,7 +38,7 @@ var death = false
 setInterval(isIDead, 5000)
 function isIDead()
 {
-    if(character.rip)
+    if(!death && character.rip)
     {
         try{
             respawn()
@@ -155,10 +155,9 @@ function getServerPlayers() {
 }
 
 gettingParty()
-async function gettingParty()
+function gettingParty()
 {
-
-    if(parent.party_list.length>0) 
+	if(parent.party_list.length>0) 
     {
         setTimeout(gettingParty, 1000)
         return
@@ -174,20 +173,6 @@ async function gettingParty()
 		}
 	}
 	setTimeout(gettingParty, 400)
-
-    // let party = Object.values(await getServerPlayers()).filter(c => c.name == 'Archealer')
-    // my_chars = await getMyCharactersOnline()
-    // if(character.party=='') ( party.length > 0 ) ? send_party_request('Archealer') : send_party_request(my_chars[0].name)
-    // else if(party && (party[0].party!='' && party[0].party != character.party))
-    // {
-    //     leave_party()
-    //     send_party_request('Archealer')
-    // }
-    // else if(!party && character.party=='')
-    // {
-    //     send_party_request(my_chars[0].name)
-    // }
-    // setTimeout(gettingParty,5000)
 }
 
 function getMsFromMinutes(minutes)

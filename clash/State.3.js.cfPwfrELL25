@@ -48,95 +48,6 @@ const FARM_LOCATIONS =
 			isCoop: true,
 			massFarm: true,
 			canSolo: false
-		},
-		boar: {
-			location: {x: 153, y: -910, map: 'winterland'},
-			mobs: ['boar'],
-			isCoop: true,
-			massFarm: true,
-			canSolo: false
-		},
-		stoneworm: {
-			location: {x:850, y:-80, map: 'spookytown'},
-			mobs: ['stoneworm'],
-			isCoop: true,
-			massFarm: false,
-			canSolo: false
-		},
-		goo: {
-			location: {x:-34, y:810, map: 'main'}, 
-			mobs: ['goo'],
-			coop: false, 
-			mass_farm: true,
-			canSolo: true
-		},
-		crab:  {
-			location: {x: -1215, y: -9, map: 'main'}, 
-			mobs: ['crab'],
-			coop: false, 
-			mass_farm: true,
-			canSolo: true
-		},
-		arcticbee:  {
-			location: {x: 1000, y: -873, map: 'winterland'},
-			mobs: ['arcticbee'],
-			coop: false,
-			massFarm: true,
-			canSolo: true
-		},
-		osnake:  
-		{
-			location: {x: -590, y: -335, map: 'spookyforest'},
-			mobs: ['osnake'],
-			coop: false,
-			massFarm: true,
-			canSolo: true
-		},
-		// squig:  {coop: false},
-		// armadillo:  {coop: false},
-		rat:  {
-			location: {x: -53, y: -284, map: 'mansion'},
-			mobs: ['rat'],
-			coop: true,
-			massFarm: true,
-			canSolo: true
-		},
-		// croc:  {coop: false},
-		iceroamer:  {
-			location: {x: 1100, y: -3, map: 'winterland'},
-			mobs: ['iceroamer'],
-			coop: true,
-			massFarm: true,
-			canSolo: false
-		},
-		// squigtoad:  {coop: false},
-		poisio:  {
-			location: {x: -121, y: 1360, map: 'main'},
-			mobs: ['poisio'],
-			coop: true,
-			massFarm: true,
-			canSolo: false
-		},
-		scorpion:  {
-			location: {x: 1491, y: -187, map: 'main'},
-			mobs: ['scorpion'],
-			coop: true,
-			massFarm: true,
-			canSolo: false
-		},
-		gscorpion:  {
-			location: {x: 391, y: -1422, map: 'desertland'},
-			mobs: ['gscorpion'],
-			coop: true,
-			massFarm: true,
-			canSolo: false
-		},
-		porcupine:  {
-			location: {x: -829, y: 135, map: 'desertland'},
-			mobs: ['porcupine'],
-			coop: true,
-			massFarm: true,
-			canSolo: true
 		}
 	}
 
@@ -155,7 +66,7 @@ var current_boss
 var current_event
 var attack_mode=true
 var curState
-var char_action
+var action
 
 
 
@@ -166,7 +77,7 @@ function getState()
 	{ 
 		curState = get(character.name)
 		current_farm_pos = curState.farm_location
-		char_action = (ACTIONS.includes(curState.current_action)) ? curState.current_action : 'farm'
+		action = (ACTIONS.includes(curState.current_action)) ? curState.current_action : 'farm'
 		current_boss = curState.current_boss ? curState.current_boss : null
 		boss_schedule = curState.bosses ? curState.bosses : []
 	}
@@ -198,7 +109,7 @@ async function saveState()
 		equip: character.slots,
 		have_pc: pc,
 		s: character.s,
-		current_action: char_action,
+		current_action: action,
 		current_boss: current_boss,
 		bosses: boss_schedule,
 		current_event: current_event
@@ -238,10 +149,9 @@ character.on("cm", function(data){
 						{
 							if(item.name == pi.name && item.level == pi.level) continue outer
 						}
-						send_item(data.name, i, item.q)
+						send_item(data.name, i)
 					}
 				}
-				send_gold(data.name, character.gold-10000000)
 				break;
 			case 'monsterhunt':
 				checkQuest();
@@ -250,11 +160,11 @@ character.on("cm", function(data){
 				let temp = current_farm_pos
 				current_farm_pos = last_farm_pos
 				last_farm_pos = temp
-				smart_move(current_farm_pos.location)
+				smart_move(current_farm_pos.mobs[0])
 				break;
 			case 'farm':
-				char_action = 'farm'
-				smart_move(current_farm_pos.location)
+				action = 'farm'
+				smart_move(current_farm_pos.mobs[0])
 				break;
 			case 'boss':
 				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)
@@ -274,7 +184,7 @@ character.on("cm", function(data){
 		{
 			last_farm_pos = current_farm_pos
 			current_farm_pos=FARM_LOCATIONS[data.message.mob]
-			if(char_action=='farm' && !smart.moving && getDistance(character, current_farm_pos.location)> 500) smart_move(current_farm_pos.location)
+			if(action=='farm' && !smart.moving && getDistance(character, current_farm_pos.location)> 500) smart_move(current_farm_pos.location)
 		}
 		else
 		{
@@ -288,34 +198,28 @@ character.on("cm", function(data){
 
 			}
 			attack_mode=true
-			if(char_action=='farm')smart_move(mob)
+			if(action=='farm')smart_move(mob)
 		}
 	}
 	else console.warn('Unknown command')
 })
 
-//function for faster command from browser
-function farm(pos) {
-	send_cm(parent.party_list, pos)
-}
-
 async function handleBoss(boss)
 {
-	console.log('Get a boss: '+boss.name+' current action:'+char_action+'\nBosses in progress: '+boss_schedule.length)
-	char_action = 'boss'
+	console.log('Get a boss: '+boss.name+' current action:'+action+'\nBosses in progress: '+boss_schedule.length)
+	action = 'boss'
 	current_boss = boss	
 }
 
-async function handleEvent(eventName, gevent)
+async function handleEvent(name, event)
 {
-	console.log('Got an event: '+eventName)
-	current_event = { name: eventName, event: gevent }
-	char_action = 'event'
-	if(['icegolem','goobrawl'].includes(eventName)){
-		join(eventName)
+	console.log('Got an event: '+name)
+	current_event = { name: name, event: event }
+	if(['icegolem','goobrawl'].includes(name)){
+		join(name)
 		return;
 	}
-	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(gevent)
+	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(event)
 }
 
 
@@ -350,7 +254,7 @@ async function sendItems()
 								{
 									if(item.name == pi.name && item.level == pi.level) continue outer
 								}
-								await send_item(i.name, it, item.q).catch(() => {})
+								send_item(i.name, it, item.q)
 							}
 						}
 					await send_gold(i.name, character.gold)
@@ -368,7 +272,7 @@ async function sendItems()
 	}
 	finally
 	{
-		setTimeout(sendItems, 30000)
+		setTimeout(sendItems, 3000)
 	}
 	
 }
