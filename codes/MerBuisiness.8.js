@@ -321,7 +321,7 @@ async function upgradeWeapon()
 			}
 		}
 	}
-	if(!character.q)changeState(DEFAULT_STATE)
+	changeState(DEFAULT_STATE)
 }
 
 
@@ -372,7 +372,7 @@ async function upgradeArmor()
 			}			
 		}
 	}
-	if(!character.q)changeState(DEFAULT_STATE)
+	changeState(DEFAULT_STATE)
 	upgradeWeapon()
 	
 }
@@ -419,7 +419,7 @@ async function combineItems()
 	catch(ex) {console.error(ex)}
 	finally
 	{
-		if(!character.q)changeState(DEFAULT_STATE)
+		changeState(DEFAULT_STATE)
 		sellItems()
 	}
 	
