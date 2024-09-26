@@ -310,14 +310,29 @@ async function upgradeWeapon()
 			if(!UPGRADE_WEAPONS[item.name] || UPGRADE_WEAPONS[item.name].level<= item.level) continue
 
 			if(!character.s.massproductionpp) await use_skill('massproductionpp')
+
 			if(findScroll(grade) != null)
 			{
-				await upgrade(i, findScroll(grade))
+				try
+				{
+					await upgrade(i, findScroll(grade))
+				}
+				catch(ex)
+				{
+					console.warn(ex)
+				}
 			} 
 			else
 			{
-				await buy_with_gold('scroll'+grade, 1)
-				await upgrade(i, findScroll(grade))
+				try
+				{
+					await buy_with_gold('scroll'+grade, 1)
+					await upgrade(i, findScroll(grade))
+				}
+				catch(ex)
+				{
+					console.warn(ex)
+				}
 			}
 		}
 	}
@@ -351,8 +366,8 @@ async function upgradeArmor()
 	{
 		for(let i=0; i<character.items.length; i++)
 		{
-			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j 
-			|| !NOT_SALE_ITEMS_ID[character.items[i].name] || NOT_SALE_ITEMS_ID[character.items[i].name].level <=j){
+			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] ||
+				(NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] && NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j)){
 				continue;
 			} 
 			let item = character.items[i]
@@ -363,13 +378,27 @@ async function upgradeArmor()
 
 			if(findScroll(grade) != null)
 			{
-				await upgrade(i, findScroll(grade))
+				try
+				{
+					await upgrade(i, findScroll(grade))
+				}
+				catch(ex)
+				{
+					console.warn(ex)
+				}
 			} 
 			else
 			{
-				await buy_with_gold('scroll'+grade, 1)
-				await upgrade(i, findScroll(grade))
-			}			
+				try
+				{
+					await buy_with_gold('scroll'+grade, 1)
+					await upgrade(i, findScroll(grade))
+				}
+				catch(ex)
+				{
+					console.warn(ex)
+				}
+			}				
 		}
 	}
 	changeState(DEFAULT_STATE)
@@ -382,13 +411,11 @@ async function combineItems()
 {
 	try
 	{
-		changeState('Compuonding..')
 		for(var lvl=0; lvl<4; lvl++)
 		{
 			for(let slot=0; slot<character.items.length; slot++)
 			{
 				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) ) continue
-				
 				let item=character.items[slot]
 				let gItem = G.items[item.name]
 				if(NOT_SALE_ITEMS_ID[gItem.id] && item.level >= NOT_SALE_ITEMS_ID[gItem.id].level) continue
@@ -407,10 +434,17 @@ async function combineItems()
 					{
 						let grade = getGrade(gItem, lvl)
 						let cscrolls = await findCScroll(grade)
-						if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-						if(!character.s.massproductionpp) use_skill('massproductionpp')
-						await compound(items[0],items[1],items[2],findCScroll(grade))
-						break;
+						try
+						{
+							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
+							if(!character.s.massproductionpp) await use_skill('massproductionpp')
+							await compound(items[0],items[1],items[2],findCScroll(grade))
+							break;
+						}
+						catch(ex)
+						{
+							console.warn(ex)
+						}
 					}
 				}	
 			}
