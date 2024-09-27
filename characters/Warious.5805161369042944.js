@@ -111,7 +111,7 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && char_action == 'farm' && 
+	if(!is_on_cooldown('agitate') && char_action == 'farm' && getDistance(get('Archealer'), character)<250 &&
 	 Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) 
 	   && e.target!=character.name && is_in_range(e, 'agitate')).length > 2 && current_farm_pos.massFarm)
 	{
