@@ -85,6 +85,7 @@ const ITEMS_TO_SALE = [
 	'iceskates',
 	'xmasshoes',
 	'xmassweater',
+	'xmaspants',
 
 	//Jewelery
 	'hpamulet',
