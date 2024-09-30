@@ -238,7 +238,7 @@ async function storeUpgradeAndCombine()
 	
 	try 
 	{
-		console.warn('Try to store item')
+		console.warn('Storing items...')
 		for(i=0; i<character.items.length; i++){
 			
 			
@@ -263,7 +263,6 @@ async function storeUpgradeAndCombine()
 
 		await smart_move('upgrade')
 		await upgradeArmor()
-		await combineItems()
 	}
     
 }
@@ -337,6 +336,7 @@ async function upgradeWeapon()
 		}
 	}
 	changeState(DEFAULT_STATE)
+	combineItems()
 }
 
 
@@ -477,6 +477,7 @@ function findCScroll(grade)
 
 async function sellItems()
 {
+	changeState('Selling items...')
 	for(let i in character.items)
 	{
 		let item = character.items[i]
@@ -484,6 +485,14 @@ async function sellItems()
 		if((SALE_ITEMS[item.name] && SALE_ITEMS[item.name].level <= item.level) || ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 	shuffleItems()
+	if(itemsCount() == 42)
+	{
+		await smart_move('bank').then(storeUpgradeAndCombine)
+	}
+	else
+	{
+		upgradeArmor()
+	}
 }
 
 
