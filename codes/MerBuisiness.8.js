@@ -359,50 +359,56 @@ async function buyWeapon()
 async function upgradeArmor()
 {
 	changeState('Upgrading armor..')
-	await smart_move('upgrade')
-	if(itemsCount()==42) sellItems()
-	exchangeItems()
-	for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
+	try
 	{
-		for(let i=0; i<character.items.length; i++)
+		await smart_move('upgrade')
+		exchangeItems()
+		for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
 		{
-			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] ||
-				(NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] && NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j)){
-				continue;
-			} 
-			let item = character.items[i]
-			let gItem = G.items[item.name]
-			let grade = getGrade(gItem, item.level)
-
-			if(!character.s.massproductionpp) await use_skill('massproductionpp')
-
-			if(findScroll(grade) != null)
+			for(let i=0; i<character.items.length; i++)
 			{
-				try
+				if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] ||
+					(NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] && NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j)){
+					continue;
+				} 
+				let item = character.items[i]
+				let gItem = G.items[item.name]
+				let grade = getGrade(gItem, item.level)
+
+				if(!character.s.massproductionpp) await use_skill('massproductionpp')
+
+				if(findScroll(grade) != null)
 				{
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
+					try
+					{
+						await upgrade(i, findScroll(grade))
+					}
+					catch(ex)
+					{
+						console.warn(ex)
+					}
+				} 
+				else
 				{
-					console.warn(ex)
-				}
-			} 
-			else
-			{
-				try
-				{
-					await buy_with_gold('scroll'+grade, 1)
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
-				{
-					console.warn(ex)
-				}
-			}				
+					try
+					{
+						await buy_with_gold('scroll'+grade, 1)
+						await upgrade(i, findScroll(grade))
+					}
+					catch(ex)
+					{
+						console.warn(ex)
+					}
+				}				
+			}
 		}
 	}
-	changeState(DEFAULT_STATE)
-	upgradeWeapon()
+	catch(Ex) { console.error(Ex)}
+	finally
+	{
+		changeState(DEFAULT_STATE)
+		upgradeWeapon()
+	}
 	
 }
 
