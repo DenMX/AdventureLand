@@ -460,7 +460,6 @@ async function combineItems()
 	finally
 	{
 		changeState(DEFAULT_STATE)
-		sellItems()
 	}
 	
 }

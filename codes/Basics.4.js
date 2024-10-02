@@ -18,6 +18,9 @@ const FARM_BOSSES = [
     "skeletor",
 	"bgoo",
 	"wabbit",
+    "mrpumpkin",
+    "mrgreen",
+
 
 	// Crypt bosses
 	"a7",
@@ -28,7 +31,9 @@ const EVENTS = [
     {name: 'snowman', useSkills: false, massFarm: false, targets: ['snowman']}, 
     {name: 'dragold', useSkills:true, massFarm: true, targets: []},
     {name: 'goobrawl', useSkills: true, massFarm: true, targets: ['bgoo']}, 
-    {name: 'icegolem', useSkills: true, massFarm: false, targets: ['icegolem']}
+    {name: 'icegolem', useSkills: true, massFarm: false, targets: ['icegolem']},
+    {name: 'mrgreen', useSkills: true, massFarm: false, targets: ['mrgreen']},
+    {name: 'mrpumpkin', useSkills: true, massFarm: false, targets: ['mrpumpkin']}
 ]
 
 const ADD_PARTY = ['man1', 'men2', 'men3']

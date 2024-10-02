@@ -115,9 +115,17 @@ async function checkEvents()
 	{
 		if(parent.S[e.name])
 		{
-			send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
-			check_bosses = false
-			waitEventEnds(e.name)
+			if((e.name == 'mrpumpkin' || e.name  == 'mrgreen') && parent.S[e.name].live)
+			{
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
+				
+			}
+			else 
+			{
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
+				check_bosses = false
+				waitEventEnds(e.name)
+			}
 		}
 	}
 }
