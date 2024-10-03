@@ -163,9 +163,16 @@ async function mageHandleBoss(boss)
 		boss_schedule.push(boss)
 		return;
 	}
-	char_action = 'boss'
-	current_boss = boss
-	smart_move(boss)
+	else if(parent.ctarget && !FARM_BOSSES.includes(parent.ctarget?.mtype) && char_action != 'event' && char_action != 'boss' && !bossReceived(boss))
+	{
+		char_action = 'boss'
+		current_boss = boss
+		smart_move(boss)
+	}
+	else {
+		if(!bossReceived(boss)) boss_schedule.push(boss)
+	}
+	
 }
 
 function bossReceived(boss)

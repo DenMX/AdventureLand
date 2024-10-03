@@ -132,7 +132,12 @@ const ITEMS_TO_SALE = [
 	'spear',
 	'swifty',
 	'phelmet',
-	
+
+	//halloween
+	'gphelmet',
+	'skullamulet',
+	'lantern',
+
 	//weapon of dead
 	'pmaceofthedead',
 	'swordofthedead',

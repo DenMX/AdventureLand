@@ -74,30 +74,37 @@ async function checkState() {
 			break;
 		case 'event':
 			set_message('Event')
-			if(getDistance(current_event.event, character)> 500 && !character.moving && !FARM_BOSSES.includes(get_targeted_moster().mtype))
+			if(current_event)
+			{
+				if(getDistance(current_event?.event, character)> 500 && !character.moving && parent.ctarget && !FARM_BOSSES.includes(parent.ctarget?.mtype))
 				{ 
 					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
 					else await smart_move(current_event.event)
 				}
-			else if(getDistance(current_event.event, character)<= 500 && bosses.length == 0)
-			{
-				if(current_event.name == 'icegolem') await town()
-				if(boss_schedule.length>0 && !current_boss)
+				else if(getDistance(current_event?.event, character)<= 500 && bosses.length == 0)
 				{
-					current_boss=boss_schedule.shift()
-					console.log('Switching action '+char_action+' to boss')
-					char_action='boss'
-					current_event = null
+					if(current_event.name == 'icegolem') await town()
+
+					if(event_schedule.length>0)
+					{
+						current_event = event_schedule.shift()
+					}
+					else if(boss_schedule.length>0 && !current_boss)
+					{
+						current_boss=boss_schedule.shift()
+						console.log('Switching action '+char_action+' to boss')
+						char_action='boss'
+						current_event = null
+					}
+					else if(current_boss) char_action = 'boss'
 				}
-				else if(current_boss) char_action = 'boss'
-				else
+			} 
+			else
 				{
 					console.log('Switching action '+char_action+' to farm')
 					char_action = 'farm'
 					current_event = null
 				}
-				
-			} 
 			break;
 
 	}
