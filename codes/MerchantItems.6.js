@@ -221,6 +221,7 @@ const NOT_SALE_ITEMS_ID =
 	intring: {level: 4},
 	hgloves: {level: 5},
 	strring: {level: 4},
+	jacko: {level: 3},
 	intamulet: {level: 3},
 	stramulet: {level: 3},
 	strbelt: {level: 3},

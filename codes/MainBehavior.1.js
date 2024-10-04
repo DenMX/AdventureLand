@@ -56,8 +56,8 @@ async function checkState() {
 			break;
 		case 'boss':
 			set_message('Bossing...')
-			if(getDistance(current_boss, character)> 500 && !smart.moving) await smart_move(current_boss)
-			else if(getDistance(current_boss, character)<= 500 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
+			if(current_boss && getDistance(current_boss, character)> 500 && !smart.moving) await smart_move(current_boss)
+			else if((!current_boss || getDistance(current_boss, character)<= 500) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
 			{
 				if(boss_schedule.length>0)
 				{
