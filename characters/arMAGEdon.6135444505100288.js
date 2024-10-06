@@ -175,13 +175,6 @@ async function mageHandleBoss(boss)
 	
 }
 
-function bossReceived(boss)
-{
-	for(let b of boss_schedule) {
-		if(b.name==boss.name) return true
-	}
-	return false
-}
 
 async function summonMates()
 {
@@ -203,6 +196,10 @@ async function summonMates()
 				await use_skill('magiport', member).catch(() => {})
 				await send_cm(member, {cmd: 'boss', boss: current_boss})
 				return
+			}
+			else if(char_action == 'event' && current_event && distance>250)
+			{
+				await use_skill('magiport', member).catch(() => {})
 			}
 			else if(curState.current_action == char_action && char_action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && distance > 500)
 			{

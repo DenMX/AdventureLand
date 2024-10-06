@@ -50,64 +50,47 @@ async function checkState() {
 	switch(char_action){
 		case 'farm':
 			set_message('Farming...')
-			if(Object.values(parent.entities).filter(e=> current_farm_pos.mobs.includes(e.mtype)).length>0) return
-			else if(!smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
-				current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
+			if(!smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
+				(current_farm_pos?.location) ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
 			break;
 		case 'boss':
 			set_message('Bossing...')
-			if(current_boss && getDistance(current_boss, character)> 500 && !smart.moving) await smart_move(current_boss)
-			else if((!current_boss || getDistance(current_boss, character)<= 500) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length == 0) 
-			{
-				if(boss_schedule.length>0)
-				{
-					current_boss=boss_schedule.shift()
-					await smart_move(current_boss)
-				}
-				else
-				{
-					console.log('Switching action '+char_action+' to farm')
-					char_action = 'farm'
-					current_boss = null
-				}
-			}
+			checkAction('boss', current_boss, boss_schedule)
 			break;
 		case 'event':
 			set_message('Event')
-			if(current_event)
-			{
-				if(getDistance(current_event?.event, character)> 500 && !character.moving && parent.ctarget && !FARM_BOSSES.includes(parent.ctarget?.mtype))
-				{ 
-					if(['goobrawl', 'icegolem'].includes(current_event.name)) join(current_event.name)
-					else await smart_move(current_event.event)
-				}
-				else if(getDistance(current_event?.event, character)<= 500 && bosses.length == 0)
-				{
-					if(current_event.name == 'icegolem') await town()
-
-					if(event_schedule.length>0)
-					{
-						current_event = event_schedule.shift()
-					}
-					else if(boss_schedule.length>0 && !current_boss)
-					{
-						current_boss=boss_schedule.shift()
-						console.log('Switching action '+char_action+' to boss')
-						char_action='boss'
-						current_event = null
-					}
-					else if(current_boss) char_action = 'boss'
-				}
-			} 
-			else
-				{
-					console.log('Switching action '+char_action+' to farm')
-					char_action = 'farm'
-					current_event = null
-				}
+			checkAction('event', current_event, event_schedule)
 			break;
 
 	}
+}
+
+
+async function checkAction(action, cur_point, schedule) {
+
+	if(cur_point && getDistance(character, cur_point)>500 && !character.moving)  {
+		(action=='boss') ? await smart_move(cur_point) : await smart_move(cur_point.event)
+	}
+	else if(!cur_point || (cur_point && getDistance(character, cur_point) <= 500 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
+	{
+		if(schedule.length>0) {
+			cur_point = schedule.shift()
+			(action=='boss') ? await smart_move(cur_point) : await smart_move(cur_point.event)
+		}
+		else {
+			if(action == 'boss') { 
+				char_action = 'farm' 
+				current_boss = null
+			}
+			else if(action == 'event'){
+				char_action = 'boss'
+				current_event = null
+				checkAction('boss', current_boss, boss_schedule)
+			}
+		}
+	}
+		
+
 }
 
 //-------------MONSTERHUNT LOGIC-------------------//

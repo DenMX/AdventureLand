@@ -303,8 +303,24 @@ function farm(pos) {
 async function handleBoss(boss)
 {
 	console.log('Get a boss: '+boss.name+' current action:'+char_action+'\nBosses in progress: '+boss_schedule.length)
-	char_action = 'boss'
-	current_boss = boss	
+	if(char_action == 'farm')
+	{
+		char_action == 'boss'
+		current_boss = boss
+		if(getDistance(character, current_boss)>500) await smart_move(current_boss)
+	}
+	else if(!bossReceived(boss)){
+		boss_schedule.push(boss)
+	}
+	
+}
+
+function bossReceived(boss)
+{
+	for(let b of boss_schedule) {
+		if(b.name==boss.name) return true
+	}
+	return false
 }
 
 async function handleEvent(eventName, gevent)

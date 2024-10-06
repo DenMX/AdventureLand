@@ -179,20 +179,6 @@ async function gettingParty()
 		}
 	}
 	setTimeout(gettingParty, 400)
-
-    // let party = Object.values(await getServerPlayers()).filter(c => c.name == 'Archealer')
-    // my_chars = await getMyCharactersOnline()
-    // if(character.party=='') ( party.length > 0 ) ? send_party_request('Archealer') : send_party_request(my_chars[0].name)
-    // else if(party && (party[0].party!='' && party[0].party != character.party))
-    // {
-    //     leave_party()
-    //     send_party_request('Archealer')
-    // }
-    // else if(!party && character.party=='')
-    // {
-    //     send_party_request(my_chars[0].name)
-    // }
-    // setTimeout(gettingParty,5000)
 }
 
 function getMsFromMinutes(minutes)
