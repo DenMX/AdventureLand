@@ -58,7 +58,8 @@ const UPGRADE_WEAPONS = {
 	harbringer: {level: 7},
 	spearofthedead: {level: 7},
 	t3bow: {level: 7},
-	crossbow: {level: 7}
+	crossbow: {level: 7},
+	broom: {level: 7}
 }
 
 const NOT_SALE_ITEM_TYPES = ['cape']
@@ -143,63 +144,11 @@ const ITEMS_TO_SALE = [
 	'swordofthedead',
 	'staffofthedead',
 	'daggerofthedead',
-	'maceofthedead'
+	'maceofthedead',
+	'bowofthedead'
 	
 ]
 
-const CHARACTERS_PROGRESS_TIERS = ['start', 'mid', 'top', 'god']
-
-const CHARACTERS_PROGRESS = 
-{
-	aRanDonDon:{
-		god:{ 
-			helmet: 'xhelmet',
-			chest: 'xarmor',
-			pants: 'xpants',
-			gloves: 'xgloves',
-			shoes: 'xboots',
-			weapon: 'crossbow',
-			rings: 'suckerpunch',
-			earrings: 'molesteeth',
-			offhand: 't2quiver',
-			amulet: 'bfangamulet',
-			belt: 'mbelt'
-		},
-		top:{
-			helmet: 'hhelmet',
-			chest: 'harmor',
-			pants: 'hpants',
-			gloves: 'hgloves',
-			shoes: 'hboots',
-			weapon: 'crossbow',
-			rings: 'ctristone',
-			earrings: 'molesteeth',
-			offhand: 't2quiver'
-		},
-		mid:{
-			helmet: 'helmet1',
-			chest: 'coat1',
-			pants: 'pants1',
-			gloves: 'gloves1',
-			shoes: 'shoes1',
-			weapon: 'firebow',
-			rings: 'ctristone',
-			earrings: 'dexearring',
-			offhand: 'quiver'
-		},
-		start:{
-			helmet: 'helmet1',
-			chest: 'coat1',
-			pants: 'pants1',
-			gloves: 'gloves1',
-			shoes: 'shoes1',
-			weapon: 'bow',
-			rings: 'dexring',
-			earrings: 'dexearring',
-			offhand: 'quiver'
-		}
-	}
-}
 
 const SALE_ITEMS = {
 
