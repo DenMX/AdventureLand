@@ -180,7 +180,7 @@ async function pullmobsFromMember()
 	{
 		if(!is_in_range(tmp_target, 'absorb'))
 		{
-			move(
+			xmove(
 				character.x+(tmp_target.x-character.x)/2,
 				character.y+(tmp_target.y-character.y)/2
 				);

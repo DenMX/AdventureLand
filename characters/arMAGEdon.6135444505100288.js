@@ -133,7 +133,7 @@ function myAttack(target){
 	useSkills(target);
 	if(!is_in_range(target))
 	{
-		move(
+		xmove(
 			character.x+(target.x-character.x)/2,
 			character.y+(target.y-character.y)/2
 			);

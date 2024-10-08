@@ -1,7 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
-const MAINHAND = {name: 'fireblade', level: 8}
-const OFFHAND = { name: 'xmace', level: 7}
+const MAINHAND = {name: 'fireblade', level: 9}
+const OFFHAND = { name: 'fireblade', level: 8}
 const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 8}
@@ -37,7 +37,7 @@ async function useElixir()
 		let elixirs = ['elixirstr0', 'elixirstr1', 'elixirstr2']
 		for(let i in character.items)
 		{
-			if(elixirs.includes(character.items[i].name)) await equip(i)
+			if(elixirs.includes(character.items[i]?.name)) await equip(i)
 		}
 	}
 	setTimeout(useElixir,getMsFromMinutes(60))
@@ -76,7 +76,7 @@ async function initialize_character() {
 async function useSkills()
 {
 	target = parent.ctarget
-	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer.rip)) return
+	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer?.rip)) return
 	await useStomp(target)
 	useShell()
 	useMassAgr()
@@ -168,7 +168,7 @@ async function useCleave(target)
 			reduce_cooldown('cleave', Math.max(...parent.pings));
 		}
 	}
-	else if(!is_on_cooldown('cleave') && char_action == 'event' && current_event.name == 'goobrawl')
+	else if(!is_on_cooldown('cleave') && char_action == 'event' && parent.ctarget?.mtype == 'bgoo')
 	{
 		await use_skill('cleave').catch(() => {})
 		// reduce_cooldown('cleave', Math.max(...parent.pings));
@@ -188,7 +188,7 @@ async function switchToMainWeapon()
 
 	switch(char_action){
 		case 'event':
-			if(current_event?.name == 'goobrawl') {
+			if(parent.ctarget?.mtype == 'bgoo') {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
@@ -290,7 +290,7 @@ function myAttack(target)
 
 	if(!is_in_range(target))
 	{
-		move(
+		xmove(
 			character.x+(target.x-character.x)/2,
 			character.y+(target.y-character.y)/2
 			);
@@ -300,11 +300,11 @@ function myAttack(target)
 	{
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
-		swing()
+		swing(target)
 	}
 }
 
-async function swing()
+async function swing(target)
 {
 	if(!character.s.hardshell && Object.values(parent.entities).filter(e => e.target == character.name).length>2)
 	{

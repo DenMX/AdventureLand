@@ -185,6 +185,7 @@ const NOT_SALE_ITEMS_ID =
 	wbook0: {level: 4},
 	mcape: {level: 7},
 	bataxe: {level: 5},
+	talkingskull: {level: 2},
 	cape: {level: 7},
 	bcape: {level: 7},
 	mittens: {level: 6}

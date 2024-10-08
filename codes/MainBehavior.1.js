@@ -71,7 +71,7 @@ async function checkAction(action, cur_point, schedule) {
 	if(cur_point && getDistance(character, cur_point)>500 && !character.moving)  {
 		(action=='boss') ? await smart_move(cur_point) : await smart_move(cur_point.event)
 	}
-	else if(!cur_point || (cur_point && getDistance(character, cur_point) <= 500 && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
+	else if(!cur_point || (cur_point && (getDistance(character, cur_point) <= 500 || getDistance(character, cur_point.event)) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
 	{
 		if(schedule.length>0) {
 			cur_point = schedule.shift()

@@ -213,14 +213,16 @@ async function saveState()
 
 
 //----------ON EVENTS---------//
-// {cmd: 'giveMeLoot'}
-// {cmd: "boss", 
-//     boss: {name: "phoenix", map: "main", x: -1184, y: 784}}
-// {cmd: 'event', 
-//     name: 'snowman', 
-//     event: {live: true, map: "winterland", hp: 1200, 
-//         max_hp: 1200, x: 996, y: -840}}
-// {mob: 'bee', isCoop: false}
+
+// ---------{cmd: 'giveMeLoot'}
+// ---------{cmd: "boss", 
+//     			boss: {name: "phoenix", map: "main", x: -1184, y: 784}}
+// ---------{cmd: 'event', 
+//     			name: 'snowman', 
+//     			event: {live: true, map: "winterland", hp: 1200, 
+//         		max_hp: 1200, x: 996, y: -840}}
+// ---------{mob: 'bee', isCoop: false}
+
 character.on("cm", function(data){
 	
 	if(!MY_CHARACTERS.includes(data.name)) return
