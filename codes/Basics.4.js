@@ -36,7 +36,7 @@ const EVENTS = [
     {name: 'mrpumpkin', useSkills: true, massFarm: false, targets: ['mrpumpkin']}
 ]
 
-const ADD_PARTY = ['man1', 'men2', 'men3']
+const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frostyHeal']
 
 var death = false
 

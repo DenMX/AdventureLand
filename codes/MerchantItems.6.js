@@ -35,33 +35,6 @@ const ITEMS_TO_EXCHANGE_IDS = [
 	'candy1'
 ]
 
-const UPGRADE_WEAPONS = {
-	firestaff: {level: 9},
-	firebow: {level: 7},
-	sword: {level: 9},
-	bow: {level: 9},
-	staff: {level:9},
-	fireblade: {level: 9},
-	t2bow: {level: 9},
-	hbow: {level:8},
-	basher: {level: 6},
-	ololipop: {level: 8},
-	glolipop: {level: 8},
-	candycanesword: {level: 8},
-	ornamentstaff: {level: 8},
-	pmace: {level: 8},
-	merry: {level:9},
-	warmscarf: {level: 9},
-	bataxe: {level: 5},
-	xmace: {level: 6},
-	oozingterror: {level: 7},
-	harbringer: {level: 7},
-	spearofthedead: {level: 7},
-	t3bow: {level: 7},
-	crossbow: {level: 7},
-	broom: {level: 7}
-}
-
 const NOT_SALE_ITEM_TYPES = ['cape']
 const ITEMS_TO_SALE = [
 	//materials
@@ -69,7 +42,7 @@ const ITEMS_TO_SALE = [
 	'xmashat',
 	'pstem', 
 	'carrot', 
-	'crabclaw',
+	// 'crabclaw',
 	'smoke', 
 	'ink',
 	'snowball',
@@ -104,7 +77,7 @@ const ITEMS_TO_SALE = [
 	'forscroll',
 
 	//begginers shit
-	'cclaw',
+	// 'cclaw',
 	'stinger',
 	'slimestaff',
 	'helmet',
@@ -150,10 +123,6 @@ const ITEMS_TO_SALE = [
 ]
 
 
-const SALE_ITEMS = {
-
-}
-
 const NOT_SALE_ITEMS_ID = 
 {
 	hhelmet: {level: 6},
@@ -162,7 +131,7 @@ const NOT_SALE_ITEMS_ID =
 	xarmor: {level: 5},
 	hpants: {level: 6},
 	xpants: {level: 5},
-	wingedboots: {level: 8},
+	wingedboots: {level: 9},
 	hboots: {level: 6},
 	xboots: {level: 5},
 	intearring: {level: 3},
@@ -177,18 +146,41 @@ const NOT_SALE_ITEMS_ID =
 	dexbelt: {level: 3},
 	intbelt: {level: 3},
 	quiver: {level: 7},
-	firebow: {level: 7},
-	fireblade: {level: 0},
-	firestaff: {level: 0},
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	wbook0: {level: 4},
 	mcape: {level: 7},
-	bataxe: {level: 5},
 	talkingskull: {level: 2},
 	cape: {level: 7},
 	bcape: {level: 7},
-	mittens: {level: 6}
+	mittens: {level: 6},
+
+	//WEAPON
+	firestaff: {level: 9},
+	firebow: {level: 7},
+	sword: {level: 9},
+	bow: {level: 9},
+	staff: {level:9},
+	fireblade: {level: 9},
+	t2bow: {level: 9},
+	hbow: {level:8},
+	basher: {level: 7},
+	ololipop: {level: 8},
+	glolipop: {level: 8},
+	candycanesword: {level: 8},
+	ornamentstaff: {level: 8},
+	pmace: {level: 8},
+	merry: {level:9},
+	warmscarf: {level: 9},
+	bataxe: {level: 7},
+	xmace: {level: 6},
+	oozingterror: {level: 7},
+	harbringer: {level: 7},
+	spearofthedead: {level: 7},
+	t3bow: {level: 7},
+	crossbow: {level: 7},
+	broom: {level: 7},
+	cclaw: {level: 8}
 }
 
 const ITEMS_TO_BUY_PONTY =

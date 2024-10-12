@@ -117,6 +117,12 @@ function attackOrHeal(target)
 		   return;
 	    }
 	}
+	let players = Object.values(parent.entities).filter(e => e.player && is_in_range(e), e.hp<e.max_hp*0.7) 
+	if(players.length>0)
+	{
+		use_skill('heal', players[0])
+		return
+	}
 	if(!target) return;
 	change_target(target);
 	useSkills(target);

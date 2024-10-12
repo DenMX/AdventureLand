@@ -3,7 +3,7 @@ checkInventory()
 async function checkInventory()
 {
 	if(character.items.length > 25){
-		await upgradeArmor()
+		await upgradeItems()
 		await combineItems()
 	}
 	setTimeout(checkInventory, getMsFromMinutes(1))
@@ -71,116 +71,50 @@ async function sendElixir(name) {
 	}
 }
 
-function findScroll(grade)
+async function upgradeItems()
 {
-	let scroll = null
-
-	for(let i=0; i<character.items.length; i++){
-		if(character.items[i] == null) continue
-		if(character.items[i].name == 'scroll'+grade) 
-		{
-			scroll = i
-			break
-		}
-	}
-	return scroll
-}
-
-function getGrade(gItem, lvl)
-{
-	let grade
-	for(let i=0; i<gItem.grades.length; i++)
+	try
 	{
-		if(gItem.grades[i] > lvl) {
-			grade = i;
-			break;
-		}
-	}
-	return grade;
-}
-
-async function upgradeWeapon()
-{
-	
-	for(let j=0; j<MAX_LVL_TO_UPGRADE; j++)
-	{
-		for(let i=0; i<character.items.length; i++)
+		await smart_move('upgrade')
+		exchangeItems()
+		for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
 		{
-			let item = character.items[i]
-			if(!item || item.level!=j) 	continue
-			let gItem = G.items[item.name]
-			let grade = getGrade(gItem, item.level)
-			if(!UPGRADE_WEAPONS[item.name] || UPGRADE_WEAPONS[item.name].level<= item.level) continue
+			for(let i=0; i<character.items.length; i++)
+			{
+				let item = character.items[i]
+				if(!item ||	!NOT_SALE_ITEMS_ID[item.name] || !NOT_SALE_ITEMS_ID[item.name].level <=j) continue; 
+				let grade = item_grade(item)
 
-			if(findScroll(grade) != null)
-			{
-				try
+				if(!character.s.massproductionpp) await use_skill('massproductionpp')
+
+				if(locate_item('scroll'+grade) != -1)
 				{
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
+					try
+					{
+						await upgrade(i, findScroll(grade))
+					}
+					catch(ex)
+					{
+						console.warn(ex)
+					}
+				} 
+				else
 				{
-					console.warn(ex)
-				}
-			} 
-			else
-			{
-				try
-				{
-					await buy_with_gold('scroll'+grade, 1)
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
-				{
-					console.warn(ex)
-				}
+					try
+					{
+						await buy_with_gold('scroll'+grade, 1)
+						await upgrade(i, locate_item('scroll'+grade))
+					}
+					catch(ex)
+					{
+						console.warn(ex)
+					}
+				}				
 			}
 		}
 	}
-}
-
-async function upgradeArmor()
-{	
-	if(itemsCount()==42) sellItems()
-	for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
-	{
-		for(let i=0; i<character.items.length; i++)
-		{
-			if(!character.items[i] || !ARMOR.includes(G.items[character.items[i].name].type) || character.items[i].level != j || !NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] ||
-				(NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id] && NOT_SALE_ITEMS_ID[G.items[character.items[i].name].id].level <=j)){
-				continue;
-			} 
-			let item = character.items[i]
-			let gItem = G.items[item.name]
-			let grade = getGrade(gItem, item.level)
-
-
-			if(findScroll(grade) != null)
-			{
-				try
-				{
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
-				{
-					console.warn(ex)
-				}
-			} 
-			else
-			{
-				try
-				{
-					await buy_with_gold('scroll'+grade, 1)
-					await upgrade(i, findScroll(grade))
-				}
-				catch(ex)
-				{
-					console.warn(ex)
-				}
-			}			
-		}
-	}
-	upgradeWeapon()
+	catch(Ex) { console.error(Ex)}
+	
 }
 
 
@@ -209,12 +143,13 @@ async function combineItems()
 					}
 					if(items.length>=3)
 					{
-						let grade = getGrade(gItem, lvl)
-						let cscrolls = await findCScroll(grade)
+						let grade = item_grade(item)
+						let cscrolls = await locate_item('cscroll'+grade)
 						try
 						{
 							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-							await compound(items[0],items[1],items[2],findCScroll(grade))
+							if(!character.s.massproductionpp) await use_skill('massproductionpp')
+							await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
 							break;
 						}
 						catch(ex)
@@ -227,10 +162,7 @@ async function combineItems()
 		}
 	}
 	catch(ex) {console.error(ex)}
-	finally
-	{
-		sellItems()
-	}
+
 	
 }
 
@@ -254,21 +186,6 @@ async function checkCraft()
 	setTimeout(checkCraft, getMsFromMinutes(5))
 }
 
-function findCScroll(grade)
-{
-	let scroll = null
-
-	for(let i=0; i<character.items.length; i++){
-		if(character.items[i] == null) continue
-		if(character.items[i].name == 'cscroll'+grade) 
-		{
-			
-			scroll = i
-			break
-		}
-	}
-	return scroll
-}
 
 async function sellItems()
 {
@@ -286,11 +203,11 @@ async function exchangeItems()
 	let exchangeItem = false
 	for(let i in character.items)
 	{
-		if(character.items[i] && ['box','gem','quest'].includes(G.items[character.items[i].name].type) 
+		if(character.items[i] && character.items[i].e 
 			&& character.items[i].q >= G.items[character.items[i].name].e) 
 		{
-			let e  = await exchange(i)
-			if(e.success = true) exchangeItem = true
+			let e  = await exchange(i).catch(()=>{})
+			if(e.success == true) exchangeItem = true
 		}
 	}
 	if(exchangeItem) exchangeItems()
