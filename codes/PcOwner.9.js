@@ -2,7 +2,7 @@
 checkInventory()
 async function checkInventory()
 {
-	if(character.items.length > 25){
+	if(itemsCount() > 25){
 		await upgradeItems()
 		await combineItems()
 	}
@@ -73,9 +73,9 @@ async function sendElixir(name) {
 
 async function upgradeItems()
 {
+	if(itemsCount() == 42) sellItems()
 	try
 	{
-		await smart_move('upgrade')
 		exchangeItems()
 		for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
 		{
