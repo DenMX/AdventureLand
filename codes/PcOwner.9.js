@@ -85,8 +85,6 @@ async function upgradeItems()
 				if(!item ||	!NOT_SALE_ITEMS_ID[item.name] || !NOT_SALE_ITEMS_ID[item.name].level <=j) continue; 
 				let grade = item_grade(item)
 
-				if(!character.s.massproductionpp) await use_skill('massproductionpp')
-
 				if(locate_item('scroll'+grade) != -1)
 				{
 					try
@@ -148,7 +146,6 @@ async function combineItems()
 						try
 						{
 							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-							if(!character.s.massproductionpp) await use_skill('massproductionpp')
 							await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
 							break;
 						}
