@@ -193,7 +193,7 @@ async function sellItems()
 	{
 		let item = character.items[i]
 		if(!item) continue
-		if((SALE_ITEMS[item.name] && SALE_ITEMS[item.name].level <= item.level) || ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
+		if(ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 }
 
