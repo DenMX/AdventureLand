@@ -364,7 +364,7 @@ async function combineItems()
 						let cscrolls = await locate_item('cscroll'+grade)
 						try
 						{
-							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
+							if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
 							if(!character.s.massproductionpp) await use_skill('massproductionpp')
 							await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
 							break;

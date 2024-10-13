@@ -126,8 +126,7 @@ async function combineItems()
 			{
 				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) ) continue
 				let item=character.items[slot]
-				let gItem = G.items[item.name]
-				if(NOT_SALE_ITEMS_ID[gItem.id] && item.level >= NOT_SALE_ITEMS_ID[gItem.id].level) continue
+				if(NOT_SALE_ITEMS_ID[item.name] && item.level >= NOT_SALE_ITEMS_ID[item.name].level) continue
 				var items = []
 				items.push(slot)
 
@@ -145,7 +144,7 @@ async function combineItems()
 						let cscrolls = await locate_item('cscroll'+grade)
 						try
 						{
-							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
+							if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
 							await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
 							break;
 						}
