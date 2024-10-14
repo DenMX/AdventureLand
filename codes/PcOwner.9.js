@@ -82,32 +82,36 @@ async function upgradeItems()
 			for(let i=0; i<character.items.length; i++)
 			{
 				let item = character.items[i]
-				if(!item ||	!NOT_SALE_ITEMS_ID[item.name] || !NOT_SALE_ITEMS_ID[item.name].level <=j) continue; 
-				let grade = item_grade(item)
+				if(item && NOT_SALE_ITEMS_ID[item.name] && NOT_SALE_ITEMS_ID[item.name].level > j && item.level == j) 
+				{
+					let grade = 'scroll'+item_grade(item)
 
-				if(locate_item('scroll'+grade) != -1)
-				{
-					try
+					if(locate_item(grade) >= 0)
 					{
-						await upgrade(i, findScroll(grade))
-					}
-					catch(ex)
+						try
+						{
+							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+							await upgrade(i, locate_item(grade))
+						}
+						catch(ex)
+						{
+							console.warn(ex)
+						}
+					} 
+					else
 					{
-						console.warn(ex)
-					}
-				} 
-				else
-				{
-					try
-					{
-						await buy_with_gold('scroll'+grade, 1)
-						await upgrade(i, locate_item('scroll'+grade))
-					}
-					catch(ex)
-					{
-						console.warn(ex)
-					}
-				}				
+						try
+						{
+							await buy_with_gold(grade, 1)
+							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+							await upgrade(i, locate_item(grade))
+						}
+						catch(ex)
+						{
+							console.warn(ex)
+						}
+					}				
+				}
 			}
 		}
 	}
@@ -124,36 +128,39 @@ async function combineItems()
 		{
 			for(let slot=0; slot<character.items.length; slot++)
 			{
-				if(character.items[slot] == null || !JEWELRY.includes(G.items[character.items[slot].name].type) ) continue
 				let item=character.items[slot]
-				if(NOT_SALE_ITEMS_ID[item.name] && item.level >= NOT_SALE_ITEMS_ID[item.name].level) continue
-				var items = []
-				items.push(slot)
-
-				for(let subSlot=0; subSlot<character.items.length; subSlot++)
+				if(item && JEWELRY_TO_UPGRADE[item.name] && item.level >= JEWELRY_TO_UPGRADE[item.name].level)
 				{
-					if(!character.items[subSlot] || slot==subSlot) continue
-					let subsItem = character.items[subSlot]
-					if(item.name == subsItem.name && item.level == subsItem.level)
+					var items = []
+					items.push(slot)
+
+					for(let subSlot=0; subSlot<character.items.length; subSlot++)
 					{
-						items.push(subSlot)
-					}
-					if(items.length>=3)
-					{
-						let grade = item_grade(item)
-						let cscrolls = await locate_item('cscroll'+grade)
-						try
+						if(!character.items[subSlot] || slot==subSlot) continue
+						let subsItem = character.items[subSlot]
+						if(subsItem && item.name == subsItem.name && item.level == subsItem.level)
 						{
-							if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
-							await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
-							break;
+							items.push(subSlot)
 						}
-						catch(ex)
+						if(items.length>=3)
 						{
-							console.warn(ex)
+							console.error(item)
+							let grade = item_grade(item)
+							let cscrolls = await locate_item('cscroll'+grade)
+							try
+							{
+								if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
+								if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+								await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
+								break;
+							}
+							catch(ex)
+							{
+								console.warn(ex)
+							}
 						}
-					}
-				}	
+					}	
+				}
 			}
 		}
 	}
@@ -199,8 +206,8 @@ async function exchangeItems()
 	let exchangeItem = false
 	for(let i in character.items)
 	{
-		if(character.items[i] && character.items[i].e 
-			&& character.items[i].q >= G.items[character.items[i].name].e) 
+		let item = character.items[i]
+		if(item && G.items[item.name].e && item.q >= G.items[item.name].e) 
 		{
 			let e  = await exchange(i).catch(()=>{})
 			if(e.success == true) exchangeItem = true

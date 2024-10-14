@@ -258,11 +258,11 @@ async function buyPots()
 
 async function checkCyberTime()
 {
-	if(Date.now()-cyberland_check<MS_TO_CYBER_CHECK ) {
+	if(Date.now()-cyberland_check<MS_TO_CYBER_CHECK || state != DEFAULT_STATE) {
 		setTimeout(scheduler(checkCyberTime), 60000)
 		return
 	}
-	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check)) 
+	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check) && state == DEFAULT_STATE) 
 	{
 		changeState('Going to pray...')
 		await checkCyberlandCommand()
@@ -282,7 +282,7 @@ async function checkItemsCount()
 	}
 	else if(itemsCount()>= ITEMS_COUNT_TO_UPGRADE)
 	{
-		await upgradeArmor()
+		await upgradeItems()
 	}
 	setTimeout(scheduler(checkItemsCount), 2000)
 	

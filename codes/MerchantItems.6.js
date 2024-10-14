@@ -134,21 +134,10 @@ const NOT_SALE_ITEMS_ID =
 	wingedboots: {level: 9},
 	hboots: {level: 6},
 	xboots: {level: 5},
-	intearring: {level: 3},
-	strearring: {level: 3},
-	intring: {level: 4},
 	hgloves: {level: 5},
-	strring: {level: 4},
-	jacko: {level: 3},
-	intamulet: {level: 3},
-	stramulet: {level: 3},
-	strbelt: {level: 3},
-	dexbelt: {level: 3},
-	intbelt: {level: 3},
 	quiver: {level: 7},
 	glolipop: {level: 5},
 	tigershield: {level: 7},
-	wbook0: {level: 4},
 	mcape: {level: 7},
 	talkingskull: {level: 2},
 	cape: {level: 7},
@@ -181,6 +170,21 @@ const NOT_SALE_ITEMS_ID =
 	crossbow: {level: 7},
 	broom: {level: 7},
 	cclaw: {level: 8}
+}
+
+const JEWELRY_TO_UPGRADE =
+{
+	strbelt: {level: 3},
+	dexbelt: {level: 3},
+	intbelt: {level: 3},
+	strring: {level: 4},
+	jacko: {level: 3},
+	intamulet: {level: 3},
+	stramulet: {level: 3},
+	intearring: {level: 3},
+	strearring: {level: 3},
+	intring: {level: 4},
+	wbook0: {level: 4}
 }
 
 const ITEMS_TO_BUY_PONTY =
