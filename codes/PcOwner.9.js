@@ -145,14 +145,24 @@ async function combineItems()
 						if(items.length>=3)
 						{
 							console.error(item)
-							let grade = item_grade(item)
-							let cscrolls = await locate_item('cscroll'+grade)
+							let grade = getGrade(gItem, lvl)
+							let cscrolls = await findCScroll(grade)
 							try
 							{
-								if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
-								if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
-								await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
-								break;
+								if(cscrolls>=0)
+								{
+									if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+									await compound(items[0],items[1],items[2],findCScroll('cscroll'+grade))
+									break;
+								} 
+								else{
+									await buy_with_gold('cscroll'+grade, 1)
+									if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+									await compound(items[0],items[1],items[2],findCScroll('cscroll'+grade))
+									break;
+								}
+								
+								
 							}
 							catch(ex)
 							{
@@ -167,6 +177,35 @@ async function combineItems()
 	catch(ex) {console.error(ex)}
 
 	
+}
+
+function findCScroll(grade)
+{
+	let scroll = null
+
+	for(let i=0; i<character.items.length; i++){
+		if(character.items[i] == null) continue
+		if(character.items[i].name == 'cscroll'+grade) 
+		{
+			
+			scroll = i
+			break
+		}
+	}
+	return scroll
+}
+
+function getGrade(gItem, lvl)
+{
+	let grade
+	for(let i=0; i<gItem.grades.length; i++)
+	{
+		if(gItem.grades[i] > lvl) {
+			grade = i;
+			break;
+		}
+	}
+	return grade;
 }
 
 checkCraft()

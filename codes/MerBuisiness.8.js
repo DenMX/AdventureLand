@@ -285,7 +285,7 @@ async function buyWeapon()
 
 async function upgradeItems()
 {
-	changeState('Upgrading armor..')
+	changeState('Upgrading items..')
 	try
 	{
 		await smart_move('upgrade')
@@ -347,37 +347,36 @@ async function combineItems()
 			for(let slot=0; slot<character.items.length; slot++)
 			{
 				let item=character.items[slot]
-				if(item && JEWELRY_TO_UPGRADE[item.name] && item.level >= JEWELRY_TO_UPGRADE[item.name].level)
+				if(!item || !JEWELRY_TO_UPGRADE[item.name] || JEWELRY_TO_UPGRADE[item.name].level <= item.level) continue
+				let gItem = G.items[item.name]
+				var items = []
+				items.push(slot)
+
+				for(let subSlot=0; subSlot<character.items.length; subSlot++)
 				{
-					var items = []
-					items.push(slot)
-	
-					for(let subSlot=0; subSlot<character.items.length; subSlot++)
+					if(!character.items[subSlot] || slot==subSlot) continue
+					let subsItem = character.items[subSlot]
+					if(item.name == subsItem.name && item.level == subsItem.level)
 					{
-						if(!character.items[subSlot] || slot==subSlot) continue
-						let subsItem = character.items[subSlot]
-						if(item.name == subsItem.name && item.level == subsItem.level)
+						items.push(subSlot)
+					}
+					if(items.length>=3)
+					{
+						let grade = getGrade(gItem, lvl)
+						let cscrolls = await findCScroll(grade)
+						try
 						{
-							items.push(subSlot)
+							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
+							if(!character.s.massproductionpp) await use_skill('massproductionpp')
+							await compound(items[0],items[1],items[2],findCScroll(grade))
+							break;
 						}
-						if(items.length>=3)
+						catch(ex)
 						{
-							let grade = item_grade(item)
-							let cscrolls = await locate_item('cscroll'+grade)
-							try
-							{
-								if(cscrolls<0) await buy_with_gold('cscroll'+grade, 1)
-								if(!character.s.massproductionpp) await use_skill('massproductionpp')
-								await compound(items[0],items[1],items[2],locate_item('cscroll'+grade))
-								break;
-							}
-							catch(ex)
-							{
-								console.warn(ex)
-							}
+							console.warn(ex)
 						}
 					}
-				}
+				}	
 			}
 		}
 	}
@@ -389,6 +388,47 @@ async function combineItems()
 	
 }
 
+function getItemsSlots(name, level)
+{
+	let items = []
+	for(let i in character.items)
+	{
+		item = character.items[i]
+		if(item && item.name == name && item.level == level) items.push(i)
+	}
+	console.log(items)
+	return items
+}
+
+
+function findCScroll(grade)
+{
+	let scroll = null
+
+	for(let i=0; i<character.items.length; i++){
+		if(character.items[i] == null) continue
+		if(character.items[i].name == 'cscroll'+grade) 
+		{
+			
+			scroll = i
+			break
+		}
+	}
+	return scroll
+}
+
+function getGrade(gItem, lvl)
+{
+	let grade
+	for(let i=0; i<gItem.grades.length; i++)
+	{
+		if(gItem.grades[i] > lvl) {
+			grade = i;
+			break;
+		}
+	}
+	return grade;
+}
 
 async function sellItems()
 {
