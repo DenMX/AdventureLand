@@ -129,7 +129,7 @@ async function combineItems()
 			for(let slot=0; slot<character.items.length; slot++)
 			{
 				let item=character.items[slot]
-				if(item && JEWELRY_TO_UPGRADE[item.name] && item.level >= JEWELRY_TO_UPGRADE[item.name].level)
+				if(item && JEWELRY_TO_UPGRADE[item.name] && item.level <= JEWELRY_TO_UPGRADE[item.name].level)
 				{
 					var items = []
 					items.push(slot)
