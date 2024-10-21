@@ -2,11 +2,12 @@
 checkInventory()
 async function checkInventory()
 {
-	if(itemsCount() > 25){
+	if(itemsCount() > 15){
+		await sellItems()
 		await upgradeItems()
 		await combineItems()
 	}
-	setTimeout(checkInventory, getMsFromMinutes(1))
+	setTimeout(checkInventory, 10000)
 }
 
 checkPots()
@@ -73,7 +74,6 @@ async function sendElixir(name) {
 
 async function upgradeItems()
 {
-	if(itemsCount() == 42) sellItems()
 	try
 	{
 		exchangeItems()
@@ -90,6 +90,7 @@ async function upgradeItems()
 					{
 						try
 						{
+							console.warn(item)
 							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
 							await upgrade(i, locate_item(grade))
 						}
@@ -104,6 +105,7 @@ async function upgradeItems()
 						{
 							await buy_with_gold(grade, 1)
 							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+							console.warn(item)
 							await upgrade(i, locate_item(grade))
 						}
 						catch(ex)
@@ -129,48 +131,36 @@ async function combineItems()
 			for(let slot=0; slot<character.items.length; slot++)
 			{
 				let item=character.items[slot]
-				if(item && JEWELRY_TO_UPGRADE[item.name] && item.level <= JEWELRY_TO_UPGRADE[item.name].level)
-				{
-					var items = []
-					items.push(slot)
+				if(!item || !JEWELRY_TO_UPGRADE[item.name] || JEWELRY_TO_UPGRADE[item.name].level <= item.level) continue
+				let gItem = G.items[item.name]
+				var items = []
+				items.push(slot)
 
-					for(let subSlot=0; subSlot<character.items.length; subSlot++)
+				for(let subSlot=0; subSlot<character.items.length; subSlot++)
+				{
+					if(!character.items[subSlot] || slot==subSlot) continue
+					let subsItem = character.items[subSlot]
+					if(item.name == subsItem.name && item.level == subsItem.level)
 					{
-						if(!character.items[subSlot] || slot==subSlot) continue
-						let subsItem = character.items[subSlot]
-						if(subsItem && item.name == subsItem.name && item.level == subsItem.level)
+						items.push(subSlot)
+					}
+					if(items.length>=3)
+					{
+						let grade = getGrade(gItem, lvl)
+						let cscrolls = await findCScroll(grade)
+						try
 						{
-							items.push(subSlot)
+							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
+							//if(!character.s.massproductionpp) await use_skill('massproductionpp')
+							await compound(items[0],items[1],items[2],findCScroll(grade))
+							break;
 						}
-						if(items.length>=3)
+						catch(ex)
 						{
-							console.error(item)
-							let grade = getGrade(gItem, lvl)
-							let cscrolls = await findCScroll(grade)
-							try
-							{
-								if(cscrolls>=0)
-								{
-									if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
-									await compound(items[0],items[1],items[2],findCScroll('cscroll'+grade))
-									break;
-								} 
-								else{
-									await buy_with_gold('cscroll'+grade, 1)
-									if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
-									await compound(items[0],items[1],items[2],findCScroll('cscroll'+grade))
-									break;
-								}
-								
-								
-							}
-							catch(ex)
-							{
-								console.warn(ex)
-							}
+							console.warn(ex)
 						}
-					}	
-				}
+					}
+				}	
 			}
 		}
 	}
@@ -253,7 +243,7 @@ async function exchangeItems()
 		}
 	}
 	if(exchangeItem) exchangeItems()
-	else setTimeout(exchangeItems, getMsFromMinutes(2))
+	else setTimeout(exchangeItems, getMsFromMinutes(1))
 }
 
 buyPots()

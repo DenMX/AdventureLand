@@ -137,6 +137,13 @@ const FARM_LOCATIONS =
 			coop: true,
 			massFarm: true,
 			canSolo: true
+		},
+		mole: {
+			location: {x: -60, y: -1060, map: 'tunnel'},
+			mobs: ['mole'],
+			coop: true,
+			massFarm: true,
+			canSolo: false
 		}
 	}
 

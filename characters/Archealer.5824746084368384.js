@@ -2,7 +2,10 @@ const TARGETING_BLACK_LIST = ''
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 var pc = false
 
-const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}]
+const PERSONAL_ITEMS = [{name: 'wbook0', level: 3}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
+
+const TANK_ITEMS = {xgloves: {level: 5}, sshield: {level: 8}}
+const HEAL_ITEMS = {wbook0: {level: 3}, mittens: {level: 8}}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -78,6 +81,20 @@ function partyheal()
     }
 }
 
+setInterval(checkEquippedItems, 1000)
+function checkEquippedItems()
+{
+	let set = Object.values(parent.entities).filter(e => e && e.target == character.name).length > 0 ? TANK_ITEMS : HEAL_ITEMS
+
+	for(let i in character.items)
+	{
+		let item = character.items[i]
+		if(item && set[item.name] && set[item.name].level == item.level)
+		{
+			equip(i)
+		}
+	}
+}
 
 async function useElixir()
 {
@@ -172,69 +189,57 @@ async function passMonsterhuntNext()
 
 async function useSkills(target)
 {
-	pullmobs();
 	useCurse(target)
 	useDarkBlessing()
+	pullmobsFromMember()
 }
 
 async function pullmobsFromMember()
 {
-	if(action=='farm' && !current_farm_pos.isCoop)return
+	if(char_action=='farm' && !current_farm_pos.isCoop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
-	let tmp_target = get_target_of(get_targeted_monster())
-	if(current_farm_pos.isCoop &&tmp_target && tmp_target.name != character.name)
+	let monsters = Object.values(parent.entities).filter(e => e && e.target != character.name && parent.party_list.includes(e.target))
+	if(monsters.length>0)
 	{
-		if(!is_in_range(tmp_target, 'absorb'))
-		{
-			xmove(
-				character.x+(tmp_target.x-character.x)/2,
-				character.y+(tmp_target.y-character.y)/2
-				);
-		}
-		await use_skill('absorb', tmp_target).catch(() => {})
-		reduce_cooldown("absorb", Math.max(...parent.pings));
-		return;
-	}
-	let mobs = Object.values(parent.entities).filter((e) => e.type == 'monster' && parent.party_list.includes(e.target) && e.target != character.name)
-	if(mobs.length==0) return;
-	for(let member of parent.party_list)
-	{
-		if(member == character.name) continue
-		let member_entity = parent.entities[member]
-		if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 0)
-		{
-			if(!is_in_range(member_entity, 'absorb'))
-			{
-			move(
-				character.x+(member_entity.x-character.x)/2,
-				character.y+(member_entity.y-character.y)/2
-				);
-			}
-			await use_skill('absorb', member).catch(() => {})
+			await use_skill('absorb', monsters[0].target).catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
-			return
-		}
 	}
+	// let tmp_target = get_target_of(get_targeted_monster())
+	// if(current_farm_pos.isCoop &&tmp_target && tmp_target.name != character.name)
+	// {
+	// 	if(!is_in_range(tmp_target, 'absorb'))
+	// 	{
+	// 		xmove(
+	// 			character.x+(tmp_target.x-character.x)/2,
+	// 			character.y+(tmp_target.y-character.y)/2
+	// 			);
+	// 	}
+	// 	await use_skill('absorb', tmp_target).catch(() => {})
+	// 	reduce_cooldown("absorb", Math.max(...parent.pings));
+	// 	return;
+	// }
+	// let mobs = Object.values(parent.entities).filter((e) => e.type == 'monster' && parent.party_list.includes(e.target) && e.target != character.name)
+	// if(mobs.length==0) return;
+	// for(let member of parent.party_list)
+	// {
+	// 	if(member == character.name) continue
+	// 	let member_entity = parent.entities[member]
+	// 	if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 0)
+	// 	{
+	// 		if(!is_in_range(member_entity, 'absorb'))
+	// 		{
+	// 		move(
+	// 			character.x+(member_entity.x-character.x)/2,
+	// 			character.y+(member_entity.y-character.y)/2
+	// 			);
+	// 		}
+	// 		await use_skill('absorb', member).catch(() => {})
+	// 		reduce_cooldown("absorb", Math.max(...parent.pings));
+	// 		return
+	// 	}
+	// }
 }
 
-async function pullmobs()
-{
-	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb < character.max_mp*0.1 || (char_action=='farm' && !current_farm_pos.isCoop)) return;
-	let near_members = Object.values(parent.entities).filter(e=> (MY_CHARACTERS.includes(e.name) || ADD_PARTY.includes(e.name)) && is_in_range(e, 'absorb'))
-	for(let i of near_members)
-	{
-		if(i.ctype == 'warrior' && i.hp < i.max_hp*0.4 && Object.values(parent.entities).filter(e => e.target == i.name).length >2)
-		{ 
-			await use_skill('absorb', i.name).catch(() => {}) 
-			return
-		}
-		else if(i.ctype != 'warrior' && Object.values(parent.entities).filter(e => e.target == i.name).length>0) 
-		{
-			await use_skill('absorb', i.name).catch(() => {})
-			return
-		}
-	}
-}
 
 async function useDarkBlessing()
 {

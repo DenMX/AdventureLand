@@ -139,7 +139,6 @@ const NOT_SALE_ITEMS_ID =
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	mcape: {level: 7},
-	talkingskull: {level: 2},
 	cape: {level: 7},
 	bcape: {level: 7},
 	mittens: {level: 6},
@@ -169,7 +168,8 @@ const NOT_SALE_ITEMS_ID =
 	t3bow: {level: 7},
 	crossbow: {level: 7},
 	broom: {level: 7},
-	cclaw: {level: 8}
+	cclaw: {level: 8},
+	sshield: {level: 7}
 }
 
 const JEWELRY_TO_UPGRADE =
@@ -179,6 +179,7 @@ const JEWELRY_TO_UPGRADE =
 	intbelt: {level: 3},
 	strring: {level: 4},
 	jacko: {level: 3},
+	talkingskull: {level: 2},
 	intamulet: {level: 3},
 	stramulet: {level: 3},
 	intearring: {level: 3},
