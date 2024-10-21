@@ -113,7 +113,7 @@ async function useMassAgr()
 {
 	if(!is_on_cooldown('agitate') && (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 &&
 	 Object.values(parent.entities).filter(e => e.target=='Archealer' ).length > 0) || Object.values(parent.entities).filter(e => !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>0
-	|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype)).length>2)
+	|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2)
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.max(...parent.pings));
