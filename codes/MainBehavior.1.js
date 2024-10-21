@@ -26,11 +26,12 @@ const WHITE_LIST_FOR_QUEST = {
 function on_magiport(name)
 {
 	if(name!='arMAGEdon' || goingForQuest) return
-	change_target(null)
+	
 	accept_magiport(name).then(async() => {
 		await sleep(700)	
 		if(smart.moving) stop('smart').catch(() => {})
 		stop('teleport').catch(() => {})
+		change_target(null)
 		if(character.moving) stop('move').catch(() => {})
 		});
 
