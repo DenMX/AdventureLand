@@ -111,9 +111,8 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(!is_on_cooldown('agitate') && char_action == 'farm' && getDistance(get('Archealer'), character)<250 &&
-	 Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) 
-	   && e.target!=character.name && is_in_range(e, 'agitate')).length > 2 && current_farm_pos.massFarm)
+	if(!is_on_cooldown('agitate') && (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 &&
+	 Object.values(parent.entities).filter(e => e.target=='Archealer' ).length > 0) || Object.values(parent.entities).filter(e => !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>0)
 	{
 		await use_skill('agitate').catch(() => {})
 		// reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -182,9 +181,6 @@ async function switchToMainWeapon()
 	let curr_off = character.slots?.offhand
 	let desired_main
 	let desired_off 
-	// = ((current_farm_pos.massFarm && char_action=='farm' && !current_farm_pos.isCoop) ||
-	// (current_farm_pos.massFarm && char_action=='farm' && current_farm_pos.isCoop && getDistance(get('Archealer'),character)<300) ||
-	// (char_action == 'event' && current_event.name == 'goobrawl')) ? LOLIPOP : OFFHAND
 
 	switch(char_action){
 		case 'event':
@@ -230,7 +226,7 @@ async function switchToMainWeapon()
 			}
 		}
 	}
-	else //if(!curr_main || !curr_off || (curr_main.name != desired_main.name || curr_main.level != desired_main.level) && (curr_off.name != desired_off.name || curr_off.level != desired_off.level))
+	else 
 	{
 		let main_slot
 		let off_slot
