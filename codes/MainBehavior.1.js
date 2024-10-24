@@ -161,7 +161,7 @@ async function getTartget()
 
 	if(!target)
 	{
-				if(character.name != 'Warious' && parent.entities['Warious'] && current_farm_pos.isCoop)target=get_target_of(parent.entities['Warious'])
+				if(character.name != 'Warious' && parent.entities['Warious'] && !parent.entities['Warious'].rip && current_farm_pos.isCoop)target=get_target_of(parent.entities['Warious'])
 				else 
 				{
 					game_log('Searching target...')

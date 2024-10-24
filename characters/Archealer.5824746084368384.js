@@ -134,7 +134,7 @@ function attackOrHeal(target)
 		   return;
 	    }
 	}
-	let players = Object.values(parent.entities).filter(e => e.player && is_in_range(e) && e.hp<e.max_hp*0.7) 
+	let players = Object.values(parent.entities).filter(e => e.player && !e.rip && is_in_range(e) && e.hp<e.max_hp*0.7 ) 
 	if(players.length>0)
 	{
 		use_skill('heal', players[0])
@@ -152,9 +152,7 @@ function attackOrHeal(target)
 		// Walk half the distance
 	}
 	else if(can_attack(target))
-	{
-		// if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-		
+	{		
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
 	}
@@ -204,40 +202,6 @@ async function pullmobsFromMember()
 			await use_skill('absorb', monsters[0].target).catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
 	}
-	// let tmp_target = get_target_of(get_targeted_monster())
-	// if(current_farm_pos.isCoop &&tmp_target && tmp_target.name != character.name)
-	// {
-	// 	if(!is_in_range(tmp_target, 'absorb'))
-	// 	{
-	// 		xmove(
-	// 			character.x+(tmp_target.x-character.x)/2,
-	// 			character.y+(tmp_target.y-character.y)/2
-	// 			);
-	// 	}
-	// 	await use_skill('absorb', tmp_target).catch(() => {})
-	// 	reduce_cooldown("absorb", Math.max(...parent.pings));
-	// 	return;
-	// }
-	// let mobs = Object.values(parent.entities).filter((e) => e.type == 'monster' && parent.party_list.includes(e.target) && e.target != character.name)
-	// if(mobs.length==0) return;
-	// for(let member of parent.party_list)
-	// {
-	// 	if(member == character.name) continue
-	// 	let member_entity = parent.entities[member]
-	// 	if(Object.values(parent.entities).filter((e) => e.type=='monster' && e.target == member).length > 0)
-	// 	{
-	// 		if(!is_in_range(member_entity, 'absorb'))
-	// 		{
-	// 		move(
-	// 			character.x+(member_entity.x-character.x)/2,
-	// 			character.y+(member_entity.y-character.y)/2
-	// 			);
-	// 		}
-	// 		await use_skill('absorb', member).catch(() => {})
-	// 		reduce_cooldown("absorb", Math.max(...parent.pings));
-	// 		return
-	// 	}
-	// }
 }
 
 
