@@ -195,7 +195,7 @@ async function switchToMainWeapon()
 			}
 			break;
 		case 'farm':
-			if(current_farm_pos.massFarm && !current_farm_pos.isCoop && (!FARM_BOSSES.includes(parent.ctarget?.mtype) && parent.ctarget?.mtype == 'bgoo')) {
+			if(current_farm_pos.massFarm && !current_farm_pos.isCoop && (!FARM_BOSSES.includes(parent.ctarget?.mtype) ||  (FARM_BOSSES.includes(parent.ctarget?.mtype) && parent.ctarget?.mtype == 'bgoo'))) {
 				desired_main = MASS_MAINHAND
 				desired_off = LOLIPOP
 			}
