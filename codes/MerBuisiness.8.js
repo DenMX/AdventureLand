@@ -285,7 +285,6 @@ async function buyWeapon()
 
 async function upgradeItems()
 {
-	changeState('Upgrading items..')
 	try
 	{
 		// await smart_move('upgrade')
@@ -330,10 +329,6 @@ async function upgradeItems()
 		}
 	}
 	catch(Ex) { console.error(Ex)}
-	finally
-	{
-		changeState(DEFAULT_STATE)
-	}
 	
 }
 
@@ -381,10 +376,6 @@ async function combineItems()
 		}
 	}
 	catch(ex) {console.error(ex)}
-	finally
-	{
-		changeState(DEFAULT_STATE)
-	}
 	
 }
 
@@ -432,7 +423,6 @@ function getGrade(gItem, lvl)
 
 async function sellItems()
 {
-	changeState('Selling items...')
 	for(let i in character.items)
 	{
 		let item = character.items[i]
