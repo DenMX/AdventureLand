@@ -275,14 +275,19 @@ async function checkCyberTime()
 async function checkItemsCount()
 {
 	
-	if(itemsCount()>=ITEMS_COUNT_TO_STORE && !character.q.upgrade && !character.q.compound && !character.q.exchange) 
+	if(itemsCount()==42) 
 	{
-		changeState('Going to sell...')
-		await smart_move('upgrade').then(sellItems)
+		sellItems()
+		if(itemsCount()==42) {
+			await storeUpgradeAndCombine()
+		}
+		else checkItemsCount()
 	}
-	else if(itemsCount()>= ITEMS_COUNT_TO_UPGRADE)
+	else if(itemsCount()<= 42)
 	{
 		await upgradeItems()
+		await combineItems()
+		await exchangeItems()
 	}
 	setTimeout(scheduler(checkItemsCount), 2000)
 	

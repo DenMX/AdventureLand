@@ -136,7 +136,7 @@ async function equipTools(tool)
 
 async function checkParty()
 {
-	if(itemsCount()>37)
+	if(itemsCount()>40)
 	{
 		setTimeout(scheduler(checkParty), getMsFromMinutes(2))
 		return
@@ -235,7 +235,7 @@ async function takeLoot(char)
 
 async function storeUpgradeAndCombine()
 {
-	
+	changeState('Banking...')
 	try 
 	{
 		console.warn('Storing items...')
@@ -249,7 +249,7 @@ async function storeUpgradeAndCombine()
 				bank_store(i) 
 				break;
 			}
-			if(JEWELRY.includes(gItem.type) && item.level==MAX_LVL_TO_UPGRADE_JEWELRY)
+			if((JEWELRY_TO_UPGRADE[item.name] && item.level==JEWELRY_TO_UPGRADE[item.name].level) || (NOT_SALE_ITEMS_ID[item.name] && item.level == NOT_SALE_ITEMS_ID[item.name].level))
 			{
 				bank_store(i);
 			}
@@ -261,8 +261,8 @@ async function storeUpgradeAndCombine()
 	finally
 	{
 
-		await smart_move('upgrade')
-		await upgradeItems()
+		await smart_move('main')
+		// upgradeItems()
 	}
     
 }
@@ -288,7 +288,7 @@ async function upgradeItems()
 	changeState('Upgrading items..')
 	try
 	{
-		await smart_move('upgrade')
+		// await smart_move('upgrade')
 		exchangeItems()
 		for(var j =0; j<MAX_LVL_TO_UPGRADE_EQUIP; j++)
 		{
