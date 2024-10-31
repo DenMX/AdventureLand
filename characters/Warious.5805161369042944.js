@@ -4,7 +4,7 @@ const MAINHAND = {name: 'fireblade', level: 9}
 const OFFHAND = { name: 'fireblade', level: 8}
 const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
-const LOLIPOP = {name: 'ololipop', level: 8}
+const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
 
 const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND]
