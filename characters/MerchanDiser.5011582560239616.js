@@ -49,7 +49,7 @@ async function useCourage(){
 
 async function initChar()
 {
-	// await load_module('Mover')
+	await load_module('Mover')
 	await load_module('PotionUse')
 	await load_module('Basics')
 	await load_module('MerBuisiness')
