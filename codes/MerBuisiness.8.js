@@ -236,6 +236,7 @@ async function takeLoot(char)
 async function storeUpgradeAndCombine()
 {
 	changeState('Banking...')
+	await smart_move('bank')
 	try 
 	{
 		console.warn('Storing items...')
@@ -262,7 +263,9 @@ async function storeUpgradeAndCombine()
 	{
 
 		await smart_move('main')
-		// upgradeItems()
+		upgradeItems()
+		combineItems()
+		exchangeItems()
 	}
     
 }
@@ -432,7 +435,7 @@ async function sellItems()
 	shuffleItems()
 	if(itemsCount() == 42)
 	{
-		await smart_move('bank').then(storeUpgradeAndCombine)
+		scheduler(storeUpgradeAndCombine)
 	}
 	else
 	{

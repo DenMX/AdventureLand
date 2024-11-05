@@ -58,7 +58,7 @@ async function initChar()
 	let getState = get(character.name)
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
-	merch_queue.push(checkItemsCount)
+	setInterval(checkItemsCount, 5000)
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
 	merch_queue.push(checkCyberTime)
@@ -235,7 +235,7 @@ async function checkBank()
 		}
 	}
 	changeState(DEFAULT_STATE)
-	setTimeout(scheduler(checkBank), getMsFromMinutes(MINUTES_TO_CHECKBANK))
+	scheduler(checkBank)
 }
 
 async function buyPots()
@@ -252,14 +252,14 @@ async function buyPots()
 		await buy_with_gold(HP_POT, MAX_HP_POTIONS-hpPotsCount())
 	} 
 	changeState(DEFAULT_STATE)
-	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
+	scheduler(buyPots)
 }
 
 
 async function checkCyberTime()
 {
 	if(Date.now()-cyberland_check<MS_TO_CYBER_CHECK || state != DEFAULT_STATE) {
-		setTimeout(scheduler(checkCyberTime), 60000)
+		scheduler(checkCyberTime)
 		return
 	}
 	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check) && state == DEFAULT_STATE) 
@@ -268,7 +268,7 @@ async function checkCyberTime()
 		await checkCyberlandCommand()
 	}
 	changeState(DEFAULT_STATE)
-	setTimeout(scheduler(checkCyberTime), MS_TO_CYBER_CHECK)
+	scheduler(checkCyberTime)
 }
 
 
@@ -278,18 +278,14 @@ async function checkItemsCount()
 	if(itemsCount()==42) 
 	{
 		sellItems()
-		if(itemsCount()==42) {
-			await storeUpgradeAndCombine()
-		}
-		else checkItemsCount()
+		
 	}
-	else if(itemsCount()<= 42)
+	else if(itemsCount()< 42)
 	{
 		await upgradeItems()
 		await combineItems()
 		await exchangeItems()
 	}
-	setTimeout(scheduler(checkItemsCount), 2000)
 	
 }
 
