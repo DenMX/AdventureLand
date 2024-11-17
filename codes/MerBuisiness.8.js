@@ -42,12 +42,15 @@ async function mining()
 	}
 	changeState('Going to mining..')
 	await smart_move(MINING_POS)
-	await equipTools('pickaxe')
+	pickaxe = await equipTools('pickaxe')
 	changeState('Mining...')
-	while(!is_on_cooldown('mining'))
+	if(pickaxe)
 	{
-		await use_skill('mining')
-		await sleep(15000)
+		while(!is_on_cooldown('mining'))
+		{
+			await use_skill('mining')
+			await sleep(15000)
+		}
 	}
 	changeState(DEFAULT_STATE)
 	await equipTools('broom')
