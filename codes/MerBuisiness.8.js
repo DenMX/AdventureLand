@@ -266,6 +266,7 @@ async function storeUpgradeAndCombine()
 		upgradeItems()
 		combineItems()
 		exchangeItems()
+		changeState(DEFAULT_STATE)
 	}
     
 }
@@ -450,7 +451,7 @@ async function exchangeItems()
 	for(let i in character.items)
 	{
 		let item = character.items[i]
-		if(item && G.items[item.name].e && G.items[item.name].e< item.q) 
+		if(item && G.items[item.name].e && G.items[item.name].e<= item.q) 
 		{
 			let e  = await exchange(i)
 			if(e.success = true) exchangeItem = true
