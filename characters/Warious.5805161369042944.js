@@ -1,7 +1,7 @@
 const TARGETING_BLACK_LIST = ''
 
-const MAINHAND = {name: 'fireblade', level: 9}
-const OFFHAND = { name: 'fireblade', level: 8}
+const MAINHAND = {name: 'candycanesword', level: 9}
+const OFFHAND = { name: 'fireblade', level: 9}
 const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
