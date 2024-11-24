@@ -396,7 +396,7 @@ async function sendItems()
 								await send_item(i.name, it, item.q).catch(() => {})
 							}
 						}
-					await send_gold(i.name, character.gold)
+					await send_gold(i.name, character.gold-1000000)
 					shuffleItems()
 				}
 			
