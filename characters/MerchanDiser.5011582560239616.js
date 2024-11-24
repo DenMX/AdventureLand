@@ -12,8 +12,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 const MINUTES_TO_RESET_STATE = 10
 
-
-
+var pc = false
 var cyberland_check
 var bank_check
 var last_state_change
@@ -54,6 +53,15 @@ async function initChar()
 	await load_module('Basics')
 	await load_module('MerBuisiness')
 	await load_module('MerchantItems')
+	for(let i in character.items)
+	{
+		if(!character.items[i]) continue;
+		if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
+		{
+			pc = true
+			await load_module('PcOwner')
+		}
+	}
 
 	let getState = get(character.name)
 	cyberland_check = getState?.last_cyber_check

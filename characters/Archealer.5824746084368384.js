@@ -1,11 +1,11 @@
 const TARGETING_BLACK_LIST = ''
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'shadowstone']
 var pc = false
 
-const PERSONAL_ITEMS = [{name: 'wbook0', level: 3}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
+const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
 
 const TANK_ITEMS = {xgloves: {level: 5}, sshield: {level: 8}}
-const HEAL_ITEMS = {wbook0: {level: 3}, mittens: {level: 8}}
+const HEAL_ITEMS = {wbook0: {level: 4}, mittens: {level: 8}}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -194,7 +194,7 @@ async function useSkills(target)
 
 async function pullmobsFromMember()
 {
-	if(char_action=='farm' && !current_farm_pos.isCoop)return
+	if(char_action=='farm' && !current_farm_pos.coop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
 	let monsters = Object.values(parent.entities).filter(e => e && e.target != character.name && parent.party_list.includes(e.target))
 	if(monsters.length>0)
@@ -207,7 +207,7 @@ async function pullmobsFromMember()
 
 async function useDarkBlessing()
 {
-	if(char_action=='farm' && !current_farm_pos.isCoop)return
+	if(char_action=='farm' && !current_farm_pos.coop)return
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
 		await use_skill('darkblessing').catch(() => {})
@@ -219,5 +219,5 @@ async function useCurse(target)
 {
 	if(!is_on_cooldown('curse')) return
 	if( FARM_BOSSES.includes(target) && character.mp - G.skills.curse.mp> character.max_mp*0.4) await use_skill('curse', target)
-	else if (current_farm_pos.isCoop) await use_skill('curse', target).catch(() => {})
+	else if (current_farm_pos.coop) await use_skill('curse', target).catch(() => {})
 }

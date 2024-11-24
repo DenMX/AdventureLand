@@ -6,8 +6,9 @@ const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
+const SHIELD = {name: 'sshield', level: 8}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -15,7 +16,8 @@ const MP_POT = 'mpot1'
 
 const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
 var pc = false
-
+let desired_main
+let desired_off
 
 async function load_module(module) {
     try {
@@ -175,44 +177,28 @@ async function useCleave(target)
 	}
 }
 
+function selectMainWeapon()
+{
+	target = parent.ctarget
+	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target.mtype == 'bgoo')
+		desired_main = MASS_MAINHAND
+	else desired_main = MAINHAND
+}
+
+function selectOffWeapon()
+{
+	target = parent.ctarget
+	if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
+	else if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target.mtype == 'bgoo')
+		desired_off = LOLIPOP
+	else desired_off = OFFHAND
+}
+
 setInterval(switchToMainWeapon, 750)
 async function switchToMainWeapon()
 {
 	let curr_main = character.slots.mainhand
 	let curr_off = character.slots?.offhand
-	let desired_main
-	let desired_off 
-
-	switch(char_action){
-		case 'event':
-			if(parent.ctarget?.mtype == 'bgoo') {
-				desired_main = MASS_MAINHAND
-				desired_off = LOLIPOP
-			}
-			else {
-				desired_main = MAINHAND
-				desired_off = OFFHAND
-			}
-			break;
-		case 'farm':
-			if(current_farm_pos.massFarm && !current_farm_pos.isCoop && (!FARM_BOSSES.includes(parent.ctarget?.mtype) ||  (FARM_BOSSES.includes(parent.ctarget?.mtype) && parent.ctarget?.mtype == 'bgoo'))) {
-				desired_main = MASS_MAINHAND
-				desired_off = LOLIPOP
-			}
-			else if(current_farm_pos.massFarm && current_farm_pos.isCoop && parent.entities.Archealer && getDistance(parent.entities.Archealer, character)< 250 && !parent.entities.Archealer?.rip && (!parent.ctarget || !FARM_BOSSES.includes(parent.ctarget.mtype))) {
-				desired_main = MASS_MAINHAND
-				desired_off = LOLIPOP
-			}
-			else {
-				desired_main = MAINHAND
-				desired_off = OFFHAND
-			}
-			break;
-		default:
-			desired_main = MAINHAND
-			desired_off = OFFHAND
-			break;
-	}
 	
 	if((curr_main && curr_off) && (curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (curr_off.name == desired_off.name && curr_off.level == desired_off.level)) return
 	if((curr_main.name == desired_main.name && curr_main.level == desired_main.level) && (!curr_off || curr_off.name != desired_off.name || curr_off.level != desired_off.level))
@@ -240,7 +226,7 @@ async function switchToMainWeapon()
 			}
 			else if(item && item.name == desired_off.name && item.level == desired_off.level && i != main_slot) {
 				off_slot = i
-				if(main_slot>0 && off_slot>0) break
+				if(main_slot>=0 && off_slot>=0) break
 			}
 		}
 		await equip_batch([{num: main_slot, slot: "mainhand"}, {num: off_slot, slot: "offhand"}])

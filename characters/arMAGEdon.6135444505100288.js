@@ -12,7 +12,14 @@ async function load_module(module) {
 var pc = false
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 
-const PERSONAL_ITEMS = []
+const MASS_WEAPON = {name: 'gstaff', level: 3}
+const SOLO_WEAPON = {name: 'oozingterror', level: 7}
+const BOOK = {name: 'wbook0', level: 3}
+
+const PERSONAL_ITEMS = [MASS_WEAPON, SOLO_WEAPON, BOOK]
+
+let desired_main
+let desired_off
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -38,6 +45,7 @@ async function initialize_character() {
 	useElixir()
 
     setInterval(saveSelfAss, 1000)
+	checkWeapon()
 	summonMates()
     //checkQuest()
 }
@@ -75,6 +83,62 @@ async function saveSelfAss()
 	}
 	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare').catch(() => {})
 	
+}
+
+
+function checkWeapon() {
+	let target = parent.ctarget
+	if(!target) {
+		setTimeout(checkWeapon, 250)
+		return
+	}
+	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop))
+		|| target.mtype == 'bgoo')
+	{
+		desired_main = MASS_WEAPON
+	}
+	else {
+		desired_main = SOLO_WEAPON
+		desired_off = BOOK
+	}
+	changeWeapon()
+}
+
+async function changeWeapon() {
+	if(desired_main.name != character.slots.mainhand.name)
+	{
+		if(desired_main == MASS_WEAPON)
+		{
+			for(let i in character.items)
+			{
+				let item = character.items[i]
+				if(item && item.name == desired_main.name && item.level == desired_main.level)
+				{
+					try{
+						if(character.slots.offhand) await unequip("offhand")
+						await equip(i)
+					}
+					catch(e) {
+						console.error('something goes wrong while changing weapon\n'+ e.data)
+					}
+				}
+			}
+		}
+		else if(desired_main == SOLO_WEAPON)
+		{
+			let main = -1
+			let off = -1
+			for(let i in character.items)
+			{
+				let item = character.items[i]
+				if(!item) continue
+				if(item.name == desired_main.name && item.level==desired_main.level) main = i
+				else if(item.name == desired_off.name && item.level == desired_off.level) off = i
+				if(main >=0 && off >= 0) await equip_batch([{ num: main, slot: "mainhand" }, { num: off, slot: "offhand" }]).catch(()=> {console.error('Failed to equip batch')})
+			}
+		}
+	}
+	setTimeout(checkWeapon, 300)
 }
 
 async function burst(target)
