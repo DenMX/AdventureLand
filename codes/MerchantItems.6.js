@@ -185,7 +185,7 @@ const JEWELRY_TO_UPGRADE =
 	intearring: {level: 3},
 	strearring: {level: 3},
 	intring: {level: 4},
-	wbook0: {level: 4},
+	wbook0: {level: 3},
 	t2intamulet: {level: 3},
 	t2stramulet: {level: 3},
 	t2dexamulet: {level: 3}
