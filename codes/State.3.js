@@ -3,63 +3,63 @@ const FARM_LOCATIONS =
 		bitch: {
 			location: {x: -1262, y: 490, map: 'main'},
 			mobs: ["squigtoad", "squig"],
-			isCoop: false,
+			coop: false,
 			massFarm : true,
 			canSolo: true
 		},
 		bee: {
 			location: {x:377, y:1350, map: 'main'},
 			mobs: ["bee"],
-			isCoop: false,
+			coop: false,
 			massFarm: true,
 			canSolo: true
 		},
 		nearMines: {
 			location: {x:627, y:1725, map: 'main'},
 			mobs: ["armadillo", "croc"],
-			isCoop: false,
+			coop: false,
 			massFarm: true,
 			canSolo: true
 		},
 		spider: {
 			location: {x:750, y:-160, map: 'main'},
 			mobs: ["spider"],
-			isCoop: true,
+			coop: true,
 			massFarm: true,
 			canSolo: false
 		},
 		snake: {
 			location: {x:-124, y:1876, map: 'main'},
 			mobs: ["snake"],
-			isCoop: false,
+			coop: false,
 			massFarm: true,
 			canSolo: true
 		},
 		bat: {
 			location: {x: 316, y: -1179, map: 'cave'},
 			mobs: ['bat'],
-			isCoop: true,
+			coop: true,
 			massFarm: true,
 			canSolo: true
 		},
 		bigbird: {
 			location: {x: 1341, y: 342, map: 'main'},
 			mobs: ['bigbird'],
-			isCoop: true,
+			coop: true,
 			massFarm: true,
 			canSolo: false
 		},
 		boar: {
 			location: {x: 153, y: -910, map: 'winterland'},
 			mobs: ['boar'],
-			isCoop: true,
+			coop: true,
 			massFarm: true,
 			canSolo: false
 		},
 		stoneworm: {
 			location: {x:850, y:-80, map: 'spookytown'},
 			mobs: ['stoneworm'],
-			isCoop: true,
+			coop: true,
 			massFarm: false,
 			canSolo: false
 		},
@@ -147,6 +147,8 @@ const FARM_LOCATIONS =
 		}
 	}
 
+cave = "IO9irSdIv5JNd6HtgKLS97dW"
+
 var boss_schedule = []
 var event_schedule = []
 
@@ -228,7 +230,7 @@ async function saveState()
 //     			name: 'snowman', 
 //     			event: {live: true, map: "winterland", hp: 1200, 
 //         		max_hp: 1200, x: 996, y: -840}}
-// ---------{mob: 'bee', isCoop: false}
+// ---------{mob: 'bee', coop: false}
 
 character.on("cm", function(data){
 	
@@ -292,7 +294,7 @@ character.on("cm", function(data){
 			current_farm_pos =
 			{
 					mobs: [data.message.mob],
-					isCoop: data.message.coop || true,
+					coop: data.message.coop || true,
 					massFarm: data.message.massFarm || false,
 					canSolo: data.message.canSolo || false
 

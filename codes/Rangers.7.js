@@ -153,13 +153,13 @@ function myAttack(target){
 			character.y+(target.y-character.y)/4
 			);
 	}
-    else if(character.level >= G.skills['5shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('5shot') && character.mp > 350
+    else if(character.level >= G.skills['5shot'].level && can_attack(target) && !current_farm_pos.coop && !is_on_cooldown('5shot') && character.mp > 350
     && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 3)
     {
         set_message("Attacking");
 		use5Shot(target).catch(() => {});
     }
-	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.isCoop && !is_on_cooldown('3shot') && character.mp > 200 
+	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.coop && !is_on_cooldown('3shot') && character.mp > 200 
     && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 2)
 	{
 		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
