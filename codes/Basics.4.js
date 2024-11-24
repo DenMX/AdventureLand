@@ -40,6 +40,13 @@ const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frost
 
 var death = false
 
+initialize_character()
+
+async function initialize_character() {
+    await load_module('Mover')
+    await load_module('PotionUse')
+}
+
 setInterval(isIDead, 5000)
 function isIDead()
 {

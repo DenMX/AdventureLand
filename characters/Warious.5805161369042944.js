@@ -55,9 +55,7 @@ async function runCharacter() {
 runCharacter();
 
 async function initialize_character() {
-    await load_module('Mover')
 	await load_module('Basics')
-    await load_module('PotionUse')
     await load_module('State')
     await load_module('MainBehavior')
 	for(let i in character.items)
@@ -72,6 +70,8 @@ async function initialize_character() {
     }
 	useElixir()
 	setInterval(useSkills, 1000)
+	setInterval(selectMainWeapon,330)
+	setInterval(selectOffWeapon,330)
 }
 
 
