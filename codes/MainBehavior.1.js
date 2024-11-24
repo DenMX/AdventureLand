@@ -130,14 +130,13 @@ async function checkQuest()
 async function dontStack()
 {
 	let near_players =Object.values(parent.entities).filter(e => e.player)
-	for(let i in near_players)
+	for(let player of near_players)
 	{
-		let player = near_players[i]
-		if(getDistance(character, player) < 15)
+		if(getDistance(character, player) < 15 && character.speed>55)
 		{
 			move(
-				character.x + (-50 +(Math.random()*50)),
-				character.y + (-50 +(Math.random()*50))
+				character.x + (-100 +(Math.random()*150)),
+				character.y + (-100 +(Math.random()*150))
 			)
 		}
 	}
