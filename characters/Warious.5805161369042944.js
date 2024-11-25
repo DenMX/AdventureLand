@@ -166,7 +166,8 @@ async function useStomp(target)
 
 async function useCleave(target)
 {
-	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1) return
+	target = parent.ctarget
+	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && target.mtype!='bgoo')) return
 	let entities = Object.values(parent.entities)
 	if(current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer) && entities.filter(e => current_farm_pos.mobs.includes(e.mtype)  && is_in_range(e, 'cleave')).length > 2)
 	{
