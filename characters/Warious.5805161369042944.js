@@ -113,10 +113,15 @@ async function useDash(target)
 
 async function useMassAgr()
 {
-	if(is_on_cooldown('agitate')) return
+	if(is_on_cooldown('agitate')|| (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
 	if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 0) 
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>0
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2)
+	{
+		await use_skill('agitate').catch(() => {})
+		reduce_cooldown("agitate", Math.max(...parent.pings));
+	}
+	else if(parent.ctarget?.mtype=='bgoo')
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.max(...parent.pings));
