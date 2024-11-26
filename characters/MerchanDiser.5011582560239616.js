@@ -48,15 +48,7 @@ async function initChar()
 {
 	await load_module('Basics')
 	await load_module('MerBuisiness')
-	for(let i in character.items)
-	{
-		if(!character.items[i]) continue;
-		if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
-		{
-			pc = true
-			await load_module('PcOwner')
-		}
-	}
+	// await load_module('Upgrading')
 
 	let getState = get(character.name)
 	cyberland_check = getState?.last_cyber_check

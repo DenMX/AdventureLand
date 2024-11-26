@@ -28,15 +28,15 @@ async function initialize_character() {
 	await load_module('Basics')
     await load_module('State')
     await load_module('MainBehavior')
-	for(let i in character.items)
-    {
-        if(!character.items[i]) continue;
-        if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
-        {
-			pc = true
-            await load_module('PcOwner')
-        }
-    }
+	// for(let i in character.items)
+    // {
+    //     if(!character.items[i]) continue;
+    //     if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
+    //     {
+	// 		pc = true
+    //         await load_module('PcOwner')
+    //     }
+    // }
 	useElixir()
 	usePhaseOut()
 }

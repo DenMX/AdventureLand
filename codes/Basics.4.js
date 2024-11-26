@@ -42,11 +42,47 @@ var death = false
 
 initialize_character()
 
+async function checkApi(callback) {
+    let xhr = new XMLHttpRequest()
+    
+    xhr.onload = function(){
+        if(xhr.status>= 200 && xhr.status < 500 ) {
+            callback(true)
+        }
+    }
+
+    xhr.onerror = function() {
+        callback(true)
+    }
+
+    xhr.open('GET', 'https://almapper.zinals.tech/FindPath/')
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.setRequestHeader('Authorization', 'Bearer ' + '776167b3d96c6ab2abff40a99175092c3c34e673f4d126a8335e778b04b00422');
+    xhr.send()
+}
+
 async function initialize_character() {
+    // try {
+    //     await checkApi( async function(available)
+    //     {
+    //         if(available) await load_module('Mover')
+    //         else console.error('API unavailable')
+    //     })
+    // }
+    // catch(ex) {console.error('Error while checking API\n' + ex)}
     await load_module('Mover')
     await load_module('PotionUse')
     await load_module('MerchantItems')
     await load_module('Upgrading')
+    for(let i in character.items)
+        {
+            if(!character.items[i]) continue;
+            if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
+            {
+                pc = true
+                await load_module('PcOwner')
+            }
+        }
 }
 
 setInterval(isIDead, 5000)
