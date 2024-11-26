@@ -236,43 +236,7 @@ async function takeLoot(char)
     await send_cm(char, {cmd: 'giveMeLoot'})
 }
 
-async function storeUpgradeAndCombine()
-{
-	changeState('Banking...')
-	await smart_move('bank')
-	try 
-	{
-		console.warn('Storing items...')
-		for(i=0; i<character.items.length; i++){
-			
-			
-			if(character.items[i] === null || ITEMS_TO_EXCHANGE_IDS.includes(G.items[character.items[i].name].id)) continue;
-			let item = character.items[i]
-			let gItem = G.items[character.items[i].name]
-			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
-				bank_store(i) 
-				break;
-			}
-			if((JEWELRY_TO_UPGRADE[item.name] && item.level==JEWELRY_TO_UPGRADE[item.name].level) || (NOT_SALE_ITEMS_ID[item.name] && item.level == NOT_SALE_ITEMS_ID[item.name].level))
-			{
-				bank_store(i);
-			}
-			
-		}
-		
-	}
-	catch(ex) {console.error(ex)}
-	finally
-	{
 
-		await smart_move('main')
-		upgradeItems()
-		combineItems()
-		exchangeItems()
-		changeState(DEFAULT_STATE)
-	}
-    
-}
 
 async function buyWeapon()
 {

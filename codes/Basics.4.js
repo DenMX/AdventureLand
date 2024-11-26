@@ -45,6 +45,7 @@ initialize_character()
 async function initialize_character() {
     await load_module('Mover')
     await load_module('PotionUse')
+    await load_module('MerchantItems')
     await load_module('Upgrading')
 }
 

@@ -398,6 +398,7 @@ async function sendItems()
 						}
 					await send_gold(i.name, character.gold-1000000)
 					shuffleItems()
+					if(itemsCount()>=42)await storeUpgradeAndCombine()
 				}
 			
 			}

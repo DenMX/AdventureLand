@@ -34,7 +34,6 @@ async function initialize_character() {
         if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
         {
 			pc = true
-            await load_module('MerchantItems')
             await load_module('PcOwner')
         }
     }

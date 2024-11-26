@@ -3,8 +3,6 @@ let isGoingToBank = false
 let isExchanging = false
 // let isCombining = false
 
-
-
 var state='Idling'
 
 const DEFAULT_STATE = 'Idling'
@@ -50,7 +48,6 @@ async function initChar()
 {
 	await load_module('Basics')
 	await load_module('MerBuisiness')
-	await load_module('MerchantItems')
 	for(let i in character.items)
 	{
 		if(!character.items[i]) continue;
@@ -281,7 +278,7 @@ async function checkCyberTime()
 async function checkItemsCount()
 {
 	
-	if(itemsCount()==42) 
+	if(itemsCount()>=42) 
 	{
 		sellItems()
 		
