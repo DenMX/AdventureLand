@@ -41,7 +41,9 @@ const ITEMS_TO_SALE = [
 	'frogt', 
 	'xmashat',
 	'pstem', 
-	'carrot', 
+	'carrot',
+	'poison', 
+	'smush',
 	// 'crabclaw',
 	'smoke', 
 	'ink',
@@ -142,6 +144,7 @@ const NOT_SALE_ITEMS_ID =
 	cape: {level: 7},
 	bcape: {level: 7},
 	mittens: {level: 6},
+	frankypants: {level: 6},
 
 	//WEAPON
 	firestaff: {level: 9},
@@ -169,7 +172,8 @@ const NOT_SALE_ITEMS_ID =
 	crossbow: {level: 7},
 	broom: {level: 7},
 	cclaw: {level: 8},
-	sshield: {level: 7}
+	sshield: {level: 7},
+	mushroomstaff: {level: 8}
 }
 
 const JEWELRY_TO_UPGRADE =
