@@ -20,6 +20,7 @@ const FARM_BOSSES = [
 	"wabbit",
     "mrpumpkin",
     "mrgreen",
+    "stompy",
 
 
 	// Crypt bosses
