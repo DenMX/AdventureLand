@@ -41,17 +41,17 @@ function on_magiport(name)
 
 
 
-setInterval(checkState, 300)
+setInterval(checkState, 2000)
 async function checkState() {
 	
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
 	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bigbird
 	bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
-	if(bosses.length > 0) return
+	if(bosses.length > 0 || character.moving) return
 	switch(char_action){
 		case 'farm':
 			set_message('Farming...')
-			if(!smart.moving && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length==0)
+			if(!characterMoving() && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length<1)
 				(current_farm_pos?.location) ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
 			break;
 		case 'boss':
@@ -69,27 +69,58 @@ async function checkState() {
 
 async function checkAction(action, cur_point, schedule) {
 
-	if(cur_point && getDistance(character, cur_point)>500 && !character.moving)  {
-		(action=='boss') ? await smart_move(cur_point) : await smart_move(cur_point.event)
-	}
-	else if(!cur_point || (cur_point && (getDistance(character, cur_point) <= 500 || getDistance(character, cur_point.event)) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
-	{
-		if(schedule.length>0) {
-			cur_point = schedule.shift()
-			(action=='boss') ? await smart_move(cur_point) : await smart_move(cur_point.event)
-		}
-		else {
-			if(action == 'boss') { 
-				char_action = 'farm' 
-				current_boss = null
+	if(characterMoving()) return
+	let bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
+	switch (action) {
+		case 'boss':
+			if(cur_point)
+			{ 
+				if( getDistance(character, cur_point)<500 && bosses.length<1)
+				{
+					schedule.length>0 ? current_boss=schedule.shift().then(smart_move(current_boss)) : current_boss = null, char_action = 'farm'
+				}
+				else if( getDistance(character, cur_point)>500) await smart_move(cur_point)
 			}
-			else if(action == 'event'){
-				char_action = 'boss'
-				current_event = null
-				checkAction('boss', current_boss, boss_schedule)
+			else schedule.length>0 ? current_boss=schedule.shift() : char_action = 'farm'
+			break;
+		case 'event':
+			if(!cur_point)
+			{
+				schedule.length > 0 ? cur_point = current_event = schedule.shift() : char_action = 'boss'
+				return
 			}
-		}
+			// check if event not active
+			if (parent.S[cur_point] == 'indefined' || parent.S[cur_point].live == false) {
+				schedule.length > 0 ? current_event = schedule.shift() : current_event = null, char_action = 'boss'
+			}
+			//check if we need to go for event. Checking bosses count because not every event has coordinates and we can meet boss before event.
+			else if (parent.S[cur_point].live || parent.S[cur_point].live == 'undefined' && bosses.length<1) smart_move (parent.S[cur_point])
+			
 	}
+
+
+
+	// if(cur_point && getDistance(character, parent.S[cur_point] || cur_point)>500 && !character.moving)  {
+	// 	(action=='boss') ? await smart_move(cur_point) : await smart_move(parent.S[cur_point])
+	// }
+	// else if(!cur_point || (cur_point && (getDistance(character, cur_point) <= 500 || getDistance(character, parent.S[cur_point])<=500) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
+	// {
+	// 	if(schedule.length>0) {
+	// 		cur_point = schedule.shift()
+	// 		(action=='boss') ? await smart_move(cur_point) : await smart_move(parent.S[cur_point])
+	// 	}
+	// 	else {
+	// 		if(action == 'boss') { 
+	// 			char_action = 'farm' 
+	// 			current_boss = null
+	// 		}
+	// 		else if(action == 'event'){
+	// 			char_action = 'boss'
+	// 			current_event = null
+	// 			checkAction('boss', current_boss, boss_schedule)
+	// 		}
+	// 	}
+	// }
 		
 
 }

@@ -17,7 +17,7 @@ async function upgradeItems()
 						try
 						{
 							console.warn(item)
-							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && character.s.massproductionpp == 'undefined' && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
 							await upgrade(i, locate_item(grade))
 						}
 						catch(ex)
@@ -30,7 +30,7 @@ async function upgradeItems()
 						try
 						{
 							await buy_with_gold(grade, 1)
-							if(character.ctype=='merchant' && !character.s.massproductionpp) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && !character.s.massproductionpp && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
 							console.warn(item)
 							await upgrade(i, locate_item(grade))
 						}
@@ -76,7 +76,7 @@ async function combineItems()
 						try
 						{
 							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-							//if(!character.s.massproductionpp) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && character.s.massproductionpp == 'undefined' && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
 							await compound(items[0],items[1],items[2],findCScroll(grade))
 							break;
 						}
@@ -176,11 +176,15 @@ async function storeUpgradeAndCombine()
 	try 
 	{
 		console.warn('Storing items...')
-		for(i=0; i<character.items.length; i++){
+		out: for(i=0; i<character.items.length; i++){
 			
 			
 			if(character.items[i] === null || ITEMS_TO_EXCHANGE_IDS.includes(G.items[character.items[i].name].id)) continue;
 			let item = character.items[i]
+			for (let i of PERSONAL_ITEMS)
+			{
+				if(item.name == i.name && item.level == i.level) continue out
+			}
 			let gItem = G.items[character.items[i].name]
 			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
 				bank_store(i) 

@@ -215,6 +215,6 @@ async function useDarkBlessing()
 async function useCurse(target)
 {
 	if(!is_on_cooldown('curse')) return
-	if( FARM_BOSSES.includes(target) && character.mp - G.skills.curse.mp> character.max_mp*0.4) await use_skill('curse', target)
+	if( FARM_BOSSES.includes(target?.mtype) && character.mp - G.skills.curse.mp> character.max_mp*0.4 && target.hp>10000) await use_skill('curse', target)
 	else if (current_farm_pos.coop) await use_skill('curse', target).catch(() => {})
 }

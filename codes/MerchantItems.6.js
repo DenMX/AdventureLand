@@ -120,31 +120,36 @@ const ITEMS_TO_SALE = [
 	'staffofthedead',
 	'daggerofthedead',
 	'maceofthedead',
-	'bowofthedead'
+	'bowofthedead',
+
+	//shields
+	'mshield'
 	
 ]
 
 
 const NOT_SALE_ITEMS_ID = 
 {
-	hhelmet: {level: 6},
+	hhelmet: {level: 7},
 	xhelmet: {level: 5},
-	harmor: {level: 6},
+	harmor: {level: 7},
 	xarmor: {level: 5},
-	hpants: {level: 6},
+	hpants: {level: 7},
 	xpants: {level: 5},
 	wingedboots: {level: 9},
-	hboots: {level: 6},
+	hboots: {level: 7},
 	xboots: {level: 5},
-	hgloves: {level: 5},
+	hgloves: {level: 7},
 	quiver: {level: 7},
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	mcape: {level: 7},
 	cape: {level: 7},
 	bcape: {level: 7},
-	mittens: {level: 6},
+	mittens: {level: 8},
 	frankypants: {level: 6},
+	gcape: {level: 7},
+	sweaterhs: {level: 7},
 
 	//WEAPON
 	firestaff: {level: 9},
@@ -158,7 +163,7 @@ const NOT_SALE_ITEMS_ID =
 	basher: {level: 7},
 	ololipop: {level: 8},
 	glolipop: {level: 8},
-	candycanesword: {level: 8},
+	candycanesword: {level: 9},
 	ornamentstaff: {level: 8},
 	pmace: {level: 8},
 	merry: {level:9},
@@ -173,7 +178,9 @@ const NOT_SALE_ITEMS_ID =
 	broom: {level: 7},
 	cclaw: {level: 8},
 	sshield: {level: 7},
-	mushroomstaff: {level: 8}
+	mushroomstaff: {level: 8},
+	snowflakes: {level: 7},
+	t2quiver: {level: 5}
 }
 
 const JEWELRY_TO_UPGRADE =
@@ -192,7 +199,8 @@ const JEWELRY_TO_UPGRADE =
 	wbook0: {level: 3},
 	t2intamulet: {level: 3},
 	t2stramulet: {level: 3},
-	t2dexamulet: {level: 3}
+	t2dexamulet: {level: 3},
+	wbookhs: {level: 1}
 }
 
 const ITEMS_TO_BUY_PONTY =

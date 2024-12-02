@@ -7,7 +7,7 @@ async function checkInventory()
 		await upgradeItems()
 		await combineItems()
 	}
-	setTimeout(checkInventory, 10000)
+	setTimeout(checkInventory, 1800000)
 }
 
 checkPots()

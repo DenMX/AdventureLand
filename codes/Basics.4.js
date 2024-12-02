@@ -30,11 +30,12 @@ const FARM_BOSSES = [
 
 const EVENTS = [
     {name: 'snowman', useSkills: false, massFarm: false, targets: ['snowman']}, 
-    {name: 'dragold', useSkills:true, massFarm: true, targets: []},
+    {name: 'dragold', useSkills:true, massFarm: true, targets: ['dragold']},
     {name: 'goobrawl', useSkills: true, massFarm: true, targets: ['bgoo']}, 
     {name: 'icegolem', useSkills: true, massFarm: false, targets: ['icegolem']},
     {name: 'mrgreen', useSkills: true, massFarm: false, targets: ['mrgreen']},
-    {name: 'mrpumpkin', useSkills: true, massFarm: false, targets: ['mrpumpkin']}
+    {name: 'mrpumpkin', useSkills: true, massFarm: false, targets: ['mrpumpkin']},
+    {name: 'grinch', useSkills: true, massFarm: false, targets: ['grinch']}
 ]
 
 const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frostyHeal']
@@ -60,6 +61,12 @@ async function checkApi(callback) {
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', 'Bearer ' + '776167b3d96c6ab2abff40a99175092c3c34e673f4d126a8335e778b04b00422');
     xhr.send()
+}
+
+function characterMoving()
+{
+    if(character.moving || smart.moving || character.c.town) return true
+    return false
 }
 
 async function initialize_character() {

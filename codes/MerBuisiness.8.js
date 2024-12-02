@@ -17,6 +17,7 @@ const BOSS_CHECK_ROUTE = [
 	{name: "mvampire", map: "cave", x: -181, y: -1164},
 	{name: "mvampire", map: "cave", x: 1244, y: -23},
 	{name: "jr", map: "spookytown", x: -784, y: -301},
+	{name: "stompy", map: "winterland", x: 400, y: -2600},
 	{name: "skeletor", map: "arena", x: 247, y: -558}
 ]
 
@@ -124,12 +125,24 @@ async function checkBosses()
 async function equipTools(tool)
 {
 	if(character.slots.mainhand && character.slots.mainhand.name == tool) return true
+	let broom_index
+	let book_index
 	for(let i in character.items)
 	{
 		item = character.items[i]
 		if(!item) continue;
-		if( item.name == tool)
+		if(tool == 'broom') {
+			if(item.name == BROOM.name && item.level == BROOM.level) {
+				broom_index = i
+			}
+			else if(item.name == BOOK.name && item.level == BOOK.level) {
+				book_index = i
+			}
+			if ( broom_index && book_index ) await equip_batch([{slot: 'mainhand', num: broom_index}, {slot: 'offhand', num: book_index}])
+		}
+		else if( item.name == tool)
 		{
+			await unequip('offhand')
 			await equip(i)
 			return true
 		}

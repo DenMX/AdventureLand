@@ -10,6 +10,11 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 const MINUTES_TO_RESET_STATE = 10
 
+const BROOM = {name: 'broom', level: 7}
+const BOOK = {name: 'wbookhs', level: 1}
+
+const PERSONAL_ITEMS = [ BROOM, BOOK ]
+
 var pc = false
 var cyberland_check
 var bank_check
@@ -110,14 +115,14 @@ async function checkEvents()
 	{
 		if(parent.S[e.name])
 		{
-			if((e.name == 'mrpumpkin' || e.name  == 'mrgreen') && parent.S[e.name].live == true)
+			if(parent.S[e.name].live && parent.S[e.name].live == true)
 			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name})
 				
 			}
-			else if(e.name != 'mrpumpkin' && e.name  != 'mrgreen')
+			else if(parent.S[e.name].live === 'undefined')
 			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, event: parent.S[e.name]})
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name})
 				check_bosses = false
 				waitEventEnds(e.name)
 			}

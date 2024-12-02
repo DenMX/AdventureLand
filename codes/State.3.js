@@ -272,7 +272,7 @@ character.on("cm", function(data){
 				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)
 				break;
 			case 'event':
-				handleEvent(data.message.name, data.message.event)
+				handleEvent(data.message.name)
 				break;
 			default:
 				console.warn('Unknown command:' + data.message.cmd)
@@ -318,7 +318,7 @@ async function handleBoss(boss)
 	{
 		char_action == 'boss'
 		current_boss = boss
-		if(getDistance(character, current_boss)>500) await smart_move(current_boss)
+		if(getDistance(character, current_boss)>500 && !characterMoving() ) await smart_move(current_boss)
 	}
 	else if(!bossReceived(boss)){
 		boss_schedule.push(boss)
@@ -334,33 +334,22 @@ function bossReceived(boss)
 	return false
 }
 
-async function handleEvent(eventName, gevent)
+async function handleEvent(eventName)
 {
 	console.log('Got an event: '+eventName)
 	if(char_action != 'event' && !FARM_BOSSES.includes(parent.ctarget?.mtype))
 	{
-		current_event = { name: eventName, event: gevent }
+		// current_event = { name: eventName, event: gevent }
+		current_event = eventName
 		char_action = 'event'
-		if(['icegolem','goobrawl'].includes(eventName)){
-			join(eventName)
-			return;
-		}
 	}
-	else if(!checkEventQueue(eventName)){
-		event_schedule.push({name: eventName, event: gevent})
+	else if(!event_schedule.includes(eventName)){
+		event_schedule.push(eventName)
 	}
 	
-	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(gevent)
+	if(Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1 && !character.moving) await smart_move(parent.S[eventName])
 }
 
-function checkEventQueue(event_name)
-{
-	for(let i of event_schedule)
-	{
-		if(i.name == event_name) return true
-	}
-	return false
-}
 
 async function goFarm(mob)
 {

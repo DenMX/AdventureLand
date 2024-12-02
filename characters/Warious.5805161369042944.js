@@ -187,7 +187,7 @@ async function useCleave(target)
 function selectMainWeapon()
 {
 	target = parent.ctarget
-	if(target && (current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target.mtype == 'bgoo')
+	if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
 		desired_main = MASS_MAINHAND
 	else desired_main = MAINHAND
 }
@@ -196,7 +196,7 @@ function selectOffWeapon()
 {
 	target = parent.ctarget
 	if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
-	else if(target && (current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target.mtype == 'bgoo')
+	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
 		desired_off = LOLIPOP
 	else desired_off = OFFHAND
 }
