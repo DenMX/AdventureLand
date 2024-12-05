@@ -41,35 +41,55 @@ function on_magiport(name)
 
 
 
-setInterval(checkState, 2000)
+setInterval(checkState, 5000)
 async function checkState() {
 	
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
 	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bigbird
 	bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
-	if(bosses.length > 0 || character.moving) return
-	switch(char_action){
-		case 'farm':
-			set_message('Farming...')
-			if(!characterMoving() && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length<1)
-				(current_farm_pos?.location) ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
-			break;
-		case 'boss':
-			set_message('Bossing...')
-			checkAction('boss', current_boss, boss_schedule)
-			break;
-		case 'event':
-			set_message('Event')
-			checkAction('event', current_event, event_schedule)
-			break;
-
+	if(bosses.length > 0 || characterMoving()) 
+	{
+		// setTimeout(checkAction, 2000)
+		return
 	}
+	try {
+		switch(char_action){
+			case 'farm':
+				set_message('Farming...')
+				if(!characterMoving() && Object.values(parent.entities).filter((e) => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)).length<1)
+				{
+					current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
+					console.log('Farm smart_move')
+					setTimeout(checkState, 2000)
+				}
+				break;
+			case 'boss':
+				set_message('Bossing...')
+				checkAction('boss', current_boss, boss_schedule)
+				break;
+			case 'event':
+				set_message('Event')
+				checkAction('event', current_event, event_schedule)
+				break;
+	
+		}
+	}
+	catch(e){
+		console.warn('Error while checking state\n'+e)
+	}
+	finally {
+		// setTimeout(checkState, 3000)
+	}
+	
 }
 
 
 async function checkAction(action, cur_point, schedule) {
 
-	if(characterMoving()) return
+	if(characterMoving()) {
+		setTimeout(checkState, 2000)	
+		return
+	}
 	let bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
 	switch (action) {
 		case 'boss':
@@ -94,7 +114,7 @@ async function checkAction(action, cur_point, schedule) {
 				schedule.length > 0 ? current_event = schedule.shift() : current_event = null, char_action = 'boss'
 			}
 			//check if we need to go for event. Checking bosses count because not every event has coordinates and we can meet boss before event.
-			else if (parent.S[cur_point].live || parent.S[cur_point].live == 'undefined' && bosses.length<1) smart_move (parent.S[cur_point])
+			else if (parent.S[cur_point].live || parent.S[cur_point].live == 'undefined' && bosses.length<1) await smart_move (parent.S[cur_point])
 			
 	}
 

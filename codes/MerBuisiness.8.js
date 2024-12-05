@@ -21,7 +21,7 @@ const BOSS_CHECK_ROUTE = [
 	{name: "skeletor", map: "arena", x: 247, y: -558}
 ]
 
-const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'gem', 'quest', 'pscroll', 'token', 'offering', 'elixir']
+const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'pscroll', 'token', 'offering', 'elixir']
 
 async function smart_exchange(npc, itemName, slot)
 {

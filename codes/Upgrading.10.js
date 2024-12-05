@@ -17,7 +17,7 @@ async function upgradeItems()
 						try
 						{
 							console.warn(item)
-							if(character.ctype == 'merchant' && character.s.massproductionpp == 'undefined' && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && !character?.s['massproductionpp'] && character.mp - G.skills.massproductionpp.mp>0) await use_skill('massproductionpp')
 							await upgrade(i, locate_item(grade))
 						}
 						catch(ex)
@@ -30,7 +30,7 @@ async function upgradeItems()
 						try
 						{
 							await buy_with_gold(grade, 1)
-							if(character.ctype == 'merchant' && !character.s.massproductionpp && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && !character.s['massproductionpp'] && character.mp - G.skills.massproductionpp.mp>0) await use_skill('massproductionpp')
 							console.warn(item)
 							await upgrade(i, locate_item(grade))
 						}
@@ -76,7 +76,7 @@ async function combineItems()
 						try
 						{
 							if(!cscrolls) await buy_with_gold('cscroll'+grade, 1)
-							if(character.ctype == 'merchant' && character.s.massproductionpp == 'undefined' && character.mp - G.skils.massproductionpp.mp>0) await use_skill('massproductionpp')
+							if(character.ctype == 'merchant' && !character.s.massproductionpp && character.mp - G.skills.massproductionpp.mp>0) await use_skill('massproductionpp')
 							await compound(items[0],items[1],items[2],findCScroll(grade))
 							break;
 						}

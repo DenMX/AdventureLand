@@ -65,32 +65,39 @@ async function checkApi(callback) {
 
 function characterMoving()
 {
-    if(character.moving || smart.moving || character.c.town) return true
+    if(character.moving || character.c.town) return true
     return false
 }
 
 async function initialize_character() {
-    // try {
-    //     await checkApi( async function(available)
-    //     {
-    //         if(available) await load_module('Mover')
-    //         else console.error('API unavailable')
-    //     })
-    // }
-    // catch(ex) {console.error('Error while checking API\n' + ex)}
     await load_module('Mover')
     await load_module('PotionUse')
     await load_module('MerchantItems')
     await load_module('Upgrading')
     for(let i in character.items)
+    {
+        if(!character.items[i]) continue;
+        if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
         {
-            if(!character.items[i]) continue;
-            if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
-            {
-                pc = true
-                await load_module('PcOwner')
-            }
+            pc = true
+            await load_module('PcOwner')
         }
+    }
+
+    checkEventBuff()
+}
+
+async function checkEventBuff()
+{
+    if(!character.s.holidayspirit)
+    {   
+        stop('moving')
+        await smart_move('main')
+        await parent.socket.emit("interaction",{type:"newyear_tree"});
+        setTimeout(checkEventBuff, character.s.holidayspirit.ms)
+    }
+    else setTimeout(checkEventBuff, character.s.holidayspirit.ms)
+
 }
 
 setInterval(isIDead, 5000)

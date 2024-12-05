@@ -24,16 +24,6 @@ const ITEMS_TO_EXCHANGE = [
 	'leather'
 ]
 
-const ITEMS_TO_EXCHANGE_IDS = [
-	'gem0',
-	'gem1',
-	'armorbox',
-	'weaponbox',
-	'bugbountybox',
-	'candycane',
-	'candy0',
-	'candy1'
-]
 
 const NOT_SALE_ITEM_TYPES = ['cape']
 const ITEMS_TO_SALE = [
@@ -62,15 +52,17 @@ const ITEMS_TO_SALE = [
 	'xmasshoes',
 	'xmassweater',
 	'xmaspants',
+	'warmscarf',
+	'merry',
 
 	//Jewelery
 	'hpamulet',
 	'hpbelt',
 	'vitearring',
 	'vitring',
-	'dexring',
-	'dexearring',
-	'dexbelt',
+	// 'dexring',
+	// 'dexearring',
+	// 'dexbelt',
 	'dexamulet',
 	'ringsj',
 
@@ -82,12 +74,6 @@ const ITEMS_TO_SALE = [
 	// 'cclaw',
 	'stinger',
 	'slimestaff',
-	'helmet',
-	'wcap',
-	'coat',
-	'wattire',
-	'pants',
-	'wbreeches',
 	'gloves',
 	'wgloves',
 	'shoes',
@@ -130,6 +116,16 @@ const ITEMS_TO_SALE = [
 
 const NOT_SALE_ITEMS_ID = 
 {
+	//begginers shit
+	helmet: {level: 9},
+	wcap: {level: 9},
+	coat: {level: 9},
+	wattire: {level: 9},
+	pants: {level: 9},
+	wbreeches: {level: 9},
+
+
+	//
 	hhelmet: {level: 7},
 	xhelmet: {level: 5},
 	harmor: {level: 7},
@@ -180,7 +176,8 @@ const NOT_SALE_ITEMS_ID =
 	sshield: {level: 7},
 	mushroomstaff: {level: 8},
 	snowflakes: {level: 7},
-	t2quiver: {level: 5}
+	t2quiver: {level: 6},
+	angelwings: {level: 4}
 }
 
 const JEWELRY_TO_UPGRADE =
@@ -200,7 +197,11 @@ const JEWELRY_TO_UPGRADE =
 	t2intamulet: {level: 3},
 	t2stramulet: {level: 3},
 	t2dexamulet: {level: 3},
-	wbookhs: {level: 1}
+	wbookhs: {level: 1},
+	santasbelt: {level: 2},
+	dexring: {level: 3},
+	dexearring: {level: 3},
+	dexbelt: {level: 4}
 }
 
 const ITEMS_TO_BUY_PONTY =

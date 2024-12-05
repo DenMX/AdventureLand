@@ -1,13 +1,19 @@
 
-checkInventory()
+setInterval(checkInventory, 30000)
 async function checkInventory()
 {
-	if(itemsCount() > 15){
-		await sellItems()
-		await upgradeItems()
-		await combineItems()
+	try{
+		if(itemsCount() > 15){
+			await sellItems()
+			await upgradeItems()
+			await combineItems()
+		}
 	}
-	setTimeout(checkInventory, 1800000)
+	catch{}
+	finally
+	{
+		// setTimeout(checkInventory, 60000)
+	}
 }
 
 checkPots()
