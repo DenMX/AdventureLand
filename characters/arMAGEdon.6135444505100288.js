@@ -239,7 +239,7 @@ async function mageHandleBoss(boss)
 
 async function summonMates()
 {
-	if(is_on_cooldown('magiport') || character.mp<900 || characterMoving() || goingForQuest || (['boss','farm'].includes(char_action) && Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1)) 
+	if(is_on_cooldown('magiport') || character.mp<900 || characterMoving() || goingForQuest || (['boss','event'].includes(char_action) && Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype)).length<1)) 
 	{
 		setTimeout(summonMates, 2000)
 		return
