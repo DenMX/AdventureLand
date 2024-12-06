@@ -197,7 +197,7 @@ const JEWELRY_TO_UPGRADE =
 	t2intamulet: {level: 3},
 	t2stramulet: {level: 3},
 	t2dexamulet: {level: 3},
-	wbookhs: {level: 1},
+	wbookhs: {level: 2},
 	santasbelt: {level: 2},
 	dexring: {level: 3},
 	dexearring: {level: 3},
