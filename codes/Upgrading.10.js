@@ -149,7 +149,8 @@ async function sellItems()
 		if(!item) continue
 		if(ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
-	if(itemsCount()>=42) await storeUpgradeAndCombine()
+	if(itemsCount()>=42 && character.ctype=='merchant') scheduler(storeUpgradeAndCombine)
+	else if (itemsCount()>= 42 && character.ctype != 'merchant') await storeUpgradeAndCombine()
 }
 
 exchangeItems()
@@ -179,11 +180,11 @@ async function storeUpgradeAndCombine()
 		out: for(i=0; i<character.items.length; i++){
 			
 			
-			if(character.items[i] === null || ITEMS_TO_EXCHANGE_IDS.includes(G.items[character.items[i].name].id)) continue;
+			if(character.items[i] === null) continue;
 			let item = character.items[i]
-			for (let i of PERSONAL_ITEMS)
+			for (let j of PERSONAL_ITEMS)
 			{
-				if(item.name == i.name && item.level == i.level) continue out
+				if(item.name == j.name && item.level == j.level) continue out
 			}
 			let gItem = G.items[character.items[i].name]
 			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
