@@ -320,7 +320,7 @@ smart_move_logic = async function() {
     }
 
     // Using town portal
-    if (smart.curr_step.town) {
+    if (smart.curr_step.town && Object.values(parent.entities).filter( e => e.target == character.name).length<1) {
         game_log("Going to town", "#2b97ff");
 
         use_skill("use_town");
