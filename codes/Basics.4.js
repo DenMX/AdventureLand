@@ -40,6 +40,8 @@ const EVENTS = [
 
 const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frostyHeal']
 
+const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'pscroll', 'token', 'offering', 'elixir']
+
 var death = false
 
 initialize_character()

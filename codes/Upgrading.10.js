@@ -189,7 +189,6 @@ async function storeUpgradeAndCombine()
 			let gItem = G.items[character.items[i].name]
 			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
 				bank_store(i) 
-				break;
 			}
 			if((JEWELRY_TO_UPGRADE[item.name] && item.level==JEWELRY_TO_UPGRADE[item.name].level) || (NOT_SALE_ITEMS_ID[item.name] && item.level == NOT_SALE_ITEMS_ID[item.name].level))
 			{
