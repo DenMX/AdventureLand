@@ -75,7 +75,7 @@ const ITEMS_TO_SALE = [
 	'stinger',
 	'slimestaff',
 	'gloves',
-	'wgloves',
+	// 'wgloves',
 	'shoes',
 	'wshoes',
 
@@ -109,7 +109,7 @@ const ITEMS_TO_SALE = [
 	'bowofthedead',
 
 	//shields
-	'mshield'
+	// 'mshield'
 	
 ]
 
@@ -117,12 +117,14 @@ const ITEMS_TO_SALE = [
 const NOT_SALE_ITEMS_ID = 
 {
 	//begginers shit
-	helmet: {level: 9},
-	wcap: {level: 9},
-	coat: {level: 9},
-	wattire: {level: 9},
-	pants: {level: 9},
-	wbreeches: {level: 9},
+	helmet: {level: 8},
+	wcap: {level: 8},
+	coat: {level: 8},
+	wattire: {level: 8},
+	pants: {level: 8},
+	wbreeches: {level: 8},
+	wgloves: {level: 8},
+	wshoes: {level: 8},
 
 
 	//
@@ -146,6 +148,7 @@ const NOT_SALE_ITEMS_ID =
 	frankypants: {level: 6},
 	gcape: {level: 7},
 	sweaterhs: {level: 7},
+	mshield: {level: 4},
 
 	//WEAPON
 	firestaff: {level: 9},

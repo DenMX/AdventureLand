@@ -21,7 +21,8 @@ const BOSS_CHECK_ROUTE = [
 	{name: "skeletor", map: "arena", x: 247, y: -558}
 ]
 
-
+// exmp: { phoenix: 12:52, dracula: 13:30 }
+var founded_bosses = {}
 
 async function smart_exchange(npc, itemName, slot)
 {
@@ -103,6 +104,9 @@ async function checkBosses()
 	changeState('Checking bosses')
 	for(let point of BOSS_CHECK_ROUTE)
 	{
+		let spawn_ms = G.monsters[point.name].respawn * 1000
+		if(founded_bosses[point.name] && Date.now()-founded_bosses[point.name] < spawn_ms) continue
+		
 		await smart_move(point)
 		if(Object.values(parent.entities).filter(e=> e.mtype == point.name).length > 0)
 		{
@@ -110,6 +114,7 @@ async function checkBosses()
 			console.log('Found: '+point.name)
 			if(point.name == 'skeletor' && Object.values(parent.entities).filter(e => e.mtype == 'skeletor' && e.hp_level>5).length>0)continue;
 			await send_cm('arMAGEdon',{cmd: "boss", boss: point})
+			founded_bosses[point.name] = Date.now()
 		}
 		else 
 		{
