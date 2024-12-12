@@ -153,7 +153,7 @@ async function sellItems()
 	else if (itemsCount()>= 42 && character.ctype != 'merchant') await storeUpgradeAndCombine()
 }
 
-exchangeItems()
+
 async function exchangeItems()
 {
 	let exchangeItem = false
@@ -205,7 +205,7 @@ async function storeUpgradeAndCombine()
 		await smart_move('main')
 		upgradeItems()
 		combineItems()
-		exchangeItems()
+		// exchangeItems()
 		if(character.type=='merchant')changeState(DEFAULT_STATE)
 	}
     

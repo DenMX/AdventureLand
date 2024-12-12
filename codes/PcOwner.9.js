@@ -1,5 +1,5 @@
 
-setInterval(checkInventory, 30000)
+checkInventory()
 async function checkInventory()
 {
 	try{
@@ -12,7 +12,7 @@ async function checkInventory()
 	catch{}
 	finally
 	{
-		// setTimeout(checkInventory, 60000)
+		setTimeout(checkInventory, 10000)
 	}
 }
 
