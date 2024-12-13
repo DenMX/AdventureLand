@@ -251,21 +251,22 @@ async function summonMates()
 			if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
 			let curState = get(member)
 			let distance = getDistance(curState, character)
+			let entities = Object.values(parent.entities)
 			
-			if(char_action == 'boss' && distance>250)
+			if(char_action == 'boss' && distance>250 && entities.filter(e => FARM_BOSSES.includes(e.mtype)).length>0)
 			{
 				await use_skill('magiport', member).catch(() => {})
-				await send_cm(member, {cmd: 'boss', boss: current_boss})
-				return
+				// await send_cm(member, {cmd: 'boss', boss: current_boss})
 			}
-			else if(char_action == 'event' && current_event && distance>250)
+			else if(char_action == 'event' && current_event && distance>250 && entities.filter(e => FARM_BOSSES.includes(e.mtype)).length>0)
 			{
 				await use_skill('magiport', member).catch(() => {})
+				
 			}
-			else if(curState.current_action == char_action && char_action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] && distance > 500)
+			else if(curState.current_action == char_action && char_action == 'farm' && curState.farm_location.mobs[0] == current_farm_pos.mobs[0] 
+				&& distance > 500 && entities.filter(e => current_farm_pos.mobs.includes(e.mtype)).length>0)
 			{
 				await use_skill('magiport', member).catch(() => {})
-				return
 			}
 		}
 	}
