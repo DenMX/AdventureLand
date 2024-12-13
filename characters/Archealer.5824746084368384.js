@@ -4,8 +4,8 @@ var pc = false
 
 const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
 
-const TANK_ITEMS = {xgloves: {level: 5}, sshield: {level: 8}}
-const HEAL_ITEMS = {wbook0: {level: 4}, mittens: {level: 8}}
+const TANK_ITEMS = {sshield: {level: 8}}
+const HEAL_ITEMS = {wbook0: {level: 4}}
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -39,6 +39,7 @@ async function initialize_character() {
     // }
 	useElixir()
 	usePhaseOut()
+	setInterval(saveSelfAss, 1000)
 }
 
 
@@ -81,7 +82,7 @@ function partyheal()
 setInterval(checkEquippedItems, 1000)
 function checkEquippedItems()
 {
-	let set = Object.values(parent.entities).filter(e => e && e.target == character.name).length > 0 ? TANK_ITEMS : HEAL_ITEMS
+	let set = (Object.values(parent.entities).filter(e => e && e.target == character.name).length > 0 && character.hp<character.max_hp*0.7) ? TANK_ITEMS : HEAL_ITEMS
 
 	for(let i in character.items)
 	{
@@ -156,6 +157,17 @@ function attackOrHeal(target)
 
 }
 
+async function saveSelfAss()
+{
+	if(is_on_cooldown('scare'))
+	{
+		setTimeout(saveSelfAss, 500)
+		return
+	}
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.5)	await use_skill('scare').catch(() => {})
+	
+}
+
 async function usePhaseOut(){
 	if(character.hp<character.max_hp*0.35 && !character.s.phasedout && locate_item('shadowstone')!= -1)
 	{
@@ -193,12 +205,29 @@ async function pullmobsFromMember()
 {
 	if(char_action=='farm' && !current_farm_pos.coop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
-	let monsters = Object.values(parent.entities).filter(e => e && e.target != character.name && parent.party_list.includes(e.target))
-	if(monsters.length>0)
+	for(member of parent.party_list)
 	{
-			await use_skill('absorb', monsters[0].target).catch(() => {})
+		let member_entity = parent.entities[member]
+		if(!member_entity || Object.values(parent.entities).filter(e=> e.target == member).length<1) continue
+		if(member_entity.ctype == 'warrior' && 
+			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'magical').length>2)) {
+				await use_skill('absorb', member).catch(() => {})
+				reduce_cooldown("absorb", Math.max(...parent.pings));
+				break
+		}
+		else if(member_entity.ctype == 'paladin' && 
+			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'physical').length>2)) {
+				await use_skill('absorb', member).catch(() => {})
+				reduce_cooldown("absorb", Math.max(...parent.pings));
+				break
+		}
+		else {
+			await use_skill('absorb', member).catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
+			break
+		}
 	}
+
 }
 
 

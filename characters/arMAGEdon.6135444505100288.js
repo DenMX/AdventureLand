@@ -75,7 +75,7 @@ async function saveSelfAss()
 {
 	if(is_on_cooldown('scare'))
 	{
-		setTimeout(saveSelfAss, 500)
+		// setTimeout(saveSelfAss, 500)
 		return
 	}
 	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare').catch(() => {})

@@ -7,8 +7,9 @@ const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
 const SHIELD = {name: 'sshield', level: 8}
+const ORB = {name: 'jacko', level: 2}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, ORB]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -71,6 +72,7 @@ async function initialize_character() {
 	setInterval(useSkills, 1000)
 	setInterval(selectMainWeapon,330)
 	setInterval(selectOffWeapon,330)
+	setInterval(saveSelfAss, 1000)
 }
 
 
@@ -83,6 +85,31 @@ async function useSkills()
 	useMassAgr()
 	useWarcry()
 	useCleave(target)
+	useTaunt(target)
+}
+
+async function saveSelfAss()
+{
+	if(character.hp>character.max_hp*0.45 || is_on_cooldown('scare')) return
+	if(character.hp<=character.max_hp*0.45 && Object.values(parent.entities).filter(e => e.target == character.name).length>0) {
+		if(character.slots.orb.name != ORB.name && character.slots.orb.level != orb.level)
+		{
+			var current_orb = character.slots.orb
+			for(let i in character.items)
+			{
+				let item = character.items[i]
+				if(item && item.name == ORB.name && item.level == ORB.level) await equip(i)
+			}
+		}
+		await use_skill('scare')
+
+		for(let j in character.items)
+		{
+			let itm = character.items[j]
+			if(itm && item.name == current_orb.name && item.level == current_orb.level) await equip(j)
+		}
+	}
+
 }
 
 useWarcry()
@@ -110,12 +137,21 @@ async function useDash(target)
 	}
 }
 
+async function useTaunt(target)
+{
+	if(!target) return
+	if(FARM_BOSSES.includes(target.mtype) && target.damage_type == 'physical' && target.target != character.name) {
+		await use_skill('taunt', target).catch(() => {})
+		reduce_cooldown('taunt', Math.max(...parent.pings))
+	}
+}
+
 async function useMassAgr()
 {
 	if(is_on_cooldown('agitate')|| (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
 	if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 0) 
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>0
-		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2)
+		|| (Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2 && (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))))
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.max(...parent.pings));
