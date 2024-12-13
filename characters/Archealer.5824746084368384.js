@@ -1,5 +1,6 @@
 const TARGETING_BLACK_LIST = ''
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'shadowstone']
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'shadowstone']
+const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck']
 var pc = false
 
 const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
@@ -79,7 +80,7 @@ function partyheal()
     }
 }
 
-setInterval(checkEquippedItems, 1000)
+// setInterval(checkEquippedItems, 1000)
 function checkEquippedItems()
 {
 	let set = (Object.values(parent.entities).filter(e => e && e.target == character.name).length > 0 && character.hp<character.max_hp*0.7) ? TANK_ITEMS : HEAL_ITEMS
@@ -100,7 +101,7 @@ async function useElixir()
 	{
 		for(let i in character.items)
 		{
-			if(character.items[i] && DO_NOT_SEND_ITEMS.includes(character.items[i].name)) await equip(i)
+			if(character.items[i] && ELIXIRS.includes(character.items[i].name)) await equip(i)
 		}
 	}
 	setTimeout(useElixir,getMsFromMinutes(60))
