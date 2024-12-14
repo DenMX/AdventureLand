@@ -16,6 +16,8 @@ const MP_POT = 'mpot1'
 
 
 const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
+const ELIXIRS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
+
 var pc = false
 let desired_main
 let desired_off

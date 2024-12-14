@@ -167,7 +167,17 @@ var attack_mode=true
 var curState
 var char_action
 
-
+async function useElixir()
+{
+	if(!character.slots.elixir)
+	{
+		for(let i in character.items)
+		{
+			if(character.items[i] && ELIXIRS.includes(character.items[i].name)) await equip(i)
+		}
+	}
+	setTimeout(useElixir,getMsFromMinutes(60))
+}
 
 getState();
 function getState()

@@ -19,7 +19,7 @@ var pc = false
 var cyberland_check
 var bank_check
 var last_state_change
-var check_bosses = true
+var check_bosses = false
 
 var merch_queue = []
 

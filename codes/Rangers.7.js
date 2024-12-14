@@ -2,7 +2,8 @@ var pc = false
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
-const DO_NOT_SEND_ITEMS = ['elixirdex0', 'elixirdex1', 'elixirdex2']
+const DO_NOT_SEND_ITEMS = ['elixirdex0', 'elixirdex1', 'elixirdex2', 'elixirluck', 'luckbooster']
+const ELIXIRS = ['elixirdex0', 'elixirdex1', 'elixirdex2', 'elixirluck']
 
 initialize_character();
 
@@ -22,6 +23,7 @@ async function initialize_character() {
             await load_module('PcOwner')
         }
     }
+    useElixir()
 }
 
 async function load_module(module) {
