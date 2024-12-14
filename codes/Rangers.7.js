@@ -110,7 +110,7 @@ async function use5Shot(target)
         let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
         && is_in_range(e))
         console.warn(tartgeted_mobs.length)
-        await use_skill('5shot', [target, tartgeted_mobs[0], tartgeted_mobs[1], tartgeted_mobs[2]])
+        await use_skill('5shot', tartgeted_mobs)
         reduce_cooldown("5shot", Math.max(...parent.pings))
         
     }
