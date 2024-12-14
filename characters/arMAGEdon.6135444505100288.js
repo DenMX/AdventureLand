@@ -12,7 +12,7 @@ async function load_module(module) {
 var pc = false
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
 
-const MASS_WEAPON = {name: 'gstaff', level: 3}
+const MASS_WEAPON = {name: 'gstaff', level: 4}
 const SOLO_WEAPON = {name: 'firestaff', level: 9}
 const BOOK = {name: 'wbook0', level: 3}
 

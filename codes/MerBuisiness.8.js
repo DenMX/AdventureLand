@@ -255,21 +255,21 @@ async function takeLoot(char)
 }
 
 
-
+// buyWeapon()
 async function buyWeapon()
 {
 	if(character.gold > 100000000 && itemsCount()<= 37)
 	{
-		changeState('Buying weapon..')
+		// changeState('Buying weapon..')
 		cnt = itemsCount()
 		for(let i =0; i<42-cnt-1; i++)
 		{
-			await buy_with_gold('bow')
+			await buy_with_gold('staff')
 		}
 	}
-	upgradeWeapon()
-	changeState(DEFAULT_STATE)
-	setTimeout(scheduler(buyWeapon), getMsFromMinutes(5))
+	// upgradeWeapon()
+	// changeState(DEFAULT_STATE)
+	setTimeout(buyWeapon, getMsFromMinutes(0,5))
 }
 
 async function checkCyberlandCommand() {

@@ -155,7 +155,7 @@ const NOT_SALE_ITEMS_ID =
 	firebow: {level: 7},
 	sword: {level: 9},
 	bow: {level: 9},
-	staff: {level:9},
+	staff: {level:8},
 	fireblade: {level: 9},
 	t2bow: {level: 9},
 	hbow: {level:8},
