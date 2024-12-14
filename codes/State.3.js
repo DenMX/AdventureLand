@@ -67,14 +67,14 @@ const FARM_LOCATIONS =
 			location: {x:-34, y:810, map: 'main'}, 
 			mobs: ['goo'],
 			coop: false, 
-			mass_farm: true,
+			massFarm: true,
 			canSolo: true
 		},
 		crab:  {
 			location: {x: -1215, y: -9, map: 'main'}, 
 			mobs: ['crab'],
 			coop: false, 
-			mass_farm: true,
+			massFarm: true,
 			canSolo: true
 		},
 		arcticbee:  {

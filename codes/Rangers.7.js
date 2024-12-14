@@ -10,16 +10,17 @@ initialize_character();
 async function initialize_character() {
     
     await load_module('Basics')
-    await load_module('PotionUse')
+    // await load_module('PotionUse')
     await load_module('State')
     await load_module('MainBehavior')
+    // await load_module('MerchantItems')
     for(let i in character.items)
     {
         if(!character.items[i]) continue;
         if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
         {
             pc = true
-            await load_module('MerchantItems')
+            
             await load_module('PcOwner')
         }
     }
@@ -90,31 +91,6 @@ async function useMark(target)
     }
 }
 
-async function useTriplShot(target)
-{
-	
-    if(!is_on_cooldown('3shot') )
-    {
-	    let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
-        && is_in_range(e) && e!== target)
-        await use_skill('3shot', [target, tartgeted_mobs[0], tartgeted_mobs[1]]).then(function(data){ reduce_cooldown("3shot", character.ping)})
-    }
-}
-
-
-async function use5Shot(target)
-{
-    if(!is_on_cooldown('5shot') )
-    {
-        console.error('using 5shot')
-        let tartgeted_mobs = Object.values(parent.entities).filter((e) => e.type==='monster' && current_farm_pos.Mobs.includes(e.mtype) 
-        && is_in_range(e))
-        console.warn(tartgeted_mobs.length)
-        await use_skill('5shot', tartgeted_mobs)
-        reduce_cooldown("5shot", Math.max(...parent.pings))
-        
-    }
-}
 
 async function usePiercing(target)
 {
@@ -143,6 +119,9 @@ function myAttack(target){
 	
 	change_target(target);
 	useSkills(target);
+    let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))
+    let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype))
+    console.log('Monsters: '+monsters_in_range.length)
 	if(!is_in_range(target))
 	{
 		move(
@@ -150,29 +129,26 @@ function myAttack(target){
 			character.y+(target.y-character.y)/4
 			);
 	}
-    else if(character.level >= G.skills['5shot'].level && can_attack(target) && !current_farm_pos.coop && !is_on_cooldown('5shot') && character.mp > 350
-    && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 3)
+    else if(canMassAttack && monsters_in_range.length > 3 && character.mp > G.skills['5shot'].mp)
     {
-        set_message("Attacking");
-		use5Shot(target).catch(() => {});
+        // set_message("Attacking");
+		use_skill('5shot', monsters_in_range).catch(() => {});
     }
-	else if(character.level >= G.skills['3shot'].level && can_attack(target) && !current_farm_pos.coop && !is_on_cooldown('3shot') && character.mp > 200 
-    && Object.values(parent.entities).filter((e) => e.type == 'monster' && is_in_range(e)).length > 2)
+	else if(canMassAttack && monsters_in_range.length > 2 && character.mp > G.skills['3shot'].mp)
 	{
 		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-		set_message("Attacking");
-		useTriplShot(target).catch(() => {});
+		// set_message("Attacking");
+		use_skill('3shot', monsters_in_range).catch(() => {});
 	}
-    else if(can_attack(target) && target.armor && target.armor > 300)
+    else if(can_attack(target) && target.armor && target.armor > 400)
     {
         usePiercing(target)
     }
     else if(can_attack(target) )
     {
         //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-		set_message("Attacking");
-		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.min(...parent.pings));
-        
+		// set_message("Attacking");
+		attack(target).catch(() => {});        
     }
+    reduce_cooldown("attack", Math.min(...parent.pings));
 }
