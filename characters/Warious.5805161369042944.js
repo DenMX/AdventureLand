@@ -7,9 +7,9 @@ const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
 const SHIELD = {name: 'sshield', level: 8}
-const ORB = {name: 'jacko', level: 2}
+const JACKO = {name: 'jacko', level: 2}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, ORB]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -74,7 +74,7 @@ async function initialize_character() {
 	setInterval(useSkills, 1000)
 	setInterval(selectMainWeapon,330)
 	setInterval(selectOffWeapon,330)
-	setInterval(saveSelfAss, 1000)
+	
 }
 
 
@@ -88,31 +88,10 @@ async function useSkills()
 	useWarcry()
 	useCleave(target)
 	useTaunt(target)
+	setInterval(saveSelfAss, 1000)
 }
 
-async function saveSelfAss()
-{
-	if(character.hp>character.max_hp*0.45 || is_on_cooldown('scare')) return
-	if(character.hp<=character.max_hp*0.45 && Object.values(parent.entities).filter(e => e.target == character.name).length>0) {
-		if(character.slots.orb.name != ORB.name && character.slots.orb.level != orb.level)
-		{
-			var current_orb = character.slots.orb
-			for(let i in character.items)
-			{
-				let item = character.items[i]
-				if(item && item.name == ORB.name && item.level == ORB.level) await equip(i)
-			}
-		}
-		await use_skill('scare')
 
-		for(let j in character.items)
-		{
-			let itm = character.items[j]
-			if(itm && item.name == current_orb.name && item.level == current_orb.level) await equip(j)
-		}
-	}
-
-}
 
 useWarcry()
 async function useWarcry(){

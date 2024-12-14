@@ -248,5 +248,30 @@ async function getTartget()
 	else myAttack(target)
 }
 
+async function saveSelfAss()
+{
+	if(character.hp>character.max_hp*0.45 || is_on_cooldown('scare')) return
+	if(character.hp<=character.max_hp*0.45 && Object.values(parent.entities).filter(e => e.target == character.name).length>0) {
+		if(character.slots.orb.name != 'jacko' )
+		{
+			var current_orb = character.slots.orb
+			for(let i in character.items)
+			{
+				let item = character.items[i]
+				if(item && item.name == JACKO.name && item.level == JACKO.level) await equip(i)
+			}
+		}
+		await use_skill('scare')
 
+		if(current_orb)
+		{
+			for(let j in character.items)
+			{
+				let itm = character.items[j]
+				if(itm && itm.name == current_orb.name && itm.level == current_orb.level) await equip(j)
+			}
+		}
+	}
+
+}
 
