@@ -35,6 +35,19 @@ async function load_module(module) {
     }
 }
 
+async function checkOrb()
+{
+	if(character.hp > character.max_hp*0.5 && character.slots.orb.name != ORB.name)
+	{
+		for(let i in character.items)
+		{
+			let item = character.items[i]
+			if(!item) continue
+			if(item.name == ORB.name && item.level == ORB.level) await equip(i)
+		}
+	}
+}
+
 
 async function useElixir()
 {
@@ -75,7 +88,7 @@ async function initialize_character() {
 	setInterval(useSkills, 1000)
 	setInterval(selectMainWeapon,330)
 	setInterval(selectOffWeapon,330)
-	
+	setInterval(checkOrb, 1000)
 }
 
 
