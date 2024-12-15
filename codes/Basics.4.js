@@ -86,7 +86,7 @@ async function initialize_character() {
         }
     }
 
-    checkEventBuff()
+    if(parent.S.holidayseason)checkEventBuff()
 }
 
 async function checkEventBuff()
