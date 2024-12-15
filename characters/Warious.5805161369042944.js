@@ -8,8 +8,9 @@ const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
 const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 2}
+const ORB = {name: 'talkingskull', level: 3}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
