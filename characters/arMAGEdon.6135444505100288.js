@@ -209,6 +209,20 @@ function myAttack(target){
 	
 }
 
+async function useCMB()
+{
+	if(is_on_cooldown('cburst')) return
+	if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
+	{
+		targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && !e.target)
+		if (targets.length>1) await use_skill('cburst', targets, 1)
+	}
+	else if( current_farm_pos.massFarm && !current_farm_pos.coop)
+	{
+		targets = Object.values(paren.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && e.max_hp < 500)
+		if(targets.length>2) await use_skill('cburst', targets, targets[0].max_hp*1.1)
+	}
+}
 
 async function passMonsterhuntNext()
 {
