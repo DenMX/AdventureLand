@@ -56,7 +56,7 @@ async function useSkills(target)
 {
     //burst(target)
     energize()
-    
+    useCMB()
 }
 
 
