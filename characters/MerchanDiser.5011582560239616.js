@@ -11,7 +11,7 @@ const MP_POT = 'mpot1'
 const MINUTES_TO_RESET_STATE = 10
 
 const BROOM = {name: 'broom', level: 7}
-const BOOK = {name: 'wbookhs', level: 2}
+const BOOK = {name: 'wbookhs', level: 3}
 
 const PERSONAL_ITEMS = [ BROOM, BOOK ]
 
