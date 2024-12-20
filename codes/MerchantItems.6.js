@@ -108,6 +108,9 @@ const ITEMS_TO_SALE = [
 	'maceofthedead',
 	'bowofthedead',
 
+	//heavy useless
+	'hboots',
+	'hgloves'
 	//shields
 	// 'mshield'
 	
@@ -148,7 +151,7 @@ const NOT_SALE_ITEMS_ID =
 	frankypants: {level: 6},
 	gcape: {level: 7},
 	sweaterhs: {level: 7},
-	mshield: {level: 4},
+	mshield: {level: 5},
 
 	//WEAPON
 	firestaff: {level: 9},
@@ -180,7 +183,7 @@ const NOT_SALE_ITEMS_ID =
 	mushroomstaff: {level: 8},
 	snowflakes: {level: 7},
 	t2quiver: {level: 6},
-	angelwings: {level: 4}
+	angelwings: {level: 6}
 }
 
 const JEWELRY_TO_UPGRADE =
