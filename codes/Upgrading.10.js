@@ -147,6 +147,7 @@ async function sellItems()
 	{
 		let item = character.items[i]
 		if(!item) continue
+		if(item.name == 'firebow') dismantle(i)
 		if(ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 	if(itemsCount()>=42 && character.ctype=='merchant') scheduler(storeUpgradeAndCombine)
