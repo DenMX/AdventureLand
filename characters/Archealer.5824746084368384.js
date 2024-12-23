@@ -3,7 +3,7 @@ const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck
 const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck']
 var pc = false
 
-const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
+const PERSONAL_ITEMS = [{name: 'exoarm', level: 1}, {name: 't2intamulet', level: 2}, {name: 'xgloves', level: 5},]
 
 const TANK_ITEMS = {exoarm: {level: 1}}
 const HEAL_ITEMS = {wbook0: {level: 4}}
