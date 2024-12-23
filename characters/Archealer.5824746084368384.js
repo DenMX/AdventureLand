@@ -5,7 +5,7 @@ var pc = false
 
 const PERSONAL_ITEMS = [{name: 'wbook0', level: 4}, {name: 't2intamulet', level: 2}, {name: 'mittens', level: 8}, {name: 'xgloves', level: 5}, {name: 'sshield', level: 8}]
 
-const TANK_ITEMS = {sshield: {level: 8}}
+const TANK_ITEMS = {exoarm: {level: 1}}
 const HEAL_ITEMS = {wbook0: {level: 4}}
 
 const HP_POT = 'hpot1'
