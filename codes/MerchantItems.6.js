@@ -77,14 +77,14 @@ const ITEMS_TO_SALE = [
 	'gloves',
 	// 'wgloves',
 	'shoes',
-	'wshoes',
+	// 'wshoes',
 
 	//Rugged set
-	'helmet1',
-	'pants1',
-	'gloves1',
-	'shoes1',
-	'coat1',
+	// 'helmet1',
+	// 'pants1',
+	// 'gloves1',
+	// 'shoes1',
+	// 'coat1',
 
 	//useless weapons
 	'dagger',
@@ -128,18 +128,23 @@ const NOT_SALE_ITEMS_ID =
 	wbreeches: {level: 8},
 	wgloves: {level: 8},
 	wshoes: {level: 8},
+	helmet1: {level: 8},
+	pants1: {level: 8},
+	gloves1: {level: 8},
+	shoes1: {level: 8},
+	coat1: {level: 8},
 
 
 	//
 	hhelmet: {level: 7},
-	xhelmet: {level: 5},
+	xhelmet: {level: 0},
 	harmor: {level: 7},
-	xarmor: {level: 5},
+	xarmor: {level: 0},
 	hpants: {level: 7},
-	xpants: {level: 5},
+	xpants: {level: 0},
 	wingedboots: {level: 8},
 	// hboots: {level: 7},
-	xboots: {level: 5},
+	xboots: {level: 0},
 	// hgloves: {level: 7},
 	quiver: {level: 7},
 	glolipop: {level: 5},
@@ -151,7 +156,7 @@ const NOT_SALE_ITEMS_ID =
 	frankypants: {level: 6},
 	gcape: {level: 7},
 	sweaterhs: {level: 7},
-	mshield: {level: 5},
+	mshield: {level: 6},
 
 	//WEAPON
 	firestaff: {level: 9},
