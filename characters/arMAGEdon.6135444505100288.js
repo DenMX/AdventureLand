@@ -265,7 +265,7 @@ async function summonMates()
 		{
 			if(member == 'MerchanDiser' ||  member == character.name  || !MY_CHARACTERS.includes(member) || !get(member).farm_location || parent.entities[member]) continue
 			let curState = get(member)
-			let distance = getDistance(curState, character)
+			let distance = getDistance(parent.party[member], character)
 			let entities = Object.values(parent.entities)
 			
 			if(char_action == 'boss' && distance>250 && entities.filter(e => FARM_BOSSES.includes(e.mtype)).length>0)
