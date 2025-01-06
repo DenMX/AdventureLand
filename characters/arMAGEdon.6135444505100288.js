@@ -15,7 +15,7 @@ const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2']
 
 const MASS_WEAPON = {name: 'gstaff', level: 6}
 const SOLO_WEAPON = {name: 'firestaff', level: 9}
-const BOOK = {name: 'wbook0', level: 4}
+const BOOK = {name: 'exoarm', level: 1}
 
 const PERSONAL_ITEMS = [MASS_WEAPON, SOLO_WEAPON, BOOK]
 
