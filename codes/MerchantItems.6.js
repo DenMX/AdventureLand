@@ -31,7 +31,7 @@ const ITEMS_TO_SALE = [
 	'frogt', 
 	'xmashat',
 	'pstem', 
-	'carrot',
+	// 'carrot',
 	'poison', 
 	'smush',
 	// 'crabclaw',
