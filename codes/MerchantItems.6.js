@@ -90,7 +90,7 @@ const ITEMS_TO_SALE = [
 	'dagger',
 	'hotchocolate',
 	'throwingstars',
-	'rapier',
+	'carrotsword',
 	'spear',
 	'swifty',
 	'phelmet',
@@ -188,7 +188,8 @@ const NOT_SALE_ITEMS_ID =
 	mushroomstaff: {level: 8},
 	snowflakes: {level: 7},
 	t2quiver: {level: 6},
-	angelwings: {level: 6}
+	angelwings: {level: 6},
+	rapier: {level: 0}
 }
 
 const JEWELRY_TO_UPGRADE =

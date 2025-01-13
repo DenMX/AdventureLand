@@ -173,16 +173,17 @@ async function exchangeItems()
 
 async function storeUpgradeAndCombine()
 {
-	if(character.type=='merchant')changeState('Banking...')
+	if(character.ctype=='merchant')changeState('Banking...')
 	await smart_move('bank')
 	try 
 	{
-		console.warn('Storing items...')
+		game_log('Storing items...')
 		out: for(i=0; i<character.items.length; i++){
 			
 			
 			if(character.items[i] === null) continue;
 			let item = character.items[i]
+			if(ELIXIRS.includes(item.name)) continue;
 			for (let j of PERSONAL_ITEMS)
 			{
 				if(item.name == j.name && item.level == j.level) continue out
@@ -207,7 +208,7 @@ async function storeUpgradeAndCombine()
 		upgradeItems()
 		combineItems()
 		// exchangeItems()
-		if(character.type=='merchant')changeState(DEFAULT_STATE)
+		if(character.ctype=='merchant')changeState(DEFAULT_STATE)
 	}
     
 }

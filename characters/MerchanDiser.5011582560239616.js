@@ -14,6 +14,7 @@ const BROOM = {name: 'broom', level: 7}
 const BOOK = {name: 'wbookhs', level: 3}
 
 const PERSONAL_ITEMS = [ BROOM, BOOK ]
+const ELIXIRS = []
 
 var pc = false
 var cyberland_check
