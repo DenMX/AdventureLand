@@ -189,7 +189,9 @@ const NOT_SALE_ITEMS_ID =
 	snowflakes: {level: 7},
 	t2quiver: {level: 6},
 	angelwings: {level: 6},
-	rapier: {level: 0}
+	rapier: {level: 0},
+	pinkie: {level: 7},
+	supermittens: {level: 0}
 }
 
 const JEWELRY_TO_UPGRADE =
