@@ -45,7 +45,7 @@ setInterval(checkState, 5000)
 async function checkState() {
 	
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
-	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bigbird
+	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bitch
 	bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
 	if(bosses.length > 0 || characterMoving()) 
 	{

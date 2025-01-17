@@ -191,7 +191,8 @@ const NOT_SALE_ITEMS_ID =
 	angelwings: {level: 6},
 	rapier: {level: 0},
 	pinkie: {level: 7},
-	supermittens: {level: 0}
+	supermittens: {level: 0},
+	wand: {level: 7}
 }
 
 const JEWELRY_TO_UPGRADE =

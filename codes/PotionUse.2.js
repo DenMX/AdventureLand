@@ -3,15 +3,15 @@ let user_mp_flask_at_percent = 0.9
 
 
 
-const MAX_HP_POTIONS = 500
-const MAX_MP_POTIONS = 2000
+const MAX_HP_POTIONS = 1000
+const MAX_MP_POTIONS = 6000
 
-const BUY_MP_POTS_AT_RATIO = 0.33
+const BUY_MP_POTS_AT_RATIO = 0.5
 const BUY_HP_POTS_AT_RATIO = 0.5
 
 
 
-function mpPotsCount()
+async function mpPotsCount()
 {
 	let count = 0;
 	inv: for(let i=0; i<character.items.length; i++)
@@ -25,11 +25,23 @@ function mpPotsCount()
 		}
 	}
 	
-
-	return count
+	try{
+		if(count==0)
+		{
+			await smart_move('upgrade')
+			await buy_with_gold(MP_POT, MAX_MP_POTIONS)
+		}
+			
+	}
+	catch{}
+	finally{
+		
+		return count
+	}
+	
 }
 
-function hpPotsCount()
+async function hpPotsCount()
 {
 	let count = 0;
 	for(let i=0; i<character.items.length; i++)
@@ -43,7 +55,19 @@ function hpPotsCount()
 		}
 	}
 
-	return count
+	try{
+		if(count==0)
+		{
+			await smart_move('upgrade')
+			await buy_with_gold(HP_POT, MAX_HP_POTIONS)
+		}
+			
+	}
+	catch{}
+	finally{
+		
+		return count
+	}
 }
 
 

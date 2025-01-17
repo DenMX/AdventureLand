@@ -95,7 +95,8 @@ async function fishing()
 
 async function checkBosses()
 {
-	
+	if(!parent.party_list.includes('arMAGEdon')) check_bosses = false
+	else check_bosses = true
 	if(!check_bosses)
 	{
 		scheduler(checkBosses)
@@ -113,7 +114,8 @@ async function checkBosses()
 			game_log('Found: '+point.name)
 			console.log('Found: '+point.name)
 			if(point.name == 'skeletor' && Object.values(parent.entities).filter(e => e.mtype == 'skeletor' && e.hp_level>5).length>0)continue;
-			await send_cm('arMAGEdon',{cmd: "boss", boss: point})
+			if(parent.party_list.includes('arMAGEdon'))await send_cm('arMAGEdon',{cmd: "boss", boss: point})
+			else await send_cm(parent.party_list, {cmd: 'boss', boss: point})
 			founded_bosses[point.name] = Date.now()
 		}
 		else 

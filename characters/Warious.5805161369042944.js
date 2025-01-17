@@ -9,8 +9,9 @@ const AXE = {name: 'scythe', level: 5}
 const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 2}
 const ORB = {name: 'orbg', level: 3}
+const FAST_WEAPON = {name: 'rapier', level: 1}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -220,13 +221,17 @@ function selectMainWeapon()
 	target = parent.ctarget
 	if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
 		desired_main = MASS_MAINHAND
+	else if(target && target.mtype == 'snowman')
+		desired_main = FAST_WEAPON
 	else desired_main = MAINHAND
 }
 
 function selectOffWeapon()
 {
 	target = parent.ctarget
-	if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
+	if(target && target.mtype == 'snowman')
+		desired_off == null
+	else if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
 	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
 		desired_off = LOLIPOP
 	else desired_off = OFFHAND
@@ -238,6 +243,7 @@ async function switchToMainWeapon()
 	let curr_main = character.slots.mainhand
 	let curr_off = character.slots?.offhand
 	
+	if(desired_main.name=='rapier' && curr_main.name==desired_main.name) return
 	if((curr_main && curr_off) && (curr_main.name == desired_main?.name && curr_main.level == desired_main?.level) && (curr_off.name == desired_off?.name && curr_off.level == desired_off?.level)) return
 	if((curr_main.name == desired_main?.name && curr_main.level == desired_main?.level) && (!curr_off || curr_off.name != desired_off?.name || curr_off.level != desired_off?.level))
 	{

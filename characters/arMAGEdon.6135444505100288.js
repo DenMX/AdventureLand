@@ -16,8 +16,10 @@ const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2']
 const MASS_WEAPON = {name: 'gstaff', level: 6}
 const SOLO_WEAPON = {name: 'firestaff', level: 9}
 const BOOK = {name: 'exoarm', level: 1}
+const FAST_WEAPON = {name: 'wand', level: 7}
+const FAST_OFFHAND = {name: 'wbookhs', level: 3}
 
-const PERSONAL_ITEMS = [MASS_WEAPON, SOLO_WEAPON, BOOK]
+const PERSONAL_ITEMS = [MASS_WEAPON, SOLO_WEAPON, BOOK, FAST_WEAPON, FAST_OFFHAND]
 
 let desired_main
 let desired_off
@@ -54,7 +56,7 @@ var quest_check_at
 
 async function useSkills(target)
 {
-    //burst(target)
+    burst(target)
     energize()
     useCMB()
 }
@@ -94,6 +96,11 @@ function checkWeapon() {
 		|| target.mtype == 'bgoo')
 	{
 		desired_main = MASS_WEAPON
+	}
+	else if(target.mtype == 'snowman')
+	{
+		desired_main = FAST_WEAPON
+		desired_off = FAST_OFFHAND
 	}
 	else {
 		desired_main = SOLO_WEAPON
@@ -141,7 +148,12 @@ async function changeWeapon() {
 
 async function burst(target)
 {
-    if(character.mp > character.max_mp*0.9 && target.hp > character.mp*1.5) await use_skill('burst', target).catch(() => {})
+    // if(character.mp > character.max_mp*0.9 && target.hp > character.mp*1.5) await use_skill('burst', target).catch(() => {})
+	if(target && target.mtype == 'snowman')
+		{
+			await use_skill('burst', parent.ctarget, 1)
+		}
+	
 }
 
 async function energize()
@@ -221,6 +233,10 @@ async function useCMB()
 	{
 		targets = Object.values(paren.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && e.max_hp < 500 && is_in_range(e)).map(e => [e.id, e.hp+e.max_hp*0.1])
 		if(targets.length>2) await use_skill('cburst', targets, targets[0].max_hp*1.1)
+	}
+	else if(parent.ctarget.mtype=='snowman')
+	{
+		await use_skill('cburst', [parent.ctarget.id, 1])
 	}
 }
 
