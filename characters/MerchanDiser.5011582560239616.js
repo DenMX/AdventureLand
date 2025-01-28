@@ -139,7 +139,7 @@ async function checkEvents()
 		if(!parent.S.dragold.live) {
 			dragold = get('dragold') || { EU:{} , US: {}, ASIA: {} }
 			dragold[parent.server_region][parent.server_identifier] = parent.S.dragold.spawn
-			set('dragold')
+			set('dragold', dragold)
 			if(!last_server_change || Date.now() - last_server_change > 60000) {
 				let srv_indx = SERVERS.indexOf(server_identifier)
 				if(srv_indx+1 == SERVERS.length) srv_indx = 0 
