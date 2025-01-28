@@ -289,7 +289,7 @@ character.on("cm", function(data){
 				character.name == 'arMAGEdon' ? mageHandleBoss(data.message.boss) : handleBoss(data.message.boss)
 				break;
 			case 'event':
-				handleEvent(data.message.name)
+				handleEvent(data.message.name, data.message.server)
 				break;
 			default:
 				console.warn('Unknown command:' + data.message.cmd)
@@ -351,7 +351,7 @@ function bossReceived(boss)
 	return false
 }
 
-async function handleEvent(eventName)
+async function handleEvent(eventName, server)
 {
 	console.log('Got an event: '+eventName)
 	if(char_action != 'event' && !FARM_BOSSES.includes(parent.ctarget?.mtype))
@@ -359,6 +359,10 @@ async function handleEvent(eventName)
 		// current_event = { name: eventName, event: gevent }
 		current_event = eventName
 		char_action = 'event'
+		if(server != parent.region+parent.server_identifier){
+			await saveState()
+			parent.caracAL.deploy(null, server)
+		}
 	}
 	else if(!event_schedule.includes(eventName)){
 		event_schedule.push(eventName)

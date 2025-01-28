@@ -21,6 +21,7 @@ var cyberland_check
 var bank_check
 var last_state_change
 var check_bosses = true
+var last_server_change
 
 var merch_queue = []
 
@@ -59,6 +60,7 @@ async function initChar()
 	let getState = get(character.name)
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
+	last_server_change = getState.last_server_change
 	setInterval(checkItemsCount, 5000)
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
@@ -71,7 +73,7 @@ async function initChar()
 	setInterval(useBaff, 200)
 	checkState()
 	setInterval(saveState, 3000)
-	setInterval(checkEvents, 30000)
+	setInterval(checkEvents, 1000)
 	setInterval(checkElixirs, getMsFromMinutes(5))
 	scheduler(checkBosses)
 	setInterval(antiFreezingState,getMsFromMinutes(10))
@@ -105,20 +107,53 @@ function saveState()
 		y: character.y,
 		map: character.map,
 		last_cyber_check: cyberland_check,
-		last_bank_check: bank_check
+		last_bank_check: bank_check,
+		last_server_change: last_server_change
 	}
 	set(character.name, state)
 }
 
+async function checkEventOnOtherServers()
+{
+	if(!get('dragold')) return
+	events = get('dragold')
+	for(let i of Object.keys(events))
+	{
+		for(let j of Object.keys(events[i]))
+		{
+			if(Date.now-events[i][j]<500) {
+				send_cm(['Archealer','arMAGEdon','Warious'],{cmd:'event', name: 'dragold', server: i+j})
+			}
+		}
+	}
+}
+
 async function checkEvents()
 {
+	if(parent.S.lunarnewyear)
+	{
+		if(!parent.S.dragold.live) {
+			dragold = get('dragold') || { EU:{} , US: {}, ASIA: {} }
+			dragold[parent.server_region][parent.server_identifier] = parent.S.dragold.spawn
+			set('dragold')
+			if(parent.caracAL && (!last_server_change || Date.now() - last_server_change > 60000)) {
+				srv_indx = SERVERS.indexOf(parent.server_region+parent.server_identifier)
+				if(srv_indx+1 == SERVERS.length) srv_indx = 0
+				last_server_change = Date.now()
+				saveState()
+				parent.caraCAL.deploy(null, SERVERS[srv_indx])
+			}
+		}
+	}
+		
+
 	for(e of EVENTS)
 	{
 		if(parent.S[e.name])
 		{
 			if(parent.S[e.name].live && parent.S[e.name].live == true)
 			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name})
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: parent.server_region+parent.server_identifier})
 				
 			}
 			else if(parent.S[e.name].live === 'undefined')

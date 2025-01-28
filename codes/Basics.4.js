@@ -1,5 +1,7 @@
 const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'aRogDonDon','RangerOver', 'Warious', 'RetroPal']
 
+const SERVERS = ['EUI', 'EUII', 'USI', 'USII', 'USIII', 'ASIAI']
+
 const FARM_BOSSES = [
 	"mvampire",
 	"fvampire",

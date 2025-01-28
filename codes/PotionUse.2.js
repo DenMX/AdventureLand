@@ -26,9 +26,9 @@ async function mpPotsCount()
 	}
 	
 	try{
-		if(count==0 && !pc)
+		if(count==0 )
 		{
-			await smart_move('upgrade')
+			if(!pc) await smart_move('upgrade')
 			await buy_with_gold(MP_POT, MAX_MP_POTIONS)
 		}
 			
@@ -56,9 +56,9 @@ async function hpPotsCount()
 	}
 
 	try{
-		if(count==0 && !pc)
+		if(count==0)
 		{
-			await smart_move('upgrade')
+			if(!pc)await smart_move('upgrade')
 			await buy_with_gold(HP_POT, MAX_HP_POTIONS)
 		}
 			
