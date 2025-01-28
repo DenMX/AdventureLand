@@ -351,6 +351,31 @@ function bossReceived(boss)
 	return false
 }
 
+setInterval(checkEvents, 1000)
+async function checkEvents()
+{
+	if(!get('dragold')) return
+	
+	events = get('dragold')
+
+	if(events[parent.server_region][parent.server_identifier]<Date.now() && parent.S.dragold.alive)
+	{
+		char_action = 'event'
+		current_event = 'dragold'
+		return
+	}
+
+	for(let i of Object.keys(events))
+	{
+		for(let j of Object.keys(events[i]))
+		{
+			if(Date.now-events[i][j]<500) {
+				parent.caracAL ? parent.caracAL.deploy(null, i+j) : change_server(i,j)
+			}
+		}
+	}
+}
+
 async function handleEvent(eventName, server)
 {
 	console.log('Got an event: '+eventName)
