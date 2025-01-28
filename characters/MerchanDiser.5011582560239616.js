@@ -62,7 +62,7 @@ async function initChar()
 	let getState = get(character.name)
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
-	last_server_change = getState.last_server_change
+	last_server_change = Date.now()
 	setInterval(checkItemsCount, 5000)
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
