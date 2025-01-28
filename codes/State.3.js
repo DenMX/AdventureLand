@@ -354,15 +354,18 @@ function bossReceived(boss)
 async function handleEvent(eventName, server)
 {
 	console.log('Got an event: '+eventName)
+	if(server && server != `${parent.server_region} ${parent.server_identifier}`)
+	{
+		current_event = eventName
+		char_action = 'event'
+		await saveState()
+		(parent.caracAL) ? parent.caracAL.deploy(null, server.split(' ')[0]+server.split(' ')[1]) : change_server(server.split(' ')[0], server.split(' ')[1])
+	}
 	if(char_action != 'event' && !FARM_BOSSES.includes(parent.ctarget?.mtype))
 	{
 		// current_event = { name: eventName, event: gevent }
 		current_event = eventName
 		char_action = 'event'
-		if(server && server != `${parent.region} ${parent.server_identifier}`){
-			await saveState()
-			parent.caracAL? parent.caracAL.deploy(null, server.split(' ')[0]+server.split(' ')[1]) : change_server(server.split(' ')[0], server.split(' ')[1])
-		}
 	}
 	else if(!event_schedule.includes(eventName)){
 		event_schedule.push(eventName)
