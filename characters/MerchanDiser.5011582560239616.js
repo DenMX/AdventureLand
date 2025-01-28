@@ -146,7 +146,8 @@ async function checkEvents()
 				else srv_indx+=1
 				last_server_change = Date.now()
 				saveState()
-				parent.caracAL ? parent.caraCAL.deploy(null, SERVERS[srv_indx]) : change_server(SERVERS[srv_indx].split(' ')[0], SERVERS[srv_indx].split(' ')[1])
+				if(parent.caracAL) parent.caraCAL.deploy(null, SERVERS[srv_indx]) 
+				else  change_server(SERVERS[srv_indx].split(' ')[0], SERVERS[srv_indx].split(' ')[1])
 			}
 		}
 	}
