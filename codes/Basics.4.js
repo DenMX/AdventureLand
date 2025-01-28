@@ -1,6 +1,6 @@
 const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'aRogDonDon','RangerOver', 'Warious', 'RetroPal']
 
-const SERVERS = ['EUI', 'EUII', 'USI', 'USII', 'USIII', 'ASIAI']
+const SERVERS = ['EU I', 'EU II', 'US I', 'US II', 'US III', 'ASIA I']
 
 const FARM_BOSSES = [
 	"mvampire",

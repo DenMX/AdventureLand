@@ -359,9 +359,9 @@ async function handleEvent(eventName, server)
 		// current_event = { name: eventName, event: gevent }
 		current_event = eventName
 		char_action = 'event'
-		if(server != parent.region+parent.server_identifier){
+		if(server && server != `${parent.region} ${parent.server_identifier}`){
 			await saveState()
-			parent.caracAL.deploy(null, server)
+			parent.caracAL? parent.caracAL.deploy(null, server.split(' ')[0]+server.split(' ')[1]) : change_server(server.split(' ')[0], server.split(' ')[1])
 		}
 	}
 	else if(!event_schedule.includes(eventName)){

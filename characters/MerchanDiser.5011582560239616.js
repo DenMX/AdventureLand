@@ -23,6 +23,8 @@ var last_state_change
 var check_bosses = true
 var last_server_change
 
+var server_identifier
+
 var merch_queue = []
 
 async function load_module(module) {
@@ -69,6 +71,7 @@ async function initChar()
 	// console.log(merch_queue)
 	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
 
+	server_identifier = `${parent.server_region} ${parent.server_identifier}`
 	
 	setInterval(useBaff, 200)
 	checkState()
@@ -122,7 +125,7 @@ async function checkEventOnOtherServers()
 		for(let j of Object.keys(events[i]))
 		{
 			if(Date.now-events[i][j]<500) {
-				send_cm(['Archealer','arMAGEdon','Warious'],{cmd:'event', name: 'dragold', server: i+j})
+				parent.caracAL ? parent.caracAL.deploy(null, i+j) : change_server(i,j)
 			}
 		}
 	}
@@ -137,12 +140,13 @@ async function checkEvents()
 			dragold = get('dragold') || { EU:{} , US: {}, ASIA: {} }
 			dragold[parent.server_region][parent.server_identifier] = parent.S.dragold.spawn
 			set('dragold')
-			if(parent.caracAL && (!last_server_change || Date.now() - last_server_change > 60000)) {
-				srv_indx = SERVERS.indexOf(parent.server_region+parent.server_identifier)
-				if(srv_indx+1 == SERVERS.length) srv_indx = 0
+			if(!last_server_change || Date.now() - last_server_change > 60000) {
+				let srv_indx = SERVERS.indexOf(server_identifier)
+				if(srv_indx+1 == SERVERS.length) srv_indx = 0 
+				else srv_indx+=1
 				last_server_change = Date.now()
 				saveState()
-				parent.caraCAL.deploy(null, SERVERS[srv_indx])
+				parent.caracAL ? parent.caraCAL.deploy(null, SERVERS[srv_indx]) : change_server(SERVERS[srv_indx].split(' ')[0], SERVERS[srv_indx].split(' ')[1])
 			}
 		}
 	}
@@ -154,7 +158,7 @@ async function checkEvents()
 		{
 			if(parent.S[e.name].live && parent.S[e.name].live == true)
 			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: parent.server_region+parent.server_identifier})
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})
 				
 			}
 			else if(parent.S[e.name].live === 'undefined')
