@@ -163,7 +163,7 @@ async function checkEvents()
 			}
 			else if(parent.S[e.name].live === 'undefined')
 			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name})
+				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})
 				check_bosses = false
 				waitEventEnds(e.name)
 			}
