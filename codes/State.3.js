@@ -358,7 +358,7 @@ async function handleEvent(eventName, server)
 	{
 		current_event = eventName
 		char_action = 'event'
-		await saveState()
+		//await saveState()
 		(parent.caracAL) ? parent.caracAL.deploy(null, server.split(' ')[0]+server.split(' ')[1]) : change_server(server.split(' ')[0], server.split(' ')[1])
 	}
 	if(char_action != 'event' && !FARM_BOSSES.includes(parent.ctarget?.mtype))
