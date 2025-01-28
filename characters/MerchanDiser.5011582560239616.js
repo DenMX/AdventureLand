@@ -132,6 +132,7 @@ async function checkEvents()
 {
 	if(parent.S.lunarnewyear)
 	{
+		checkEventOnOtherServers()
 		if(!parent.S.dragold.live) {
 			dragold = get('dragold') || { EU:{} , US: {}, ASIA: {} }
 			dragold[parent.server_region][parent.server_identifier] = parent.S.dragold.spawn
