@@ -369,7 +369,7 @@ async function checkEvents()
 	{
 		for(let j of Object.keys(events[i]))
 		{
-			if(Date.now-events[i][j]<500) {
+			if(parent.server_region!= i && parent.server_identifier != j && Date.now-events[i][j]<500) {
 				if(parent.caracAL) parent.caracAL.deploy(null, i+j) 
 				else change_server(i,j)
 			}
