@@ -110,7 +110,7 @@ async function checkAction(action, cur_point, schedule) {
 				return
 			}
 			// check if event not active
-			if (parent.S[cur_point] == 'indefined' || parent.S[cur_point].live == false) {
+			if (parent.S[cur_point] == 'indefined' || parent.S[cur_point]?.live == false) {
 				schedule.length > 0 ? current_event = schedule.shift() : current_event = null, char_action = 'boss'
 			}
 			//check if we need to go for event. Checking bosses count because not every event has coordinates and we can meet boss before event.
