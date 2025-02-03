@@ -114,7 +114,7 @@ async function checkAction(action, cur_point, schedule) {
 				schedule.length > 0 ? current_event = schedule.shift() : current_event = null, char_action = 'boss'
 			}
 			//check if we need to go for event. Checking bosses count because not every event has coordinates and we can meet boss before event.
-			else if (parent.S[cur_point].live || parent.S[cur_point].live == 'undefined' && bosses.length<1) await smart_move (parent.S[cur_point])
+			else if (parent.S[cur_point]?.live || parent.S[cur_point]?.live == 'undefined' && bosses.length<1) await smart_move (parent.S[cur_point])
 			
 	}
 
