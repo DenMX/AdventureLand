@@ -94,6 +94,7 @@ const ITEMS_TO_SALE = [
 	'spear',
 	'swifty',
 	'phelmet',
+	'cupid',
 
 	//halloween
 	'gphelmet',
