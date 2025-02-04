@@ -1,6 +1,11 @@
 const ARMOR = ['shoes', 'chest', 'helmet', 'pants','gloves','shield', 'quiver', 'cape']
 const JEWELRY = ['amulet', 'ring', 'belt', 'earring', 'source', 'orb']
 
+const DISMANTLE_ITEMS = [
+	'firebow', 
+	'lostearring'
+]
+
 const ARMOR_SLOT_LIB = 
 {
 	shoes: 'shoes',
@@ -161,7 +166,6 @@ const NOT_SALE_ITEMS_ID =
 
 	//WEAPON
 	firestaff: {level: 9},
-	firebow: {level: 0},
 	sword: {level: 9},
 	bow: {level: 9},
 	staff: {level:8},
@@ -184,7 +188,7 @@ const NOT_SALE_ITEMS_ID =
 	t3bow: {level: 7},
 	crossbow: {level: 7},
 	broom: {level: 7},
-	cclaw: {level: 8},
+	cclaw: {level: 7},
 	sshield: {level: 7},
 	mushroomstaff: {level: 8},
 	snowflakes: {level: 7},

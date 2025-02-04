@@ -147,7 +147,7 @@ async function sellItems()
 	{
 		let item = character.items[i]
 		if(!item) continue
-		if(item.name == 'firebow') dismantle(i)
+		if(DISMANTLE_ITEMS.includes(item.name)) dismantle(i)
 		if(ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
 	}
 	if(itemsCount()>=42 && character.ctype=='merchant') scheduler(storeUpgradeAndCombine)
@@ -161,7 +161,12 @@ async function exchangeItems()
 	for(let i in character.items)
 	{
 		let item = character.items[i]
-		if(item && G.items[item.name].e && item.q >= G.items[item.name].e) 
+		if(!item) continue
+		if(DISMANTLE_ITEMS.includes(item.name)) { 
+			dismantle(i) 
+			continue
+		}
+		if(G.items[item.name].e && item.q >= G.items[item.name].e) 
 		{
 			let e  = await exchange(i).catch(()=>{})
 			if(e.success == true) exchangeItem = true
