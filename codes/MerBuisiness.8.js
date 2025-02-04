@@ -96,7 +96,7 @@ async function fishing()
 async function checkBosses()
 {
 	if(!parent.party_list.includes('arMAGEdon')) check_bosses = false
-	if(parent.S.holidayseason || parent.S.lunarnewyear) check_bosses = false
+	else if(parent.S.holidayseason || parent.S.lunarnewyear) check_bosses = false
 	else check_bosses = true
 	if(check_bosses == false)
 	{
