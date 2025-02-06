@@ -1,6 +1,6 @@
 const TARGETING_BLACK_LIST = ''
 const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'shadowstone']
-const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck']
+const ELIXIRS = ['elixirluck','elixirint0', 'elixirint1', 'elixirint2' ]
 var pc = false
 
 const PERSONAL_ITEMS = [{name: 'exoarm', level: 1}, {name: 't2intamulet', level: 2}, {name: 'xgloves', level: 5},]

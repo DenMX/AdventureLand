@@ -1,5 +1,6 @@
 async function upgradeItems()
 {
+	if(character.q.upgrade) return
 	try
 	{
 		exchangeItems()
