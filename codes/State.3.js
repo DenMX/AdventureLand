@@ -146,7 +146,7 @@ const FARM_LOCATIONS =
 			canSolo: false
 		},
 		crabx: {
-			location: {x: -60, y: -1060, map: 'tunnel'},
+			location: {x: -1045, y: 1575, map: 'main'},
 			mobs: ['crabx'],
 			coop: true,
 			massFarm: true,
