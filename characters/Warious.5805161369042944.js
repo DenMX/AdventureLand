@@ -17,8 +17,8 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
 
-const DO_NOT_SEND_ITEMS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
-const ELIXIRS = ['elixirstr0', 'elixirstr1', 'elixirstr2']
+const DO_NOT_SEND_ITEMS = ['pumpkinspice']
+const ELIXIRS = ['pumpkinspice']
 
 var pc = false
 let desired_main
