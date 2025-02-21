@@ -84,6 +84,13 @@ const ITEMS_TO_SALE = [
 	'shoes',
 	'wshoes',
 
+	//beginners set
+	'helmet',
+	'pants',
+	'gloves',
+	'shoes',
+	'coat',
+
 	//Rugged set
 	'helmet1',
 	'pants1',
