@@ -6,7 +6,13 @@ const ELIXIRS = [
 ]
 var pc = false
 
-const PERSONAL_ITEMS = [{name: 'exoarm', level: 1}, {name: 't2intamulet', level: 2}, {name: 'xgloves', level: 5},]
+const PERSONAL_ITEMS = [
+	{name: 'exoarm', level: 1}, 
+	{name: 't2intamulet', level: 2}, 
+	{name: 'xgloves', level: 5}, 
+	{name: 'jacko', level: 3}, 
+	{name: 'rabbitsfoot', level: 0}
+]
 
 const TANK_ITEMS = {exoarm: {level: 1}}
 const HEAL_ITEMS = {wbook0: {level: 4}}

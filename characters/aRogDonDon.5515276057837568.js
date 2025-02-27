@@ -3,7 +3,7 @@ const ORB = {name: 'talkingskull', level: 3}
 
 const MAINHAND = {name: 'cclaw', level: 8}
 const OFFHAND = {name: 'cclaw', level: 8}
-const FAST_WEAPON = {name: 'rapier', level: 1}
+const FAST_WEAPON = {name: 'rapier', level: 5}
 
 const PERSONAL_ITEMS = [JACKO, ORB, FAST_WEAPON]
 
