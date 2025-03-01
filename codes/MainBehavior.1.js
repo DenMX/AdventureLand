@@ -183,11 +183,11 @@ async function dontStack()
 	let near_players =Object.values(parent.entities).filter(e => e.player)
 	for(let player of near_players)
 	{
-		if(getDistance(character, player) < 30 && character.speed>55)
+		if(getDistance(character, player) < 10 && character.speed>55)
 		{
 			move(
-				character.x + (-100 +(Math.random()*150)),
-				character.y + (-100 +(Math.random()*150))
+				character.x + (-50 +(Math.random()*50)),
+				character.y + (-50 +(Math.random()*50))
 			)
 		}
 	}
