@@ -22,8 +22,8 @@ const FARM_LOCATIONS =
 			canSolo: true
 		},
 		spider: {
-			location: {x:750, y:-160, map: 'main'},
-			mobs: ["spider"],
+			location: {x:1287, y:-130, map: 'main'},
+			mobs: ["spider", "bigbird", "scorpion"],
 			coop: true,
 			massFarm: true,
 			canSolo: false
