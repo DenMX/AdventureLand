@@ -30,7 +30,7 @@ const ITEMS_TO_EXCHANGE = [
 ]
 
 
-const NOT_SALE_ITEM_TYPES = ['cape']
+const NOT_SALE_ITEM_TYPES = []
 const ITEMS_TO_SALE = [
 	//materials
 	'frogt', 
@@ -123,7 +123,8 @@ const ITEMS_TO_SALE = [
 
 	//heavy useless
 	'hboots',
-	'hgloves'
+	'hgloves',
+	'cape'
 	//shields
 	// 'mshield'
 	
