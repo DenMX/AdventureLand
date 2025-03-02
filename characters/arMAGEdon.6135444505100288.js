@@ -58,7 +58,6 @@ async function useSkills(target)
 {
     burst(target)
     energize()
-    useCMB()
 }
 
 
@@ -74,16 +73,16 @@ async function useElixir()
 	setTimeout(useElixir,getMsFromMinutes(60))
 }
 
-async function saveSelfAss()
-{
-	if(is_on_cooldown('scare'))
-	{
-		// setTimeout(saveSelfAss, 500)
-		return
-	}
-	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare').catch(() => {})
+// async function saveSelfAss()
+// {
+// 	if(is_on_cooldown('scare'))
+// 	{
+// 		// setTimeout(saveSelfAss, 500)
+// 		return
+// 	}
+// 	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare').catch(() => {})
 	
-}
+// }
 
 
 function checkWeapon() {
@@ -221,22 +220,39 @@ function myAttack(target){
 	
 }
 
+useCMB()
 async function useCMB()
 {
-	if(is_on_cooldown('cburst')) return
-	if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
+	if(is_on_cooldown('cburst')) 
 	{
-		targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && !e.target && is_in_range(e)).map(e=> [e.id, 1])
-		if (targets.length>1) await use_skill('cburst', targets)
+		setTimeout(useCMB, 300)
+		return
 	}
-	else if( current_farm_pos.massFarm && !current_farm_pos.coop)
+	try
 	{
-		targets = Object.values(paren.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && e.max_hp < 500 && is_in_range(e)).map(e => [e.id, e.hp+e.max_hp*0.1])
-		if(targets.length>2) await use_skill('cburst', targets, targets[0].max_hp*1.1)
+		if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
+			{
+				target_to_pull = getSpotForAggro()
+				if(target_to_pull?.count >= 4)
+				{
+					await smart_move(target_to_pull.monster)
+				}
+				targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && !e.target && is_in_range(e)).map(e=> [e.id, 1])
+				if (targets.length>1) await use_skill('cburst', targets)
+			}
+			else if( current_farm_pos.massFarm && !current_farm_pos.coop)
+			{
+				targets = Object.values(paren.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && e.max_hp < 500 && is_in_range(e)).map(e => [e.id, e.hp+e.max_hp*1.1])
+				if(targets.length>2) await use_skill('cburst', targets, targets[0].max_hp*1.1)
+			}
 	}
-	else if(parent.ctarget.mtype=='snowman')
+	catch
 	{
-		await use_skill('cburst', [parent.ctarget.id, 1])
+		console.warn('Error in CMB')
+	}
+	finally
+	{
+		setTimeout(useCMB, 300)
 	}
 }
 

@@ -248,6 +248,36 @@ async function getTartget()
 	else myAttack(target)
 }
 
+async function getSpotForAggro() {
+	let monsters = Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target)
+	monsters.sort(
+		function(current, next){
+			let dist_current = getDistance(character, current);
+			let dist_next = getDistance(character, next);
+			
+			if(dist_current != dist_next){
+				return (dist_current< dist_next) ? 1 : -1;
+			}
+			
+			return 0;
+		}
+	)
+
+	let monster_count = 0;
+	let current_monster
+	for(monster of monsters)
+	{
+		curr_count = Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target && getDistance(monster, e) <= 400).length
+		if(curr_count> monster_count)
+		{
+			monster_count = curr_count
+			current_monster = monster
+		}
+	}
+
+	return { monster: current_monster, count: monster_count }
+}
+
 async function saveSelfAss()
 {
 	if(character.hp>character.max_hp*0.45 || is_on_cooldown('scare')) return
