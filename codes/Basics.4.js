@@ -31,7 +31,7 @@ const FARM_BOSSES = [
 ];
 
 const EVENTS = [
-    {name: 'snowman', useSkills: false, massFarm: false, targets: ['snowman']}, 
+    // {name: 'snowman', useSkills: false, massFarm: false, targets: ['snowman']}, 
     {name: 'dragold', useSkills:true, massFarm: true, targets: ['dragold']},
     {name: 'goobrawl', useSkills: true, massFarm: true, targets: ['bgoo']}, 
     {name: 'icegolem', useSkills: true, massFarm: false, targets: ['icegolem']},
