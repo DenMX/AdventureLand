@@ -163,7 +163,7 @@ var event_schedule = []
 const LOOTER = 'Archealer'
 const ACTIONS = ['farm', 'boss', 'event', 'quest']
 
-const COMMON_DONT_SEND_ITEMS =[MP_POT, HP_POT, 'tracker', 'Ancient Computer']
+const COMMON_DONT_SEND_ITEMS =[MP_POT, HP_POT, 'tracker', 'computer', 'supercomputer']
 const DONT_SEND_ITEMS = COMMON_DONT_SEND_ITEMS.concat(DO_NOT_SEND_ITEMS)
 
 var last_farm_pos

@@ -232,8 +232,8 @@ async function useCMB()
 	{
 		if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
 			{
-				target_to_pull = getSpotForAggro()
-				if(target_to_pull?.count >= 4)
+				target_to_pull = await getSpotForAggro()
+				if(target_to_pull?.count >= 3)
 				{
 					await smart_move(target_to_pull.monster)
 				}

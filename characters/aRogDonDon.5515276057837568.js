@@ -7,7 +7,7 @@ const FAST_WEAPON = {name: 'rapier', level: 5}
 
 const PERSONAL_ITEMS = [JACKO, ORB, FAST_WEAPON]
 
-const DO_NOT_SEND_ITEMS = ['elixirdex0', 'elixirdex1', 'elixirdex2','pumpkinspice']
+const DO_NOT_SEND_ITEMS = ['elixirdex0', 'elixirdex1', 'elixirdex2','pumpkinspice', 'xpbooster']
 const ELIXIRS = ['elixirdex0', 'elixirdex1', 'elixirdex2','pumpkinspice']
 
 const HP_POT = 'hpot1'
