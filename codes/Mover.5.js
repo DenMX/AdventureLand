@@ -196,7 +196,7 @@ function plot_path_smart_move() {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    fetch("https://almapper.zinals.tech/FindPath/", {
+    fetch("https://almapper.zinals.dev/FindPath/", {
             signal: controller.signal,
             method: "POST",
             mode: "cors",
