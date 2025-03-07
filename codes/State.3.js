@@ -26,7 +26,8 @@ const FARM_LOCATIONS =
 			mobs: ["spider", "bigbird", "scorpion"],
 			coop: true,
 			massFarm: true,
-			canSolo: false
+			canSolo: false,
+			radius: 15
 		},
 		snake: {
 			location: {x:-124, y:1876, map: 'main'},

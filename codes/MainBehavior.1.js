@@ -46,6 +46,7 @@ async function checkState() {
 	
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
 	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bitch
+	radius = current_farm_pos.radius || 30
 	bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
 	if(bosses.length > 0 || characterMoving()) 
 	{
@@ -61,6 +62,10 @@ async function checkState() {
 					current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
 					console.log('Farm smart_move')
 					setTimeout(checkState, 2000)
+				}
+				else if(Object.values(parent.entitites).filter(e=>current_farm_pos.mobs.includes(e.mtype))>0 && getDistance(character, current_farm_pos?.location)>radius)
+				{
+					await smart_move(current_farm_pos.location)
 				}
 				break;
 			case 'boss':
