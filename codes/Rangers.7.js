@@ -2,8 +2,8 @@ var pc = false
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
-const DO_NOT_SEND_ITEMS = ['elixirdex0', 'elixirdex1', 'elixirdex2', 'elixirluck', 'luckbooster']
-const ELIXIRS = ['elixirdex0', 'elixirdex1', 'elixirdex2', 'elixirluck']
+const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster']
+const ELIXIRS = ['elixirluck' ]
 
 const JACKO = {name: 'jacko', level: 1}
 const PERSONAL_ITEMS = [JACKO]
