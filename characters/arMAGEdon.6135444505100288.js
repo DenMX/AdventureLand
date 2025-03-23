@@ -223,7 +223,7 @@ function myAttack(target){
 useCMB()
 async function useCMB()
 {
-	if(is_on_cooldown('cburst')) 
+	if(is_on_cooldown('cburst') || Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target) && e.type=='monster').length >= 4) 
 	{
 		setTimeout(useCMB, 300)
 		return
