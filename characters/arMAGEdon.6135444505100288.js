@@ -223,7 +223,7 @@ function myAttack(target){
 useCMB()
 async function useCMB()
 {
-	if(is_on_cooldown('cburst') || Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target) && e.type=='monster').length >= 4) 
+	if(is_on_cooldown('cburst')) 
 	{
 		setTimeout(useCMB, 300)
 		return
@@ -233,7 +233,7 @@ async function useCMB()
 		if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
 			{
 				target_to_pull = await getSpotForAggro()
-				if(target_to_pull?.count >= 3)
+				if(Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target) && e.type=='monster').length < 4 && target_to_pull?.count >= 3)
 				{
 					await smart_move(target_to_pull.monster)
 				}
