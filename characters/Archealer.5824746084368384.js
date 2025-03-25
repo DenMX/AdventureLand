@@ -1,5 +1,5 @@
 const TARGETING_BLACK_LIST = ''
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'shadowstone']
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'goldbooster', 'shadowstone']
 const ELIXIRS = [
 	'elixirluck', 
 	// 'elixirint2' 
