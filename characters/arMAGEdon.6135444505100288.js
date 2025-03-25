@@ -47,6 +47,7 @@ async function initialize_character() {
     setInterval(saveSelfAss, 1000)
 	checkWeapon()
 	summonMates()
+	smart.use_town = false;
     //checkQuest()
 }
 
