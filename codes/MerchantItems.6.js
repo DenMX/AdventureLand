@@ -90,6 +90,8 @@ const ITEMS_TO_SALE = [
 	'gloves',
 	'shoes',
 	'coat',
+	'quiver',
+	'wcap',
 
 	//Rugged set
 	'helmet1',
@@ -135,7 +137,7 @@ const NOT_SALE_ITEMS_ID =
 {
 	//begginers shit
 	// helmet: {level: 8},
-	wcap: {level: 8},
+	// wcap: {level: 8},
 	// coat: {level: 8},
 	wattire: {level: 8},
 	// pants: {level: 8},
@@ -160,7 +162,7 @@ const NOT_SALE_ITEMS_ID =
 	// hboots: {level: 7},
 	xboots: {level: 0},
 	// hgloves: {level: 7},
-	quiver: {level: 7},
+	
 	glolipop: {level: 5},
 	tigershield: {level: 7},
 	mcape: {level: 7},
@@ -206,7 +208,8 @@ const NOT_SALE_ITEMS_ID =
 	pinkie: {level: 7},
 	supermittens: {level: 0},
 	wand: {level: 7},
-	lmace: {level: 0}
+	lmace: {level: 0},
+	alloyquiver: {level: 7}
 }
 
 const JEWELRY_TO_UPGRADE =
