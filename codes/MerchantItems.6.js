@@ -209,7 +209,7 @@ const NOT_SALE_ITEMS_ID =
 	supermittens: {level: 0},
 	wand: {level: 7},
 	lmace: {level: 0},
-	alloyquiver: {level: 7}
+	alloyquiver: {level: 5}
 }
 
 const JEWELRY_TO_UPGRADE =
