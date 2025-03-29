@@ -277,6 +277,7 @@ async function mageHandleBoss(boss)
 		char_action = 'boss'
 		current_boss = boss
 		smart_move(boss)
+		change_target(null)
 	}
 	else {
 		if(!bossReceived(boss)) boss_schedule.push(boss)
