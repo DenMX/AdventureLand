@@ -83,6 +83,7 @@ const ITEMS_TO_SALE = [
 	'wgloves',
 	'shoes',
 	'wshoes',
+	'pclaw',
 
 	//beginners set
 	'helmet',
