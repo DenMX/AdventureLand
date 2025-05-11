@@ -183,10 +183,8 @@ async function reflection()
     }
 }
 
-setInterval(kite, 200)
-function kite()
+function kite(target)
 {
-	target = parent.ctarget
 	if(!attack_mode || !target) return
 	
 	let distance = getDistance(target, character)
@@ -199,39 +197,28 @@ function kite()
     }
 }
 
-myAttack()
-function myAttack(){
 
-	try 
+function myAttack(target){
+
+    kite(target)
+	
+	change_target(target);
+	if(FARM_BOSSES.includes(target.mtype) && (!target.target || target.target == character.name)) return
+	useSkills(target);
+	if(!is_in_range(target))
 	{
-		target=parent.ctarget;
-		if(!target) return
-		if(FARM_BOSSES.includes(target.mtype) && (!target.target || target.target == character.name)) return
-		if(is_on_cooldown('scare')) return
-		
-		useSkills(target);
-		if(!is_in_range(target))
-		{
-			xmove(
-				character.x+(target.x-character.x)/2,
-				character.y+(target.y-character.y)/2
-				);
-			// Walk half the distance
-		}
-		else if(can_attack(target))
-		{
-			attack(target).catch(() => {});
-			reduce_cooldown("attack", Math.min(...parent.pings));
-		}
+		xmove(
+			character.x+(target.x-character.x)/2,
+			character.y+(target.y-character.y)/2
+			);
+		// Walk half the distance
 	}
-	catch(ex)
+	else if(can_attack(target))
 	{
-		console.warn('error while attack\n' + ex)
+		attack(target).catch(() => {});
+		reduce_cooldown("attack", Math.min(...parent.pings));
 	}
-	finally
-	{
-		setTimeout(myAttack, Math.max(1, ms_to_next_skill('attack')));
-	}
+	
 }
 
 useCMB()

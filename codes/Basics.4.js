@@ -254,15 +254,6 @@ async function gettingParty()
 	setTimeout(gettingParty, 400)
 }
 
-function ms_to_next_skill(skill) {
-    let next_skill  = parent.next_skill[skill];
-    if(!next_skill) return 0;
-
-    let ms = parent.next_skill[skill].getTime() - Date.now();
-
-    return ms < 0 ? 0 : ms
-}
-
 function getMsFromMinutes(minutes)
 {
     return minutes*60000

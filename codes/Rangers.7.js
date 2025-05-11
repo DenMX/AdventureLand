@@ -104,10 +104,8 @@ async function usePiercing(target)
     }
 }
 
-setIntervak(kite,200)
-function kite()
+function kite(target)
 {
-    target = get_targeted_monster()
 	if(!attack_mode || !target) return
 	
 	let distance = getDistance(target, character)
@@ -120,53 +118,41 @@ function kite()
     }
 }
 
-myAttack()
-function myAttack(){
-    
-	try{
-
-        if(is_on_cooldown('scare')) return
-        target = parent.ctarget;
-        useSkills(target);
-        let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))
-        let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype))
-        console.log('Monsters: '+monsters_in_range.length)
-        if(!is_in_range(target))
-        {
-            move(
-                character.x+(target.x-character.x)/4,
-                character.y+(target.y-character.y)/4
-                );
-        }
-        else if(canMassAttack && monsters_in_range.length > 3 && character.mp > G.skills['5shot'].mp)
-        {
-            // set_message("Attacking");
-            use_skill('5shot', monsters_in_range).catch(() => {});
-        }
-        else if(canMassAttack && monsters_in_range.length > 2 && character.mp > G.skills['3shot'].mp)
-        {
-            //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-            // set_message("Attacking");
-            use_skill('3shot', monsters_in_range).catch(() => {});
-        }
-        else if(can_attack(target) && target.armor && target.armor > 400)
-        {
-            usePiercing(target)
-        }
-        else if(can_attack(target) )
-        {
-            //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
-            // set_message("Attacking");
-            attack(target).catch(() => {});        
-        }
-        reduce_cooldown("attack", Math.min(...parent.pings));
-    }
-    catch(ex)
+function myAttack(target){
+    kite(target)
+	
+	change_target(target);
+	useSkills(target);
+    let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))
+    let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype))
+    console.log('Monsters: '+monsters_in_range.length)
+	if(!is_in_range(target))
+	{
+		move(
+			character.x+(target.x-character.x)/4,
+			character.y+(target.y-character.y)/4
+			);
+	}
+    else if(canMassAttack && monsters_in_range.length > 3 && character.mp > G.skills['5shot'].mp)
     {
-        console.warn('Error while attacking\n'+ex)
+        // set_message("Attacking");
+		use_skill('5shot', monsters_in_range).catch(() => {});
     }
-    finally
+	else if(canMassAttack && monsters_in_range.length > 2 && character.mp > G.skills['3shot'].mp)
+	{
+		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+		// set_message("Attacking");
+		use_skill('3shot', monsters_in_range).catch(() => {});
+	}
+    else if(can_attack(target) && target.armor && target.armor > 400)
     {
-        setTimeout(myAttack, Math.max(1, ms_to_next_skill('attack')));
+        usePiercing(target)
     }
+    else if(can_attack(target) )
+    {
+        //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
+		// set_message("Attacking");
+		attack(target).catch(() => {});        
+    }
+    reduce_cooldown("attack", Math.min(...parent.pings));
 }
