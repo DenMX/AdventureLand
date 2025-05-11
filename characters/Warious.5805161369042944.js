@@ -144,7 +144,7 @@ async function useTaunt(target)
 
 async function useMassAgr()
 {
-	if(is_on_cooldown('agitate')|| (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
+	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
 	if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 1) 
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>1
 		|| (Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2 && (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))))

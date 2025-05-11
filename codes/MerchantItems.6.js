@@ -249,7 +249,7 @@ const ITEMS_TO_BUY_PONTY =
 	hboots: {level: 6},
 	xboots: {level: 5},
 	quiver: {level: 7},
-	firebow: {level: 7},
+	// firebow: {level: 7},
 	fireblade: {level: 0},
 	firestaff: {level: 0},
 	glolipop: {level: 7},
