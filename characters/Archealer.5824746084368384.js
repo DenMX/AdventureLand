@@ -105,58 +105,68 @@ function checkEquippedItems()
 }
 
 
-
-function attackOrHeal(target)
+attackOrHeal()
+function attackOrHeal()
 {
-	if(character.hp < character.max_hp * 0.8) 
-	{
-		use_skill('heal', character) ;
-		return;
-	}
+	try{
 
-	for (i=0; i<parent.party_list.length; i++){
-		if(parent.entities[parent.party_list[i]] == null ) continue;
-		let member = parent.party_list[i]
-		entity = parent.entities[member]
-        if(!entity.rip && member != character.name && entity.hp <= entity.max_hp * 0.8) 
-	    {
-			
-		   if(getDistance(character, entity)>character.range)
-		   {
+		target = parent.ctarget
+		if(character.hp < character.max_hp * 0.8) 
+		{
+			use_skill('heal', character) ;
+			return;
+		}
+
+		for (i=0; i<parent.party_list.length; i++){
+			if(parent.entities[parent.party_list[i]] == null ) continue;
+			let member = parent.party_list[i]
+			entity = parent.entities[member]
+			if(!entity.rip && member != character.name && entity.hp <= entity.max_hp * 0.8) 
+			{
+				
+			if(getDistance(character, entity)>character.range)
+			{
+				move(
+					character.x+(entity.x - character.x)/2,
+					character.y+(entity.y - character.y)/2
+				)
+			}
+				use_skill('heal', parent.entities[parent.party_list[i]]);
+			return;
+			}
+		}
+		let players = Object.values(parent.entities).filter(e => e.player && !e.rip && is_in_range(e) && e.hp<e.max_hp*0.7 ) 
+		if(players.length>0)
+		{
+			use_skill('heal', players[0])
+			return
+		}
+		if(!target || is_on_cooldown('scare')) return;
+		useSkills(target);
+		if(!is_in_range(target))
+		{
 			move(
-				character.x+(entity.x - character.x)/2,
-				character.y+(entity.y - character.y)/2
-			)
-		   }
-			use_skill('heal', parent.entities[parent.party_list[i]]);
-		   return;
-	    }
-	}
-	let players = Object.values(parent.entities).filter(e => e.player && !e.rip && is_in_range(e) && e.hp<e.max_hp*0.7 ) 
-	if(players.length>0)
-	{
-		use_skill('heal', players[0])
-		return
-	}
-	if(!target) return;
-	change_target(target);
-	useSkills(target);
-	if(!is_in_range(target))
-	{
-		move(
-			character.x+(target.x-character.x)/4,
-			character.y+(target.y-character.y)/4
-			);
-		// Walk half the distance
-	}
-	else if(can_attack(target))
-	{		
-		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.max(...parent.pings));
-	}
+				character.x+(target.x-character.x)/4,
+				character.y+(target.y-character.y)/4
+				);
+			// Walk half the distance
+		}
+		else if(can_attack(target))
+		{		
+			attack(target).catch(() => {});
+			reduce_cooldown("attack", Math.max(...parent.pings));
+		}
 
+	}
+	catch(ex)
+	{
+		console.warn('Error while attacking\n'+ex)
+	}
+	finally
+	{
+		setTimeout(attackOrHeal, Math.max(1, ms_to_next_skill('attack')));
+	}
 }
-
 // async function saveSelfAss()
 // {
 // 	if(is_on_cooldown('scare'))

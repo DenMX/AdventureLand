@@ -309,25 +309,38 @@ async function switchToBasher()
 	return false
 }
 
-function myAttack(target)
+myAttack()
+function myAttack()
 {
-	if((char_action == 'boss' || char_action =='event') && (!parent.entities.Archealer || (getDistance(parent.entities.Archealer, character)> 300 || parent.entities.Archealer.rip))) return
-	change_target(target);
+	try{
 
-
-	if(!is_in_range(target))
-	{
-		xmove(
-			character.x+(target.x-character.x)/2,
-			character.y+(target.y-character.y)/2
-			);
-		// Walk half the distance
+		
+		if(is_on_cooldown('scare')) return
+		if((char_action == 'boss' || char_action =='event') && (!parent.entities.Archealer || (getDistance(parent.entities.Archealer, character)> 300 || parent.entities.Archealer.rip))) return
+		
+		target = parent.ctarget
+		if(!target) return
+		if(!is_in_range(target))
+		{
+			xmove(
+				character.x+(target.x-character.x)/2,
+				character.y+(target.y-character.y)/2
+				);
+			// Walk half the distance
+		}
+		else if(can_attack(target))
+		{
+			attack(target).catch(() => {});
+			reduce_cooldown("attack", Math.max(...parent.pings));
+			swing(target)
+		}
 	}
-	else if(can_attack(target))
+	catch(ex)
 	{
-		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.max(...parent.pings));
-		swing(target)
+		console.warn('Error while attacking\n'+ex)
+	}
+	finally {
+		setTimeout(myAttack, Math.max(1, ms_to_next_skill('attack')));
 	}
 }
 

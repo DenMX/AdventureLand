@@ -225,10 +225,7 @@ async function getTartget()
 				}
 					
 	}		
-	if(!target && character.name != 'Archealer') return;
-	if(is_on_cooldown('scare')) return;
-	else if (character.name=='Archealer') attackOrHeal(target)
-	else myAttack(target)
+	if(target) change_target(target)
 }
 
 async function getSpotForAggro() {
