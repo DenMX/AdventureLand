@@ -180,7 +180,7 @@ function looting(){
 	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
 }
 
-setInterval(getTartget, 150)
+setInterval(getTartget, 100)
 //--------COMBAT SECTION--------//
 async function getTartget()
 {
