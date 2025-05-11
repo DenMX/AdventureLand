@@ -184,13 +184,13 @@ async function useStomp(target)
 	if(!target) return
 	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 &&
 	 (FARM_BOSSES.includes(target.mtype) || 
-	 Object.values(parent.entities).filter(e=> e.target == character.name )))
+	 Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target)).length>2))
 	{
 		let switched = await switchToBasher()
 		if(switched == true)
 		{
 			await use_skill('stomp').catch(() => {})
-			// reduce_cooldown('stomp', Math.max(...parent.pings));
+			reduce_cooldown('stomp', Math.max(...parent.pings));
 		}
 	}
 }

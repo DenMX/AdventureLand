@@ -239,7 +239,7 @@ async function gettingParty()
         setTimeout(gettingParty,500)
         return
     }
-    else if(parent.party_list.length<2)
+    else if(!parent.party_list)
     {
         let myChars = getMyCharactersOnline()
         if(myChars.length>0)
