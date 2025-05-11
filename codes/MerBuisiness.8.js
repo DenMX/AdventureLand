@@ -92,6 +92,14 @@ async function fishing()
 	}
 }
 
+setInterval(manageStand, 500)
+async function manageStand()
+{
+	if(character.moving && character.standed)
+		close_stand()
+	else if (!character.moving && !character.standed)
+		open_stand()
+}
 
 async function checkBosses()
 {

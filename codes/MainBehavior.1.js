@@ -123,30 +123,6 @@ async function checkAction(action, cur_point, schedule) {
 			else if (parent.S[cur_point]?.live || parent.S[cur_point]?.live == 'undefined' && bosses.length<1) await smart_move (parent.S[cur_point])
 			
 	}
-
-
-
-	// if(cur_point && getDistance(character, parent.S[cur_point] || cur_point)>500 && !character.moving)  {
-	// 	(action=='boss') ? await smart_move(cur_point) : await smart_move(parent.S[cur_point])
-	// }
-	// else if(!cur_point || (cur_point && (getDistance(character, cur_point) <= 500 || getDistance(character, parent.S[cur_point])<=500) && Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype)).length<1))
-	// {
-	// 	if(schedule.length>0) {
-	// 		cur_point = schedule.shift()
-	// 		(action=='boss') ? await smart_move(cur_point) : await smart_move(parent.S[cur_point])
-	// 	}
-	// 	else {
-	// 		if(action == 'boss') { 
-	// 			char_action = 'farm' 
-	// 			current_boss = null
-	// 		}
-	// 		else if(action == 'event'){
-	// 			char_action = 'boss'
-	// 			current_event = null
-	// 			checkAction('boss', current_boss, boss_schedule)
-	// 		}
-	// 	}
-	// }
 		
 
 }

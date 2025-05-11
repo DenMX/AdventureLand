@@ -11,7 +11,7 @@ const FARM_BOSSES = [
 	"cutebee",
 	"grinch",
 	"dragold",
-	//"franky",
+	"franky",
 	"icegolem",
 	//"crabxx",
 	"jr",
@@ -173,7 +173,7 @@ function itemsCount()
 setInterval(on_party_invite,1000)
 // Accept party from one of these sources
 function on_party_invite(name) {
-    if (MY_CHARACTERS.includes(name)) {
+    if (MY_CHARACTERS.includes(name) || name == 'Flamme') {
         accept_party_invite(name);
     }
 }
@@ -227,21 +227,30 @@ gettingParty()
 async function gettingParty()
 {
 
-    if(parent.party_list.length>0) 
+    if(parent.party_list.length>0 && parent.party_list.includes('Flamme')) 
     {
         setTimeout(gettingParty, 1000)
         return
     }
-	let myChars = getMyCharactersOnline()
-	
-	if(myChars.length>0)
-	{
-		for(let char of myChars)
-		{
-			send_party_request(char.name)
-			
-		}
-	}
+    else if(Object.values(getServerPlayers()).filter(c => c.name == 'Flamme'))
+    {
+        //if(parent.party_list.length>0) leave_party()
+        send_party_request('Flamme')
+        setTimeout(gettingParty,500)
+        return
+    }
+    else if(parent.party_list.length<2)
+    {
+        let myChars = getMyCharactersOnline()
+        if(myChars.length>0)
+        {
+            for(let char of myChars)
+            {
+                send_party_request(char.name)
+                break
+            }
+        }
+    }
 	setTimeout(gettingParty, 400)
 }
 
