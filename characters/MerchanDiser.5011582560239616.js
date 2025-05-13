@@ -134,6 +134,7 @@ async function checkEventOnOtherServers()
 
 async function checkEvents()
 {
+	return;
 	if(parent.S.lunarnewyear)
 	{
 		checkEventOnOtherServers()
