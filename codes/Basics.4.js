@@ -236,8 +236,12 @@ async function gettingParty()
     {
         //if(parent.party_list.length>0) leave_party()
         send_party_request('Flamme')
-        setTimeout(gettingParty,500)
-        return
+        await sleep(5000)
+        if(parent.party_list.length>1)
+        {
+            setTimeout(gettingParty,500)
+            return
+        }
     }
     else if(!parent.party_list)
     {
