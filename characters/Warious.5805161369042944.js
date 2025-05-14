@@ -97,7 +97,7 @@ async function initialize_character() {
 async function useSkills()
 {
 	target = parent.ctarget
-	if(character.s.stonned)
+	if(parent.is_disabled(character))
 	{
 		try{
 			useShell()
