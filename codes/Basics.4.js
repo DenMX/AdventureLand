@@ -232,28 +232,25 @@ async function gettingParty()
         setTimeout(gettingParty, 1000)
         return
     }
-    else if(Object.values(getServerPlayers()).filter(c => c.name == 'Flamme'))
+    else 
     {
-        //if(parent.party_list.length>0) leave_party()
-        send_party_request('Flamme')
-        await sleep(5000)
-        if(parent.party_list.length>1)
-        {
-            setTimeout(gettingParty,500)
-            return
-        }
-    }
-    else if(!parent.party_list)
-    {
-        let myChars = getMyCharactersOnline()
-        if(myChars.length>0)
-        {
-            for(let char of myChars)
+        if(!parent.party_list)
+        {   let myChars = getMyCharactersOnline()
+            if(myChars.length>0)
             {
-                send_party_request(char.name)
-                break
+                for(let char of myChars)
+                {
+                    send_party_request(char.name)
+                    break
+                }
             }
         }
+        if(Object.values(getServerPlayers()).filter(c => c.name == 'Flamme') && !parent.party_list.includes('Flamme'))
+        {
+            
+            send_party_request('Flamme')
+        }
+
     }
 	setTimeout(gettingParty, 400)
 }
