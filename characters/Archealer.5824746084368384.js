@@ -1,5 +1,5 @@
 const TARGETING_BLACK_LIST = ''
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'goldbooster', 'shadowstone']
+const DO_NOT_SEND_ITEMS = [ 'elixirint2', 'elixirluck', 'luckbooster', 'goldbooster', 'shadowstone']
 const ELIXIRS = [
 	'elixirluck', 
 	// 'elixirint2' 
@@ -217,7 +217,7 @@ async function pullmobsFromMember()
 	for(member of parent.party_list)
 	{
 		let member_entity = parent.entities[member]
-		if(!member_entity || Object.values(parent.entities).filter(e=> e.target == member).length<1) continue
+		if(!member_entity || Object.values(parent.entities).filter(e=> e.target == member && e.mtype != 'oneeye').length<1) continue
 		if(member_entity.ctype == 'warrior' && 
 			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'magical').length>2)) {
 				await use_skill('absorb', member).catch(() => {})
