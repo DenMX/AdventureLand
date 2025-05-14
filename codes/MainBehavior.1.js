@@ -63,7 +63,7 @@ async function checkState() {
 					console.log('Farm smart_move')
 					setTimeout(checkState, 2000)
 				}
-				else if(Object.values(parent.entitites).filter(e=>current_farm_pos.mobs.includes(e.mtype))>0 && getDistance(character, current_farm_pos?.location)>radius &&
+				else if(Object.values(parent.entitites).filter(e=>current_farm_pos.mobs.includes(e.mtype)).length>0 && getDistance(character, current_farm_pos?.location)>radius &&
 					!FARM_BOSSES.includes(parent.ctarget.mtype) && !character.moving)
 				{
 					await smart_move(current_farm_pos.location)
