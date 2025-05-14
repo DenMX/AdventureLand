@@ -90,12 +90,25 @@ async function initialize_character() {
 	setInterval(selectMainWeapon,330)
 	setInterval(selectOffWeapon,330)
 	setInterval(checkOrb, 1000)
+	setInterval(saveSelfAss, 1000)
 }
 
 
 async function useSkills()
 {
 	target = parent.ctarget
+	if(character.s.stonned)
+	{
+		try{
+			useShell()
+			useMassAgr()
+		}	
+		catch(ex)
+		{
+			console.warn('Error while using skills being stonned\n'+ex)
+		}
+		return
+	} 
 	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer?.rip)) return
 	await useStomp(target)
 	useShell()
@@ -103,12 +116,12 @@ async function useSkills()
 	useWarcry()
 	useCleave(target)
 	useTaunt(target)
-	setInterval(saveSelfAss, 1000)
+	
 }
 
 
 
-useWarcry()
+// useWarcry()
 async function useWarcry(){
 	try{
 		if(!is_on_cooldown('warcry') && !character.s.warcry && character.mp > G.skills.warcry.mp)
@@ -119,7 +132,7 @@ async function useWarcry(){
 	}
 	catch {}
 	finally {
-			setTimeout(useWarcry, 1000)
+			// setTimeout(useWarcry, 1000)
 	}
 }
 
