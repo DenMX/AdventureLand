@@ -161,7 +161,7 @@ var boss_schedule = []
 var event_schedule = []
 
 
-const LOOTER = 'Archealer'
+const LOOTER = 'Warious'
 const ACTIONS = ['farm', 'boss', 'event', 'quest']
 
 const COMMON_DONT_SEND_ITEMS =[MP_POT, HP_POT, 'tracker', 'computer', 'supercomputer']
