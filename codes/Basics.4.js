@@ -234,7 +234,7 @@ async function gettingParty()
     }
     else 
     {
-        if(!parent.party_list)
+        if(parent.party_list<2)
         {   let myChars = getMyCharactersOnline()
             if(myChars.length>0)
             {
