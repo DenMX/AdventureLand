@@ -93,7 +93,7 @@ function checkWeapon() {
 		return
 	}
 	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop))
-		|| target.mtype == 'bgoo')
+		|| target.mtype == 'bgoo' || target.mtype == 'franky')
 	{
 		desired_main = MASS_WEAPON
 	}
