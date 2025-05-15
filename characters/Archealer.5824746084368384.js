@@ -108,6 +108,7 @@ function checkEquippedItems()
 
 function attackOrHeal(target)
 {
+	if(is_on_cooldown('attack')) return;
 	try{
 
 		if(character.hp < character.max_hp * 0.8) 
