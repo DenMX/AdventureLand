@@ -224,7 +224,7 @@ function myAttack(target){
 useCMB()
 async function useCMB()
 {
-	if(is_on_cooldown('cburst')) 
+	if(is_on_cooldown('cburst') || parent.ctarget.mtype == 'franky') 
 	{
 		setTimeout(useCMB, 300)
 		return
