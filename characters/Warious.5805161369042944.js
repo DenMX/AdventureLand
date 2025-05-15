@@ -157,7 +157,7 @@ async function useTaunt(target)
 
 async function useMassAgr()
 {
-	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && !['bgoo','franky'].includes(parent.ctarget.mtype))) return
+	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && !['bgoo'].includes(parent.ctarget.mtype))) return
 	if(current_farm_pos.massFarm && (parent.entities.Archealer || parent.entities.Flamme) && Object.values(parent.entities).filter( e=> e.mtype == 'oneeye' && (!e.target || parent.party_list.includes(e.target))).length>0)
 	{
 		await use_skill('agitate').catch(() => {})
@@ -216,7 +216,7 @@ async function useStomp(target)
 async function useCleave(target)
 {
 	target = parent.ctarget
-	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && target.mtype!='bgoo' && target.mtype!= 'franky')) return
+	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && target.mtype!='bgoo' )) return
 	let entities = Object.values(parent.entities)
 	if(current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer) && entities.filter(e => current_farm_pos.mobs.includes(e.mtype)  && is_in_range(e, 'cleave')).length > 2)
 	{
