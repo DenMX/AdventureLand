@@ -238,7 +238,7 @@ async function useCMB()
 				{
 					await smart_move(target_to_pull.monster)
 				}
-				targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && !e.target && is_in_range(e)).map(e=> [e.id, 1])
+				targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && e.mtype != 'oneeye' && !e.target && is_in_range(e)).map(e=> [e.id, 1])
 				if (targets.length>1) await use_skill('cburst', targets)
 			}
 			else if( current_farm_pos.massFarm && !current_farm_pos.coop)
