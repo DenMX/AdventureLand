@@ -140,7 +140,7 @@ function attackOrHeal(target)
 			use_skill('heal', players[0])
 			return
 		}
-		if(!target || is_on_cooldown()) return;
+		if(!target || is_on_cooldown('attack')) return;
 		useSkills(target);
 		if(!is_in_range(target))
 		{
