@@ -220,7 +220,7 @@ async function pullmobsFromMember()
 		let member_entity = parent.entities[member]
 		if(current_farm_pos.mobs.includes('oneeye') && current_farm_pos.massFarm == true && member!='Warious')
 		{
-			if(Object.values(parent.entities).filter(e => e.type=='monster' && e.target == member).length>0)
+			if(Object.values(parent.entities).filter(e => e.type=='monster' && e.target == member && e.mtype!='nerfedmummy').length>0)
 			{
 				await use_skill('absorb', 'Warious').catch(() => {})
 				reduce_cooldown("absorb", Math.max(...parent.pings));
