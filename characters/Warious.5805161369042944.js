@@ -157,7 +157,7 @@ async function useTaunt(target)
 
 async function useMassAgr()
 {
-	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
+	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && (parent.ctarget.mtype!='bgoo' || parent.ctarget.mtype!='franky'))) return
 	if(current_farm_pos.massFarm && (parent.entities.Archealer || parent.entities.Flamme) && Object.values(parent.entities).filter( e=> e.mtype == 'oneeye' && (!e.target || parent.party_list.includes(e.target))).length>0)
 	{
 		await use_skill('agitate').catch(() => {})
@@ -238,7 +238,7 @@ function selectMainWeapon()
 {
 	target = parent.ctarget
 	if(character.s.stonned) desired_main = MASS_MAINHAND
-	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
+	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo' || target.mtype=='franky')
 		desired_main = MASS_MAINHAND
 	else if(target && target.mtype == 'snowman') desired_main = FAST_WEAPON
 	else desired_main = MAINHAND
@@ -249,7 +249,7 @@ function selectOffWeapon()
 	target = parent.ctarget
 	if(target && target.mtype == 'snowman') desired_off == null
 	else if(character.hp <= character.max_hp*0.55 || character.s.stonned) desired_off = SHIELD
-	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
+	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo' || target.mtype=='franky')
 		desired_off = LOLIPOP
 	else desired_off = OFFHAND
 }
