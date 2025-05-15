@@ -221,7 +221,7 @@ async function pullmobsFromMember()
 		{
 			if(Object.values(parent.entities).filter(e => e.type=='monster' && e.target == member).length>0)
 			{
-				await use_skill('absorb', member).catch(() => {})
+				await use_skill('absorb', 'Warious').catch(() => {})
 				reduce_cooldown("absorb", Math.max(...parent.pings));
 				break
 			}
