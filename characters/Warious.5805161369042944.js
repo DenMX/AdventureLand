@@ -218,14 +218,10 @@ async function useCleave(target)
 	target = parent.ctarget
 	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && (target.mtype!='bgoo' || target.mtype != 'franky')  )) return
 	let entities = Object.values(parent.entities)
-	if(target.mtype == 'franky')
-	{
-		let is_avoid_monster = (Object.values(entities).filter(e=> e.type== 'monster' && is_in_range(e, 'cleave') && !['nerfedmummy','franky'].includes(e.mtype)).length>0)
-		if(!is_avoid_monster && Object.values(entities).filter(e => ['nerfedmummy', 'franky'].includes(e.mtype) && is_in_range(e, 'cleave')).length>1)
-		{
-			await use_skill('cleave').catch(() => {})
-			reduce_cooldown('cleave', Math.min(...parent.pings));
-		}
+	if(target.mtype == 'franky' && !Object.values(entities).filter(e=> is_in_range(e, 'cleave') && e.mtype=='oneeye'))
+{
+		await use_skill('cleave').catch(() => {})
+		reduce_cooldown('cleave', Math.min(...parent.pings));
 	}
 	if(current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer) && entities.filter(e => current_farm_pos.mobs.includes(e.mtype)  && is_in_range(e, 'cleave')).length > 2)
 	{
