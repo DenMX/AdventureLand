@@ -217,6 +217,15 @@ async function pullmobsFromMember()
 	for(member of parent.party_list)
 	{
 		let member_entity = parent.entities[member]
+		if(current_farm_pos.mobs.includes('oneeye') && current_farm_pos.massFarm == true && member!='Warious')
+		{
+			if(Object.values(parent.entities).filter(e => e.type=='monster' && e.target == member).length>0)
+			{
+				await use_skill('absorb', member).catch(() => {})
+				reduce_cooldown("absorb", Math.max(...parent.pings));
+				break
+			}
+		}
 		if(!member_entity || Object.values(parent.entities).filter(e=> e.target == member && e.mtype != 'oneeye' && e.type == 'monster').length<1) continue
 		if(member_entity.ctype == 'warrior' && 
 			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'magical').length>2)) {
