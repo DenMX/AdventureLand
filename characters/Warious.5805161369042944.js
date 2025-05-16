@@ -340,6 +340,7 @@ async function myAttack(target)
 	{
 		await frankyLogic(target)
 	}
+	if(target.mtype == 'franky' && Object.values(parent.entities).filter(e => e.mtype == 'oneeye' && getDistance(e, target)<50).length>0) return
 	if(!is_in_range(target))
 	{
 		xmove(

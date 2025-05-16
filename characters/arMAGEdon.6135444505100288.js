@@ -204,6 +204,7 @@ function myAttack(target){
 	
 	change_target(target);
 	if(FARM_BOSSES.includes(target.mtype) && (!target.target || target.target == character.name)) return
+	if(target.mtype == 'franky' && Object.values(parent.entities).filter(e => e.mtype == 'oneeye' && getDistance(e, target)<50).length>0) return
 	useSkills(target);
 	if(!is_in_range(target))
 	{
