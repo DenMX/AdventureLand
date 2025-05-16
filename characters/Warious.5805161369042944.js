@@ -331,12 +331,15 @@ async function switchToBasher()
 	return false
 }
 
-function myAttack(target)
+async function myAttack(target)
 {
-	if((char_action == 'boss' || char_action =='event') && (!parent.entities.Archealer || (getDistance(parent.entities.Archealer, character)> 300 || parent.entities.Archealer.rip))) return
+	if((char_action == 'boss' || char_action =='event') && (!parent.entities.Archealer || parent.is_disabled(character) || (getDistance(parent.entities.Archealer, character)> 300 || parent.entities.Archealer.rip))) return
 	change_target(target);
 
-
+	if(target.mtype == 'franky')
+	{
+		await frankyLogic(target)
+	}
 	if(!is_in_range(target))
 	{
 		xmove(
@@ -350,6 +353,42 @@ function myAttack(target)
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
 		swing(target)
+	}
+}
+
+async function frankyLogic(target){
+	// should works on respawn
+	if(!target.target)
+	{
+		if(Object.values(parent.entities).filter( e=> e.mtype =='oneeye' && e.target == character.name).length>0 && !is_on_cooldown('scare'))
+		{
+			if(character.slots.orb.name != 'jacko' )
+				{
+					var current_orb = character.slots.orb
+					for(let i in character.items)
+					{
+						let item = character.items[i]
+						if(item && item.name == JACKO.name && item.level == JACKO.level) await equip(i)
+					}
+				}
+				await use_skill('scare')
+		
+				if(current_orb)
+				{
+					for(let j in character.items)
+					{
+						let itm = character.items[j]
+						if(itm && itm.name == current_orb.name && itm.level == current_orb.level) await equip(j)
+					}
+				}
+		}
+		await use_skill('taunt', target)
+		await xmove(FRANKY_POSITION)
+	}
+	else if(getDistance(target, FRANKY_POSITION)>50 )
+	{
+		if(target.target != character.name) await use_skill('taunt', target)
+		await xmove(FRANKY_POSITION)
 	}
 }
 

@@ -168,8 +168,8 @@ async function dontStack()
 		if(getDistance(character, player) < 10 && character.speed>55)
 		{
 			move(
-				character.x + (-50 +(Math.random()*50)),
-				character.y + (-50 +(Math.random()*50))
+				character.x + (-25 +(Math.random()*25)),
+				character.y + (-25 +(Math.random()*25))
 			)
 		}
 	}
@@ -190,6 +190,13 @@ async function getTartget()
 	
 	if(target && target.map != character.map || getDistance(target, character) > 500) change_target(null)
 	dontStack()
+	if(target && target.mtype == 'franky' && getDistance(character, target) > 30)
+	{
+		xmove(
+			character.x + (target.x - character.x) / 2,
+			character.y + (target.y - character.y) / 2
+		)
+	}
 
 	if(!target)
 	{

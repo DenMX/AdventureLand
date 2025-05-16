@@ -30,6 +30,8 @@ const FARM_BOSSES = [
 	"a3"
 ];
 
+const FRANKY_POSITION = {x: -30, y: 4}
+
 const EVENTS = [
     // {name: 'snowman', useSkills: false, massFarm: false, targets: ['snowman']}, 
     {name: 'dragold', useSkills:true, massFarm: true, targets: ['dragold']},
