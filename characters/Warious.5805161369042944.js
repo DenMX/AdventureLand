@@ -382,13 +382,28 @@ async function frankyLogic(target){
 					}
 				}
 		}
+		if(!is_in_range(target,'taunt'))
+		{
+			await xmove(
+				character.x+(target.x-character.x)/2,
+				character.y+(target.y-character.y)/2
+				);
+		}
 		await use_skill('taunt', target)
 		await xmove(FRANKY_POSITION)
 	}
 	else if(getDistance(target, FRANKY_POSITION)>50 )
 	{
-		if(target.target != character.name) await use_skill('taunt', target)
-		await xmove(FRANKY_POSITION)
+		if(target.target != character.name) {
+			if(!is_in_range(target,'taunt'))
+			{
+				await xmove(
+					character.x+(target.x-character.x)/2,
+					character.y+(target.y-character.y)/2
+					);
+			}
+			await use_skill('taunt', target)}
+			await xmove(FRANKY_POSITION)
 	}
 }
 
