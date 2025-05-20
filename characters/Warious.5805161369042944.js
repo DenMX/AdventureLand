@@ -10,6 +10,7 @@ const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 2}
 const ORB = {name: 'rabbitsfoot', level: 1}
 const FAST_WEAPON = {name: 'rapier', level: 4}
+const LSHIELD = {name: 'mshield', level: 7}
 
 const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON]
 
@@ -253,7 +254,8 @@ function selectOffWeapon()
 {
 	target = parent.ctarget
 	if(target && target.mtype == 'snowman') desired_off == null
-	else if(character.hp <= character.max_hp*0.55 || character.s.stonned) desired_off = SHIELD
+	else if(character.hp <= character.max_hp*0.55 ) desired_off = SHIELD
+	else if(Object.values(parent.entities).filter(e=> e.mtype == 'oneeye' && e.target==character.name)) desired_off = LSHIELD
 	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo' || target.mtype=='franky')
 		desired_off = LOLIPOP
 	else desired_off = OFFHAND
