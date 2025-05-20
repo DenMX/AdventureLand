@@ -12,7 +12,7 @@ const ORB = {name: 'rabbitsfoot', level: 1}
 const FAST_WEAPON = {name: 'rapier', level: 4}
 const LSHIELD = {name: 'mshield', level: 7}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON]
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON, LSHIELD]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
