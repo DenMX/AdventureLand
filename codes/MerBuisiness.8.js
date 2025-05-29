@@ -21,6 +21,13 @@ const BOSS_CHECK_ROUTE = [
 	{name: "skeletor", map: "arena", x: 247, y: -558}
 ]
 
+const MERCHANT_SOLO_BOSSES = [
+	"greenjr",
+	"fvampire",
+	"mvampire",
+	"jr"
+]
+
 // exmp: { phoenix: 12:52, dracula: 13:30 }
 var founded_bosses = {}
 
@@ -95,15 +102,15 @@ async function fishing()
 setInterval(manageStand, 500)
 async function manageStand()
 {
-	if(character.moving && character.standed)
+	if((character.moving || attack_mode) && character.standed)
 		close_stand()
-	else if (!character.moving && !character.standed)
+	else if (!character.moving && !character.standed && !attack_mode)
 		open_stand()
 }
 
 async function checkBosses()
 {
-	return
+	// return
 	if(!parent.party_list.includes('arMAGEdon')) check_bosses = false
 	else if(parent.S.holidayseason || parent.S.lunarnewyear) check_bosses = false
 	else check_bosses = true
@@ -115,8 +122,11 @@ async function checkBosses()
 	changeState('Checking bosses')
 	for(let point of BOSS_CHECK_ROUTE)
 	{
+
 		let spawn_ms = G.monsters[point.name].respawn * 1000
 		if(founded_bosses[point.name] && Date.now()-founded_bosses[point.name] < spawn_ms) continue
+		// TEMPORARY SKIPPING NON MERCHANT SOLO BOSSES
+		if(!MERCHANT_SOLO_BOSSES.includes(point.name)) continue
 		
 		await smart_move(point)
 		if(Object.values(parent.entities).filter(e=> e.mtype == point.name).length > 0)
@@ -124,8 +134,21 @@ async function checkBosses()
 			game_log('Found: '+point.name)
 			console.log('Found: '+point.name)
 			if(point.name == 'skeletor' && Object.values(parent.entities).filter(e => e.mtype == 'skeletor' && e.hp_level>5).length>0)continue;
-			if(parent.party_list.includes('arMAGEdon'))await send_cm('arMAGEdon',{cmd: "boss", boss: point})
-			else await send_cm(parent.party_list, {cmd: 'boss', boss: point})
+			if(parent.party_list.includes('arMAGEdon') && !MERCHANT_SOLO_BOSSES.includes(point.name)) await send_cm('arMAGEdon',{cmd: "boss", boss: point})
+			else {
+				
+				if(await equipTools('gun'))
+				{
+					attack_mode = true
+					await attackBoss()
+					while(Object.values(parent.entities).filter(e=> e.mtype == point.name).length > 0)
+					{
+						await sleep(1000)
+					}
+					attack_mode = false
+					await equipTools('broom')
+				}
+			}
 			founded_bosses[point.name] = Date.now()
 		}
 		else 
@@ -156,6 +179,12 @@ async function equipTools(tool)
 				book_index = i
 			}
 			if ( broom_index && book_index ) await equip_batch([{slot: 'mainhand', num: broom_index}, {slot: 'offhand', num: book_index}])
+		}
+		else if(tool == 'gun') {
+			if(item.name == GUN.name && item.level == GUN.level) {
+				await equip(i)
+				return true
+			}
 		}
 		else if( item.name == tool)
 		{

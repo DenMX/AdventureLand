@@ -12,8 +12,9 @@ const MINUTES_TO_RESET_STATE = 10
 
 const BROOM = {name: 'broom', level: 7}
 const BOOK = {name: 'wbookhs', level: 3}
+const GUN = {name: 'dartgun', level: 3}
 
-const PERSONAL_ITEMS = [ BROOM, BOOK ]
+const PERSONAL_ITEMS = [ BROOM, BOOK, GUN ]
 const ELIXIRS = []
 
 var pc = false
@@ -22,6 +23,7 @@ var bank_check
 var last_state_change
 var check_bosses = true
 var last_server_change
+var attack_mode = false
 
 var server_identifier
 
@@ -88,6 +90,39 @@ function antiFreezingState()
 	{
 		changeState(DEFAULT_STATE)
 	}
+}
+
+async function attackBoss()
+{
+	if(!attack_mode) return
+	if(is_on_cooldown('attack')) setTimeout(attackBoss, 1000)
+	let target = get_targeted_monster()
+	target = target ? target : Object.values(parent.entities).filter(e => FARM_BOSSES.includes(e.mtype) && MERCHANT_SOLO_BOSSES.includes(e.mtype))[0]
+	if(target)
+	{
+		change_target(target)
+		if(!is_in_range(target))
+		{
+			await xmove(
+				character.x + (target.x-character.x)/2,
+				character.y + (target.y-character.y)/2
+			)
+			setTimeout(attackBoss, 1000)
+		}
+		else 
+		{
+			attack(target).catch(() => {});   
+			loot()
+			reduce_cooldown('attack', Math.min(...parent.pings))
+			setTimeout(attackBoss, Math.min(0, getNextSkill('attack')))
+		}
+	}
+}
+
+setInterval(checkSlot, 1000)
+async function checkSlot()
+{
+	if(!attack_mode && slots.mainhand.name != 'broom' && character.moving) equipTools('broom')
 }
 
 saveSelfAss()

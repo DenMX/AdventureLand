@@ -69,6 +69,13 @@ async function checkApi(callback) {
     xhr.send()
 }
 
+function getNextSkill(skill)
+{
+    if(!parent.next_skill[skill]) return 0
+    if(parent.next_skill[skill] - Date.now() <= 0) return 0
+    else return parent.next_skill[skill] - Date.now()
+}
+
 function characterMoving()
 {
     if(character.moving || character.c.town) return true
