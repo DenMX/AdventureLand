@@ -327,7 +327,7 @@ async function myAttack(target)
 	else if(can_attack(target))
 	{
 		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.max(...parent.pings));
+		reduce_cooldown("attack", Math.min(...parent.pings));
 		swing(target)
 	}
 }
