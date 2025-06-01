@@ -175,7 +175,9 @@ async function useStomp(target)
 	if(!target) return
 	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 &&
 	 (FARM_BOSSES.includes(target.mtype) || 
-	 Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target)).length>2))
+	 Object.values(parent.entities)
+	 .filter(e=> parent.party_list.includes(e.target) && (!e.s.stunned || e.s.stunned == false) && e.hp >= 10000)
+	 .length>2))
 	{
 		let switched = await switchToBasher()
 		if(switched == true)
