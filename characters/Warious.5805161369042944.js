@@ -349,13 +349,14 @@ async function myAttack(target)
 			character.x+(target.x-character.x)/2,
 			character.y+(target.y-character.y)/2
 			);
+			return
 		// Walk half the distance
 	}
 	else if(can_attack(target))
 	{
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
-		swing(target)
+		
 	}
 }
 
