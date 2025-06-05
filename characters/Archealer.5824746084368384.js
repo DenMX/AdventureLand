@@ -219,8 +219,7 @@ async function pullmobsFromMember()
 	if(current_farm_pos.mobs.includes('oneeye') && current_farm_pos.massFarm == true)
 	{
 		if(character.hp < character.max_hp * 0.7) return
-		if(Object.values(parent.entities).filter( e => e.ctype == 'priest' && parent.party_list.includes(e.name)).length>0
-			&& Object.values(parent.entitites).filter( e => e.mtype == 'oneeeye' && e.target=='Warious').length>0)
+		if(Object.values(parent.entities).filter( e => e.ctype == 'priest' && parent.party_list.includes(e.name)).length>0 && Object.values(parent.entitites).filter( e => e.mtype == 'oneeeye' && e.target=='Warious').length>0)
 		{
 			await use_skill('absorb', 'Warious').catch(() => {})
 			reduce_cooldown("absorb", Math.max(...parent.pings));
