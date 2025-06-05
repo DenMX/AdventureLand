@@ -164,7 +164,7 @@ async function useMassAgr()
 		let party_heals = Object.values(parent.entities).filter(e => parent.party_list.includes(e.name) && e.ctype=='priest')
 		if(party_heals.length<1 ) return 
 		let arch = parent.entities.Archealer
-		if(arch.hp < arch.max_hp*0.7)
+		if(arch.hp < arch.max_hp*0.6)
 		{
 			await use_skill('agitate').catch(() => {})
 			reduce_cooldown("agitate", Math.max(...parent.pings));

@@ -168,16 +168,7 @@ function attackOrHeal(target)
 		// setTimeout(attackOrHeal, Math.max(1, ms_to_next_skill('attack')));
 	}
 }
-// async function saveSelfAss()
-// {
-// 	if(is_on_cooldown('scare'))
-// 	{
-// 		setTimeout(saveSelfAss, 500)
-// 		return
-// 	}
-// 	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.5)	await use_skill('scare').catch(() => {})
-	
-// }
+
 
 async function usePhaseOut(){
 	if(character.hp<character.max_hp*0.35 && !character.s.phasedout && locate_item('shadowstone')!= -1)
@@ -218,7 +209,7 @@ async function pullmobsFromMember()
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
 	if(current_farm_pos.mobs.includes('oneeye') && current_farm_pos.massFarm == true)
 	{
-		if(character.hp < character.max_hp * 0.7) return
+		if(character.hp < character.max_hp * 0.6) return
 		if(Object.values(parent.entities).filter( e => e.ctype == 'priest' && parent.party_list.includes(e.name)).length>0 && Object.values(parent.entities).filter( e => e.mtype == 'oneeye' && e.target=='Warious').length>0)
 		{
 			await use_skill('absorb', 'Warious').catch(() => {})
