@@ -11,7 +11,8 @@ const PERSONAL_ITEMS = [
 	{name: 't2intamulet', level: 2}, 
 	{name: 'xgloves', level: 5}, 
 	{name: 'jacko', level: 3}, 
-	{name: 'rabbitsfoot', level: 0}
+	{name: 'rabbitsfoot', level: 0},
+	{name: 'mshield', level: 7}
 ]
 
 const TANK_ITEMS = {exoarm: {level: 1}}
@@ -215,6 +216,17 @@ async function pullmobsFromMember()
 {
 	if(char_action=='farm' && !current_farm_pos.coop)return
 	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
+	if(current_farm_pos.mobs.includes('oneeye') && current_farm_pos.massFarm == true)
+	{
+		if(character.hp < character.max_hp * 0.7) return
+		if(Object.values(parent.entities).filter( e => e.ctype == 'priest' && parent.party_list.includes(e.name)).length>0
+			&& Object.values(parent.entitites).filter( e => e.mtype == 'oneeeye' && e.target=='Warious').length>0)
+		{
+			await use_skill('absorb', 'Warious').catch(() => {})
+			reduce_cooldown("absorb", Math.max(...parent.pings));
+			return
+		}
+	}
 	for(member of parent.party_list)
 	{
 		let member_entity = parent.entities[member]

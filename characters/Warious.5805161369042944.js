@@ -159,10 +159,26 @@ async function useTaunt(target)
 async function useMassAgr()
 {
 	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && !['bgoo'].includes(parent.ctarget.mtype))) return
-	if(current_farm_pos.massFarm && (parent.entities.Archealer || parent.entities.Flamme) && Object.values(parent.entities).filter( e=> e.mtype == 'oneeye' && (!e.target || parent.party_list.includes(e.target))).length>0)
+	if(current_farm_pos.massFarm && current_farm_pos.mobs.includes('oneeye'))
 	{
-		await use_skill('agitate').catch(() => {})
-		reduce_cooldown("agitate", Math.max(...parent.pings));
+		let party_heals = Object.values(parent.entities).filter(e => parent.party_list.includes(e.name) && e.ctype=='priest')
+		if(party_heals.length<1 ) return 
+		let arch = parent.entities.Archealer
+		if(arch.hp < arch.max_hp*0.7)
+		{
+			await use_skill('agitate').catch(() => {})
+			reduce_cooldown("agitate", Math.max(...parent.pings));
+		}
+		else if(party_heals.length == 1 && Object.values(parent.entities).filter( e=> e.mtype=='oneeye' && !e.target || parent.party_list.includes(e.target)).length>0)
+		{
+			await use_skill('agitate').catch(() => {})
+			reduce_cooldown("agitate", Math.max(...parent.pings));
+		}
+		else if(party_heals.length == 2 && Object.values(parent.entities).filter( e => e.mtype == 'oneeye' && (!e.target || (e.target!='Archealer' && parent.party_list.includes(e.target)))).length>1)
+		{
+			await use_skill('agitate').catch(() => {})
+			reduce_cooldown("agitate", Math.max(...parent.pings));
+		}
 	}
 	else if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 1) 
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>1
