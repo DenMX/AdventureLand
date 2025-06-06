@@ -257,7 +257,7 @@ async function getTartget()
 	}
 	catch(ex)
 	{
-		console.warn('Exception in getTarget: '+ ex.ToString())
+		console.warn('Exception in getTarget: '+ ex.toString())
 	}
 	finally
 	{
