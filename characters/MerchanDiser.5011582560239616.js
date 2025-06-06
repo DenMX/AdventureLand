@@ -122,7 +122,7 @@ async function attackBoss()
 setInterval(checkSlot, 1000)
 async function checkSlot()
 {
-	if(!attack_mode && slots.mainhand.name != 'broom' && character.moving) equipTools('broom')
+	if(!attack_mode && character.slots.mainhand.name != 'broom' && character.moving) equipTools('broom')
 }
 
 saveSelfAss()
