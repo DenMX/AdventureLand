@@ -108,8 +108,6 @@ async function fixPromise(promise) {
     return Promise.race(promises);
 }
 
-// Example:
-await fixPromise(equip(locate_item("zapper")))
 
 function getNextSkill(skill)
 {

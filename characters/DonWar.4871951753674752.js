@@ -88,7 +88,7 @@ async function initialize_character() {
 
 async function useSkills()
 {
-	target = parent.ctarget
+	target = get_targeted_monster()
 	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer?.rip)) return
 	if(character.level>=G.skills['stomp'].level) await useStomp(target)
 	if(character.level>=G.skills['hardshell'].level)useShell()
@@ -130,7 +130,7 @@ async function useTaunt(target)
 async function useMassAgr()
 {
 	return
-	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && !['bgoo'].includes(parent.ctarget.mtype))) return
+	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (get_targeted_monster() && FARM_BOSSES.includes(get_targeted_monster().mtype) && !['bgoo'].includes(get_targeted_monster().mtype))) return
 	if(current_farm_pos.massFarm && (parent.entities.Archealer || parent.entities.Flamme) && Object.values(parent.entities).filter( e=> e.mtype == 'oneeye' && (!e.target || parent.party_list.includes(e.target))).length>0)
 	{
 		await use_skill('agitate').catch(() => {})
@@ -143,7 +143,7 @@ async function useMassAgr()
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.min(...parent.pings));
 	}
-	else if(parent.ctarget?.mtype=='bgoo')
+	else if(get_targeted_monster()?.mtype=='bgoo')
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.min(...parent.pings));
@@ -190,7 +190,7 @@ async function useStomp(target)
 
 async function useCleave(target)
 {
-	target = parent.ctarget
+	target = get_targeted_monster()
 	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && (target.mtype!='bgoo' || target.mtype != 'franky')  )) return
 	let entities = Object.values(parent.entities)
 	if(target.mtype == 'franky' && Object.values(entities).filter(e=> is_in_range(e, 'cleave') && e.mtype=='oneeye' && !e.target).length<1)
@@ -216,7 +216,7 @@ async function useCleave(target)
 
 function selectMainWeapon()
 {
-	target = parent.ctarget
+	target = get_targeted_monster()
 	if(character.s.stonned) desired_main = MASS_MAINHAND
 	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo' || target.mtype=='franky')
 		desired_main = MASS_MAINHAND
@@ -226,7 +226,7 @@ function selectMainWeapon()
 
 function selectOffWeapon()
 {
-	target = parent.ctarget
+	target = get_targeted_monster()
 	if(target && target.mtype == 'snowman') desired_off == null
 	else if(character.hp <= character.max_hp*0.55 ) desired_off = SHIELD
 	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo' || target.mtype=='franky')
