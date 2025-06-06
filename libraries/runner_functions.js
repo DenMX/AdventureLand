@@ -175,7 +175,7 @@ function reduce_cooldown(name,ms)
 	// show_json(parent.next_skill) to get a better idea
 	// reduce_cooldown("attack",100) would cause the attack cooldown to reduce by 100 ms
 	// If your ping is 100+ms - this would ~correct/improve/adjust the cooldown
-	// attack(target).then(function(data){ reduce_cooldown("attack",character.ping*0.95); });
+	// await fixPromise(attack(target)).then(function(data){ reduce_cooldown("attack",character.ping*0.95); });
 	// Above call is likely the ideal usage
 	if(parent.next_skill[name])
 		parent.skill_timeout(name,-mssince(parent.next_skill[name])-ms);

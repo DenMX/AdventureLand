@@ -152,7 +152,7 @@ function myAttack(target){
     {
         //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		// set_message("Attacking");
-		attack(target).catch(() => {});        
+		await fixPromise(attack(target)).catch(() => {});        
     }
     reduce_cooldown("attack", Math.min(...parent.pings));
 }
