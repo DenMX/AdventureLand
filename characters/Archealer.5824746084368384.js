@@ -133,6 +133,7 @@ function attackOrHeal(target)
 				)
 			}
 				use_skill('heal', parent.entities[parent.party_list[i]]);
+				reduce_cooldown("heal", Math.min(...parent.pings));
 			return;
 			}
 		}
@@ -140,6 +141,7 @@ function attackOrHeal(target)
 		if(players.length>0)
 		{
 			use_skill('heal', players[0])
+			reduce_cooldown("heal", Math.min(...parent.pings));
 			return
 		}
 		if(!target || is_on_cooldown('attack')) return;
@@ -155,7 +157,7 @@ function attackOrHeal(target)
 		else if(can_attack(target))
 		{		
 			attack(target).catch(() => {});
-			reduce_cooldown("attack", Math.max(...parent.pings));
+			reduce_cooldown("attack", Math.min(...parent.pings));
 		}
 
 	}
@@ -165,7 +167,7 @@ function attackOrHeal(target)
 	}
 	finally
 	{
-		// setTimeout(attackOrHeal, Math.max(1, ms_to_next_skill('attack')));
+		// setTimeout(attackOrHeal, Math.min(1, ms_to_next_skill('attack')));
 	}
 }
 
@@ -175,7 +177,7 @@ async function usePhaseOut(){
 	{
 		try{
 			await use_skill('phaseout')
-			reduce_cooldown("phaseout", Math.max(...parent.pings))
+			reduce_cooldown("phaseout", Math.min(...parent.pings))
 		}
 		catch(exception)
 		{
@@ -225,7 +227,7 @@ async function pullmobsFromMember()
 			if(Object.values(parent.entities).filter(e => e.type=='monster' && e.target == member && e.mtype!='nerfedmummy').length>0)
 			{
 				await use_skill('absorb', 'Warious').catch(() => {})
-				reduce_cooldown("absorb", Math.max(...parent.pings));
+				reduce_cooldown("absorb", Math.min(...parent.pings));
 				break
 			}
 		}
@@ -233,18 +235,18 @@ async function pullmobsFromMember()
 		if(member_entity.ctype == 'warrior' && 
 			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'magical').length>2)) {
 				await use_skill('absorb', member).catch(() => {})
-				reduce_cooldown("absorb", Math.max(...parent.pings));
+				reduce_cooldown("absorb", Math.min(...parent.pings));
 				break
 		}
 		else if(member_entity.ctype == 'paladin' && 
 			(member_entity.hp<member_entity.max_hp*0.5 || Object.values(parent.entities).filter(e => e.target == member && e.damage_type == 'physical').length>2)) {
 				await use_skill('absorb', member).catch(() => {})
-				reduce_cooldown("absorb", Math.max(...parent.pings));
+				reduce_cooldown("absorb", Math.min(...parent.pings));
 				break
 		}
 		else {
 			await use_skill('absorb', member).catch(() => {})
-			reduce_cooldown("absorb", Math.max(...parent.pings));
+			reduce_cooldown("absorb", Math.min(...parent.pings));
 			break
 		}
 	}
@@ -258,7 +260,7 @@ async function useDarkBlessing()
 	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
 	{
 		await use_skill('darkblessing').catch(() => {})
-		reduce_cooldown("darkblessing", Math.max(...parent.pings));
+		reduce_cooldown("darkblessing", Math.min(...parent.pings));
 	}
 }
 

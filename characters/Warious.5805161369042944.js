@@ -152,7 +152,7 @@ async function useTaunt(target)
 	if(!target) return
 	if(FARM_BOSSES.includes(target.mtype) && target.damage_type == 'physical' && target.target != character.name) {
 		await use_skill('taunt', target).catch(() => {})
-		reduce_cooldown('taunt', Math.max(...parent.pings))
+		reduce_cooldown('taunt', Math.min(...parent.pings))
 	}
 }
 
@@ -167,17 +167,17 @@ async function useMassAgr()
 		if(arch.hp < arch.max_hp*0.6)
 		{
 			await use_skill('agitate').catch(() => {})
-			reduce_cooldown("agitate", Math.max(...parent.pings));
+			reduce_cooldown("agitate", Math.min(...parent.pings));
 		}
 		else if(party_heals.length == 1 && Object.values(parent.entities).filter( e=> e.mtype=='oneeye' && !e.target || parent.party_list.includes(e.target)).length>0)
 		{
 			await use_skill('agitate').catch(() => {})
-			reduce_cooldown("agitate", Math.max(...parent.pings));
+			reduce_cooldown("agitate", Math.min(...parent.pings));
 		}
 		else if(party_heals.length == 2 && Object.values(parent.entities).filter( e => e.mtype == 'oneeye' && (!e.target || (e.target!='Archealer' && parent.party_list.includes(e.target)))).length>1)
 		{
 			await use_skill('agitate').catch(() => {})
-			reduce_cooldown("agitate", Math.max(...parent.pings));
+			reduce_cooldown("agitate", Math.min(...parent.pings));
 		}
 	}
 	else if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 1) 
@@ -185,12 +185,12 @@ async function useMassAgr()
 		|| (Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2 && (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))))
 	{
 		await use_skill('agitate').catch(() => {})
-		reduce_cooldown("agitate", Math.max(...parent.pings));
+		reduce_cooldown("agitate", Math.min(...parent.pings));
 	}
 	else if(parent.ctarget?.mtype=='bgoo')
 	{
 		await use_skill('agitate').catch(() => {})
-		reduce_cooldown("agitate", Math.max(...parent.pings));
+		reduce_cooldown("agitate", Math.min(...parent.pings));
 	}
 }
 
@@ -225,7 +225,7 @@ async function useStomp(target)
 		if(switched == true)
 		{
 			await use_skill('stomp').catch(() => {})
-			reduce_cooldown('stomp', Math.max(...parent.pings));
+			reduce_cooldown('stomp', Math.min(...parent.pings));
 		}
 	}
 }
@@ -235,7 +235,7 @@ async function useCleave(target)
 	target = parent.ctarget
 	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && (target.mtype!='bgoo' || target.mtype != 'franky')  )) return
 	let entities = Object.values(parent.entities)
-	if(target.mtype == 'franky' && !Object.values(entities).filter(e=> is_in_range(e, 'cleave') && e.mtype=='oneeye'))
+	if(target.mtype == 'franky' && Object.values(entities).filter(e=> is_in_range(e, 'cleave') && e.mtype=='oneeye' && !e.target).length<1)
 {
 		await use_skill('cleave').catch(() => {})
 		reduce_cooldown('cleave', Math.min(...parent.pings));
@@ -246,13 +246,13 @@ async function useCleave(target)
 		if(switched == true)
 		{
 			await use_skill('cleave').catch(() => {})
-			reduce_cooldown('cleave', Math.max(...parent.pings));
+			reduce_cooldown('cleave', Math.min(...parent.pings));
 		}
 	}
 	else if(entities.filter( e => e.mtype == 'bgoo' && is_in_range(e, 'cleave')).length>1)
 	{
 		await use_skill('cleave').catch(() => {})
-		reduce_cooldown('cleave', Math.max(...parent.pings));
+		reduce_cooldown('cleave', Math.min(...parent.pings));
 	}
 }
 
@@ -375,7 +375,7 @@ async function myAttack(target)
 	else if(can_attack(target))
 	{
 		attack(target).catch(() => {});
-		reduce_cooldown("attack", Math.max(...parent.pings));
+		reduce_cooldown("attack", Math.min(...parent.pings));
 		
 	}
 }
