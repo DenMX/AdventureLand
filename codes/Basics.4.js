@@ -100,6 +100,12 @@ async function initialize_character() {
     if(parent.S.holidayseason)checkEventBuff()
 }
 
+function getNextSkill(skill)
+{
+    if(parent.next_skill- new Date()<=0) return 0
+    return parent.next_skill - new Date()
+}
+
 async function checkEventBuff()
 {
     if(!character.s.holidayspirit)

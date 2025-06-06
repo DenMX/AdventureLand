@@ -159,6 +159,13 @@ async function checkQuest()
 	else if(character.s.monsterhunt && character.s.monsterhunt.c>0) setTimeout(checkQuest, 5000)
 }
 
+function on_combined_damage()
+{
+	move(
+		character.x + (-5 +(Math.random()*5)),
+		character.y + (-5 +(Math.random()*5))
+	)
+}
 
 async function dontStack()
 {
@@ -180,16 +187,20 @@ function looting(){
 	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
 }
 
-setInterval(getTartget, 100)
+// setInterval(getTartget, 100)
 //--------COMBAT SECTION--------//
+getTartget()
 async function getTartget()
 {
-	if(!attack_mode || character.rip || smart.moving ) return;
+	if(!attack_mode || is_disabled(character) ) {
+		setTimeout(getTartget, 500)
+		return;
+	}
 	
 	let target = get_targeted_monster()
 	
 	if(target && target.map != character.map || getDistance(target, character) > 500) change_target(null)
-	dontStack()
+	// dontStack()
 	if(target && target.mtype == 'franky' && getDistance(character, target) > 30)
 	{
 		xmove(
@@ -197,45 +208,61 @@ async function getTartget()
 			character.y + (target.y - character.y) / 2
 		)
 	}
-
-	if(!target)
+	try
 	{
-				if(character.name != 'Warious' && parent.entities['Warious'] && !parent.entities['Warious'].rip && current_farm_pos.coop)target=get_target_of(parent.entities['Warious'])
-				else 
-				{
-					game_log('Searching target...')
-					let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
-
-					if(monsters.length>0)
+		if(!target)
+		{
+					if(character.name != 'Warious' && parent.entities['Warious'] && !parent.entities['Warious'].rip && current_farm_pos.coop)target=get_target_of(parent.entities['Warious'])
+					else 
 					{
-						monsters.sort(
-							function(current, next) {
-								let dist_current = getDistance(character, current);
-								let dist_next = getDistance(character, next);
-								if(FARM_BOSSES.includes(current.mtype)!=FARM_BOSSES.includes(next.mtype)) {
-									return (FARM_BOSSES.includes(current.mtype) && !FARM_BOSSES.includes(next.mtype)) ? -1 : 1;
-								}
-								if(parent.party_list.includes(current.target) != parent.party_list.includes(next.target))
-								{
-									return (parent.party_list.includes(current.target) && !parent.party_list.includes(next.target)) ? -1 : 1;
-								}
+						game_log('Searching target...')
+						let monsters = Object.values(parent.entities).filter((e) => e.type === "monster" && (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
 
-								if(dist_current != dist_next){
-									return (dist_current< dist_next) ? -1 : 1;
+						if(monsters.length>0)
+						{
+							monsters.sort(
+								function(current, next) {
+									let dist_current = getDistance(character, current);
+									let dist_next = getDistance(character, next);
+									if(FARM_BOSSES.includes(current.mtype)!=FARM_BOSSES.includes(next.mtype)) {
+										return (FARM_BOSSES.includes(current.mtype) && !FARM_BOSSES.includes(next.mtype)) ? -1 : 1;
+									}
+									if(parent.party_list.includes(current.target) != parent.party_list.includes(next.target))
+									{
+										return (parent.party_list.includes(current.target) && !parent.party_list.includes(next.target)) ? -1 : 1;
+									}
+
+									if(dist_current != dist_next){
+										return (dist_current< dist_next) ? -1 : 1;
+									}
+									
+									return 0;
 								}
-								
-								return 0;
-							}
-						)
-						target = monsters[0]
+							)
+							target = monsters[0]
+						}
 					}
-				}
-					
-	}		
-	if(!target && character.name != 'Archealer') return;
-	if(is_on_cooldown('scare')) return;
-	else if (character.name=='Archealer') attackOrHeal(target)
-	else myAttack(target)
+						
+		}		
+		if(!target && character.name != 'Archealer'){
+			setTimeout(getTartget, 500)
+			return;
+		}
+		else if (character.name=='Archealer') attackOrHeal(target)
+		if(is_on_cooldown('scare')) {
+			setTimeout(getTartget, Math.min(0, getNextSkill('scare')))
+			return;
+		}
+		else await myAttack(target)
+	}
+	catch(ex)
+	{
+		console.warn('Exception in getTarget: '+ ex.ToString())
+	}
+	finally
+	{
+		setTimeout(getTartget, Math.min(0, getNextSkill(attack)))
+	}
 }
 
 async function getSpotForAggro() {
