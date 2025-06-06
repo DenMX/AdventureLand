@@ -255,7 +255,7 @@ async function getTartget()
 		}
 		else 
 		{
-			if(character.name == 'Archealer') attackOrHeal(target)
+			if(character.name == 'Archealer') await attackOrHeal(target)
 			else await myAttack(target)
 		}
 	}

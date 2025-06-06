@@ -107,7 +107,7 @@ function checkEquippedItems()
 
 
 
-function attackOrHeal(target)
+async function attackOrHeal(target)
 {
 	if(is_on_cooldown('attack') || parent.is_disabled(character)) return;
 	try{
