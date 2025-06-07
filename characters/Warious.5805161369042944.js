@@ -169,15 +169,20 @@ async function useMassAgr()
 			await use_skill('agitate').catch(() => {})
 			reduce_cooldown("agitate", Math.min(...parent.pings));
 		}
-		else if(party_heals.length == 1 && Object.values(parent.entities).filter( e=> e.mtype=='oneeye' && !e.target || parent.party_list.includes(e.target)).length>0)
+		else if(party_heals.length == 1 && Object.values(parent.entities).filter( e=> e.mtype=='oneeye' && (!e.target || parent.party_list.includes(e.target))).length>0)
 		{
 			await use_skill('agitate').catch(() => {})
 			reduce_cooldown("agitate", Math.min(...parent.pings));
 		}
-		else if(party_heals.length == 2 && Object.values(parent.entities).filter( e => e.mtype == 'oneeye' && (!e.target || (e.target!='Archealer' && parent.party_list.includes(e.target)))).length>1)
+		else if(party_heals.length == 2) 
 		{
-			await use_skill('agitate').catch(() => {})
-			reduce_cooldown("agitate", Math.min(...parent.pings));
+			let targets = Object.values(parent.entities).filter( e => e.mtype == 'oneeye' && !e.target)
+			targets.concat(Object.values(parent.entities).filter(e.mtype == 'oneeye' && e.target && e.target != 'Archealer'))
+			if(targets.length>0)
+			{
+				await use_skill('agitate').catch(() => {})
+				reduce_cooldown("agitate", Math.min(...parent.pings));
+			}
 		}
 	}
 	else if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 1) 

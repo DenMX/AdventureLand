@@ -248,7 +248,7 @@ async function getTartget()
 			setTimeout(getTartget, 500)
 			return;
 		}
-		else if (!target && character.name=='Archealer') attackOrHeal(target)
+		else if (!target && character.name=='Archealer') await attackOrHeal(target)
 		if(is_on_cooldown('scare')) {
 			setTimeout(getTartget, Math.min(0, getNextSkill('scare')))
 			return;
