@@ -100,15 +100,6 @@ async function initialize_character() {
     if(parent.S.holidayseason)checkEventBuff()
 }
 
-async function fixPromise(promise) {
-    const promises = [];
-    promises.push(promise);
-    // Guarantees it will resolve in 2.5s, might want to use reject instead, though
-    promises.push(new Promise((resolve) => setTimeout(resolve, 2500)));
-    return Promise.race(promises);
-}
-
-
 function getNextSkill(skill)
 {
     if(parent.next_skill- new Date()<=0) return 0

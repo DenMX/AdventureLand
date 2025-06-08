@@ -111,7 +111,7 @@ async function attackBoss()
 		}
 		else 
 		{
-			await fixPromise(attack(target)).catch(() => {});   
+			attack(target).catch(() => {});   
 			loot()
 			reduce_cooldown('attack', Math.min(...parent.pings))
 			setTimeout(attackBoss, Math.min(0, getNextSkill('attack')))

@@ -327,7 +327,7 @@ async function myAttack(target)
 	}
 	else if(can_attack(target))
 	{
-		await fixPromise(attack(target)).catch(() => {});
+		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.min(...parent.pings));
 	}
 }
