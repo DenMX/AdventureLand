@@ -184,7 +184,7 @@ const NOT_SALE_ITEMS_ID =
 	t2bow: {level: 9},
 	hbow: {level:8},
 	basher: {level: 7},
-	ololipop: {level: 8},
+	ololipop: {level: 0},
 	glolipop: {level: 8},
 	candycanesword: {level: 9},
 	ornamentstaff: {level: 8},

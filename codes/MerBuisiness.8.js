@@ -103,7 +103,7 @@ async function manageStand()
 
 async function checkBosses()
 {
-	return
+	// return
 	if(!parent.party_list.includes('arMAGEdon')) check_bosses = false
 	else if(parent.S.holidayseason || parent.S.lunarnewyear) check_bosses = false
 	else check_bosses = true
@@ -116,7 +116,7 @@ async function checkBosses()
 	for(let point of BOSS_CHECK_ROUTE)
 	{
 		let spawn_ms = G.monsters[point.name].respawn * 1000
-		if(founded_bosses[point.name] && Date.now()-founded_bosses[point.name] < spawn_ms) continue
+		// if(founded_bosses[point.name] && Date.now()-founded_bosses[point.name] < spawn_ms) continue
 		
 		await smart_move(point)
 		if(Object.values(parent.entities).filter(e=> e.mtype == point.name).length > 0)
