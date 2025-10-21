@@ -10,8 +10,8 @@ const PERSONAL_ITEMS = [
 	{name: 'exoarm', level: 1}, 
 	{name: 't2intamulet', level: 2}, 
 	{name: 'xgloves', level: 5}, 
-	{name: 'jacko', level: 3}, 
-	{name: 'rabbitsfoot', level: 0}
+	{name: 'jacko', level: 4}, 
+	{name: 'rabbitsfoot', level: 1}
 ]
 
 const TANK_ITEMS = {exoarm: {level: 1}}

@@ -381,6 +381,7 @@ async function checkEvents()
 async function handleEvent(eventName, server)
 {
 	console.log('Got an event: '+eventName)
+	if(smart.moving) return
 	if(server && server != `${parent.server_region} ${parent.server_identifier}`)
 	{
 		current_event = eventName

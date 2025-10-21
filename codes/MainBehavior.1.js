@@ -44,6 +44,7 @@ function on_magiport(name)
 setInterval(checkState, 5000)
 async function checkState() {
 	
+	if(smart.moving) return
 	if(!ACTIONS.includes(char_action)) char_action = 'farm'
 	current_farm_pos = current_farm_pos || FARM_LOCATIONS.bitch
 	radius = current_farm_pos.radius || 30
