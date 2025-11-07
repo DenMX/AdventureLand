@@ -155,8 +155,8 @@ function myAttack(target){
 	if(!is_in_range(target))
 	{
 		move(
-			character.x+(target.x-character.x)/4,
-			character.y+(target.y-character.y)/4
+			character.x+(target.x-character.x)/2,
+			character.y+(target.y-character.y)/2
 			);
 		// Walk half the distance
 	}
