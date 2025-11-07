@@ -1,9 +1,9 @@
 const JACKO = {name: 'jacko', level: 0}
 const ORB = {name: 'talkingskull', level: 3}
 
-const MAINHAND = {name: 'cclaw', level: 8}
+const MAINHAND = {name: 'cclaw', level: 9}
 const OFFHAND = {name: 'cclaw', level: 8}
-const FAST_WEAPON = {name: 'rapier', level: 6}
+const FAST_WEAPON = {name: 'rapier', level: 5}
 
 const PERSONAL_ITEMS = [JACKO, ORB, FAST_WEAPON]
 
@@ -149,7 +149,7 @@ function myAttack(target){
 	let distance = getDistance(target, character)
 	
     if(character.s.invis && character.hp < character.max_hp*0.7 && !target.target) return
-    if(!current_farm_pos.canSolo && !target.target) return
+	if(!current_farm_pos.canSolo && !target.target) return
 	change_target(target);
 	useSkills(target);
 	if(!is_in_range(target))

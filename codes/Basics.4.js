@@ -1,6 +1,8 @@
-const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'aRogDonDon','RangerOver', 'Warious', 'RetroPal']
+const MY_CHARACTERS = ['arMAGEdon', 'aRanDonDon', 'Archealer','MerchanDiser', 'aRogDonDon','RangerOver', 'Warious', 'RogerThat']
 
 const SERVERS = ['EU I', 'EU II', 'US I', 'US II', 'US III', 'ASIA I']
+
+const sp = "DenMX_Super_Secret_Key"
 
 const FARM_BOSSES = [
 	"mvampire",
@@ -12,6 +14,7 @@ const FARM_BOSSES = [
 	"grinch",
 	"dragold",
 	"franky",
+    "frog",
 	"icegolem",
 	//"crabxx",
 	"jr",
@@ -74,7 +77,7 @@ function characterMoving()
 }
 
 async function initialize_character() {
-    // await load_module('Mover')
+    await load_module('Mover')
     await load_module('PotionUse')
     await load_module('MerchantItems')
     await load_module('Upgrading')
@@ -90,6 +93,26 @@ async function initialize_character() {
 
     if(parent.S.holidayseason)checkEventBuff()
 }
+
+character.on("new_map", function(data) {
+    
+    if(data.name == "bank") {
+        sleep(300)
+        if(character.bank){
+            let url = `https://aldata.earthiverse.ca/bank/${character.owner}/${sp}`
+            let settings = {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(character.bank)
+            }
+            fetch(url, settings).then((response) => console.log(response.status));
+        }
+        else {
+            console.warn("Not enough time to load bank")
+        }
+    }
+    
+})
 
 async function checkEventBuff()
 {

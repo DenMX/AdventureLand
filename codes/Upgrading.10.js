@@ -181,6 +181,7 @@ async function storeUpgradeAndCombine()
 {
 	if(character.ctype=='merchant')changeState('Banking...')
 	await smart_move('bank')
+	await sleep(500)
 	try 
 	{
 		game_log('Storing items...')

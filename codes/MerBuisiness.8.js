@@ -123,9 +123,7 @@ async function checkBosses()
 		{
 			game_log('Found: '+point.name)
 			console.log('Found: '+point.name)
-			if(point.name == 'skeletor' && Object.values(parent.entities).filter(e => e.mtype == 'skeletor' && e.hp_level>5).length>0)continue;
-			if(parent.party_list.includes('arMAGEdon'))await send_cm('arMAGEdon',{cmd: "boss", boss: point})
-			else await send_cm(parent.party_list, {cmd: 'boss', boss: point})
+			await send_cm('arMAGEdon',{cmd: "boss", boss: point})
 			founded_bosses[point.name] = Date.now()
 		}
 		else 
@@ -133,6 +131,7 @@ async function checkBosses()
 			game_log(point.name+' not found')
 			console.log(point.name+' not found')
 		}
+		if(point.name == "stompy") await town()
 	}
 	await smart_move('main')
 	changeState(DEFAULT_STATE)
@@ -294,6 +293,7 @@ async function checkCyberlandCommand() {
 		cyberland_check = Date.now();
 		parent.socket.emit("eval", {command: "give spares"});
 		await sleep(2000);
+		loot()
 	} catch (ex) {
 		console.error(ex);
 	} finally {

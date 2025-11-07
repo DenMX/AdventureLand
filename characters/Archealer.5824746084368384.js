@@ -32,6 +32,19 @@ async function load_module(module) {
     }
 }
 
+async function useElixir()
+{
+	if(!character.slots.elixir)
+	{
+		
+		for(let i in character.items)
+		{
+			if(ELIXIRS.includes(character.items[i]?.name)) await equip(i)
+		}
+	}
+	setTimeout(useElixir,getMsFromMinutes(60))
+}
+
 initialize_character()
 
 async function initialize_character() {

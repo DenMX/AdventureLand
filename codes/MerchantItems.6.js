@@ -50,6 +50,18 @@ const ITEMS_TO_SALE = [
 	'elixirvit1', 
 	'elixirvit2', 
 	'elixirvit3',
+	'elixirstr0',
+	'elixirstr1',
+	'elixirstr2',
+	'elixirstr3',
+	'elixirdex0',
+	'elixirdex1',
+	'elixirdex2',
+	'elixirdex3',
+	'elixirint0',
+	'elixirint1',
+	'elixirint2',
+	'elixirint3',
 
 	//xmass set
 	'rednose',
@@ -124,6 +136,11 @@ const ITEMS_TO_SALE = [
 	'maceofthedead',
 	'bowofthedead',
 
+	//heavy set
+	'harmor',
+	'hhelmet',
+	'hpants',
+
 	//heavy useless
 	'hboots',
 	'hgloves',
@@ -153,15 +170,13 @@ const NOT_SALE_ITEMS_ID =
 
 
 	//
-	hhelmet: {level: 7},
 	xhelmet: {level: 0},
-	harmor: {level: 7},
 	xarmor: {level: 0},
-	hpants: {level: 7},
 	xpants: {level: 0},
 	wingedboots: {level: 8},
 	// hboots: {level: 7},
-	xboots: {level: 0},
+	xboots: {level: 5},
+	xgloves: {level: 5},
 	// hgloves: {level: 7},
 	
 	glolipop: {level: 5},

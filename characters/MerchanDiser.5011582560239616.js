@@ -10,7 +10,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 const MINUTES_TO_RESET_STATE = 10
 
-const BROOM = {name: 'broom', level: 7}
+const BROOM = {name: 'broom', level: 8}
 const BOOK = {name: 'wbookhs', level: 3}
 
 const PERSONAL_ITEMS = [ BROOM, BOOK ]
@@ -22,6 +22,7 @@ var bank_check
 var last_state_change
 var check_bosses = true
 var last_server_change
+smart.use_town = false
 
 var server_identifier
 

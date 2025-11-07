@@ -1,14 +1,14 @@
 const TARGETING_BLACK_LIST = ''
 
-const MAINHAND = {name: 'candycanesword', level: 9}
-const OFFHAND = { name: 'fireblade', level: 9}
+const MAINHAND = {name: 'fireblade', level: 9}
+const OFFHAND = { name: 'candycanesword', level: 9}
 const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'scythe', level: 5}
 const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 2}
-const ORB = {name: 'test_orb', level: 0}
+const ORB = {name: 'orbg', level: 3}
 const FAST_WEAPON = {name: 'rapier', level: 4}
 
 const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON]
