@@ -1,13 +1,13 @@
 const JACKO = {name: 'jacko', level: 0}
-const ORB = {name: 'talkingskull', level: 3}
+const ORB = {name: 'test_orb', level: 0}
 
-const MAINHAND = {name: 'cclaw', level: 8}
+const MAINHAND = {name: 'cclaw', level: 9}
 const OFFHAND = {name: 'cclaw', level: 8}
 const FAST_WEAPON = {name: 'rapier', level: 6}
 
 const PERSONAL_ITEMS = [JACKO, ORB, FAST_WEAPON]
 
-const DO_NOT_SEND_ITEMS = ['pumpkinspice', 'xpbooster','luckbooster','goldbooster']
+const DO_NOT_SEND_ITEMS = ['pumpkinspice', 'xpbooster','luckbooster','goldbooster', 'xptome']
 const ELIXIRS = ['pumpkinspice']
 
 const HP_POT = 'hpot1'
@@ -152,7 +152,7 @@ function myAttack(target){
     if(!current_farm_pos.canSolo && !target.target) return
 	change_target(target);
 	useSkills(target);
-	if(!is_in_range(target))
+	if(!is_in_range(target, "quickpunch"))
 	{
 		move(
 			character.x+(target.x-character.x)/2,

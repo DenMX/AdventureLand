@@ -20,7 +20,7 @@ const WHITE_LIST_FOR_QUEST = {
 	porcupine:  {coop: true}
 }
 
-
+let last_looting
 
 
 function on_magiport(name)
@@ -176,9 +176,94 @@ async function dontStack()
 	}
 }
 
-setInterval(looting, 333)
-function looting(){
-	if(character.name == LOOTER || !parent.entities[LOOTER] || !parent.party_list.includes(LOOTER)) loot();
+looting()
+async function looting(){
+	if(character.name == "Archealer") {
+		// EQUIP FOR OPEN CHESTS
+		if(Object.values(parent.chests).length>0 && (!last_looting || Date.now()-last_looting>60000 || smart.moving)) {
+			equipSet("loot")
+			Object.values(parent.chests).forEach( chest => loot(chest.id))
+			// shift(booster, 'luckbooster')
+			last_looting = Date.now()
+		}
+		
+		// EQUIP FOR KILLING WITH MORE LUCK
+		if(character.hp> character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.hp <3000).length>1) {
+			equipSet("luck")
+		}
+		// EQUIP FOR TANKING
+		else if(character.hp < character.max_hp*0.8){
+			equipSet("tank")
+		}
+
+	}
+	else if(character.name != LOOTER && (!parent.entities[LOOTER] || !parent.party_list.includes(LOOTER))) Object.values(parent.chests).forEach(e=> loot(e.id));
+	setTimeout(looting,500)
+}
+
+async function equipSet(set) {
+	if(set == "luck") {
+		try{
+			let batch = []
+			for(let i = 0; i<character.items.length; i++) {
+				let item = character.items[i]
+				if(!item) continue
+				if(LUCK_EQUIP.filter(e => e.name == item.name && e.level == item.level).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
+				
+				if(['goldbooster','xpbooster'].includes(item.name) && item.expires) shift(i,'luckbooster')
+				else if(!['luckbooster','xpbooster','goldbooster'].includes(item.name)) batch.push({num: i, slot: getItemSlotByType(item.name)})
+			}
+			if(batch.length>0) await equip_batch(batch)
+		}
+		catch(ex) {
+			console.warn(ex)
+		}
+	}
+	else if(set == "loot") {
+		try {
+			let batch = []
+			let booster
+			for(let i = 0; i<character.items.length; i++) {
+				let item = character.items[i]
+				if(!item) continue
+				if(LOOT_EQUIP.filter(e => e.name == item.name && e.level == item.level).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
+				
+				if(['luckbooster','xpbooster'].includes(item.name) && item.expires){ 
+					booster = i
+					shift(i,'goldbooster')
+				}
+				else if(!['luckbooster','xpbooster','goldbooster'].includes(item.name)) batch.push({num: i, slot: getItemSlotByType(item.name)})
+			}
+			if(batch.length>0) await equip_batch(batch)
+		}
+		catch(ex) {
+			console.warn(ex)
+		}
+	}
+	else if(set == "tank") {
+		try{
+			let batch = []
+			let entities_array = Object.values(parent.entities)
+			let phys_mobs = entities_array.filter( e => e.target == character.name && e.damage_type == "physical").length
+			let mage_mobs = entities_array.filter( e => e.target == character.name && e.damage_type == "magical").length
+			let tank_set = TANK
+			if(phys_mobs>0 && mage_mobs>0) tank_set.push(GYBRID_OFFHAND)
+			else {
+				if(phys_mobs>0) tank_set.push(PHYSICAL_OFFHAND)
+				else if(mage_mobs>0) tank_set.push(MAGICAL_OFFHAND)
+			}
+			for(let i = 0; i<character.items.length; i++) {
+				let item = character.items[i]
+				if(!item) continue
+				if(tank_set.filter(e => e.name == item.name && e.level == item.level).length == 0 ) continue
+				batch.push({num: i, slot: getItemSlotByType(item.name)})
+			}
+			if(batch.length>0) await equip_batch(batch)
+		}
+		catch(ex) {
+			console.warn(ex)
+		}
+	}
 }
 
 setInterval(getTartget, 100)
@@ -272,7 +357,10 @@ async function saveSelfAss()
 			for(let i in character.items)
 			{
 				let item = character.items[i]
-				if(item && item.name == JACKO.name && item.level == JACKO.level) await equip(i)
+				if(item && item.name == "jacko") {
+					await equip(i)
+					break
+				}
 			}
 		}
 		await use_skill('scare')
@@ -282,7 +370,7 @@ async function saveSelfAss()
 			for(let j in character.items)
 			{
 				let itm = character.items[j]
-				if(itm && itm.name == current_orb.name && itm.level == current_orb.level) await equip(j)
+				if(itm && itm.name == current_orb.name && itm.level == current_orb.level) return equip(j)
 			}
 		}
 	}

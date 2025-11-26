@@ -1,6 +1,6 @@
 async function upgradeItems()
 {
-	if(character.q.upgrade) return
+	if(Object.values(character.q).lenght>0) return
 	try
 	{
 		exchangeItems()
@@ -149,7 +149,7 @@ async function sellItems()
 		let item = character.items[i]
 		if(!item) continue
 		if(DISMANTLE_ITEMS.includes(item.name)) dismantle(i)
-		if(ITEMS_TO_SALE.includes(item.name)) await sell(i, item.q)
+		if(ITEMS_TO_SALE.includes(item.name) && (!item.level || item.level == 0)) await sell(i, item.q)
 	}
 	if(itemsCount()>=42 && character.ctype=='merchant') scheduler(storeUpgradeAndCombine)
 	else if (itemsCount()>= 42 && character.ctype != 'merchant') await storeUpgradeAndCombine()
@@ -179,6 +179,7 @@ async function exchangeItems()
 
 async function storeUpgradeAndCombine()
 {
+	if(Object.values(character.q).length>0) return
 	if(character.ctype=='merchant')changeState('Banking...')
 	await smart_move('bank')
 	await sleep(500)

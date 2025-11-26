@@ -1,5 +1,5 @@
 const TARGETING_BLACK_LIST = ''
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'goldbooster', 'shadowstone']
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'elixirluck', 'luckbooster', 'goldbooster', 'shadowstone', 'xptome']
 const ELIXIRS = [
 	'elixirluck', 
 	// 'elixirint2' 
@@ -7,14 +7,66 @@ const ELIXIRS = [
 var pc = false
 
 const PERSONAL_ITEMS = [
-	{name: 'exoarm', level: 1}, 
+	{name: 'exoarm', level: 2}, 
 	{name: 't2intamulet', level: 2}, 
 	{name: 'xgloves', level: 5}, 
 	{name: 'jacko', level: 4}, 
+	{name: 'rabbitsfoot', level: 1},
+	{name: 'wcap', level: 9},
+	{name: 'wattire', level: 8},
+	{name: 'wbreeches', level: 9},
+	{name: 'wshoes', level: 9},
+	{name: 'wgloves', level: 8},
+	{name: 'handofmidas', level: 4},
+	{name: 'spookyamulet', level: 1},
+	{name: 'lantern', level: 3},
+	{name: 'mshield', level: 7},
+	{name: 'xhelmet', level: 7},
+	{name: 'xarmor', level: 6},
+	{name: 'starkillers', level: 7},
+	{name: 'wingedboots', level: 8},
+	{name: 'mittens', level: 9},
+	{name: 'lmace', level: 7},
+	{name: 'pmace', level: 9},
+	{name: 't2intamulet', level: 3}
+]
+
+const LUCK_EQUIP = [
+	{name: 'wcap', level: 9},
+	{name: 'wattire', level: 8},
+	{name: 'wbreeches', level: 9},
+	{name: 'wshoes', level: 9},
+	{name: 'wgloves', level: 8},
+	{name: 'spookyamulet', level: 1},
+	{name: 'mshield', level: 7},
+	{name: 'lmace', level: 7},
 	{name: 'rabbitsfoot', level: 1}
 ]
 
-const TANK_ITEMS = {exoarm: {level: 1}}
+const LOOT_EQUIP = [
+	{name: 'wcap', level: 9},
+	{name: 'wattire', level: 8},
+	{name: 'wbreeches', level: 9},
+	{name: 'wshoes', level: 9},
+	{name: 'handofmidas', level: 4},
+	{name: 'spookyamulet', level: 1}
+]
+
+const TANK = [
+	{name: 'xhelmet', level: 7},
+	{name: 'xarmor', level: 6},
+	{name: 'starkillers', level: 7},
+	{name: 'wingedboots', level: 8},
+	{name: 'mittens', level: 9},
+	{name: 'pmace', level: 9},
+	{name: 't2intamulet', level: 3}
+]
+
+const PHYSICAL_OFFHAND = {name: 'exoarm', level: 2}
+const MAGICAL_OFFHAND = {name: 'wbookhs', level: 3}
+const GYBRID_OFFHAND = {name: 'lantern', level: 3}
+
+const TANK_ITEMS = [{exoarm: {level: 1}}]
 const HEAL_ITEMS = {wbook0: {level: 4}}
 
 const HP_POT = 'hpot1'
@@ -176,19 +228,39 @@ function attackOrHeal(target)
 	}
 	finally
 	{
-		setTimeout(attackOrHeal, Math.max(1, ms_to_next_skill('attack')));
+		// setTimeout(attackOrHeal, Math.max(1, ms_to_next_skill('attack')));
 	}
 }
-// async function saveSelfAss()
-// {
-// 	if(is_on_cooldown('scare'))
-// 	{
-// 		setTimeout(saveSelfAss, 500)
-// 		return
-// 	}
-// 	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.5)	await use_skill('scare').catch(() => {})
+
+async function saveSelfAss()
+{
+	if(is_on_cooldown('scare'))	return
 	
-// }
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.5)	{
+		let cur_orb = character.slots.orb
+		if(character.slots.orb.name !== "jacko"){
+			for(let i =0 ; i<character.items.length; i++){
+				let item = character.items[i]
+				if(!item) continue
+				if(item.name == "jacko") {
+					await equip(i)
+					await use_skill('scare').catch(()=> {})
+					break;
+				}
+			}
+			for(let i=0; i<character.items.length; i++) {
+				let item=character.items[i]
+				if(!item) continue
+				if(item.name == cur_orb.name && item.level == cur_orb.level) {
+					equip(i)
+					return
+				}
+			}
+		}
+		await use_skill('scare').catch(() => {})
+	}
+	
+}
 
 async function usePhaseOut(){
 	if(character.hp<character.max_hp*0.35 && !character.s.phasedout && locate_item('shadowstone')!= -1)
@@ -221,12 +293,13 @@ async function useSkills(target)
 	useCurse(target)
 	useDarkBlessing()
 	pullmobsFromMember()
+	pullMobs()
 }
 
 async function pullmobsFromMember()
 {
 	if(char_action=='farm' && !current_farm_pos.coop)return
-	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.4) return
+	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.2) return
 	for(member of parent.party_list)
 	{
 		let member_entity = parent.entities[member]
@@ -252,6 +325,17 @@ async function pullmobsFromMember()
 
 }
 
+async function pullMobs() {
+	if(character.hp<character.max_hp*0.5 || is_on_cooldown("zapperzap")) return
+
+	if(character.mp < character.max_mp*0.5) return
+
+	let entities = Object.values(parent.entities).filter( e => (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)) && is_in_range(e,"zapperzap") && !e.target && e.aggro<1)
+	if(entities.length>0){
+		use_skill("zapperzap",entities[0])
+	}
+}
+
 
 async function useDarkBlessing()
 {
@@ -267,6 +351,18 @@ async function useDarkBlessing()
 async function useCurse(target)
 {
 	if(is_on_cooldown('curse')) return
-	if( FARM_BOSSES.includes(target?.mtype) && character.mp - G.skills.curse.mp> character.max_mp*0.4 && target.hp>10000) await use_skill('curse', target)
+	if( FARM_BOSSES.includes(target?.mtype) && character.mp - G.skills.curse.mp> character.max_mp*0.4 && target.hp>4000) {
+		if(current_farm_pos.mobs.includes("pinkgoblin") && parent.party_list.includes("CrownsAnal")){
+			let targets = Object.values(parent.entities).filter(e => parent.party_list.includes(e.target)).sort( (curr, next) =>
+			{
+				if(curr.hp != next.hp){
+					return curr.hp>next.hp ? -1: 1;
+				}
+				return 0
+			})
+			return await use_skill("curse", target[0].id)
+		}
+		await use_skill('curse', target)
+	}
 	else if (current_farm_pos.coop) await use_skill('curse', target).catch(() => {})
 }

@@ -7,7 +7,7 @@ const FAST_WEAPON = {name: 'rapier', level: 5}
 
 const PERSONAL_ITEMS = [JACKO, ORB, FAST_WEAPON]
 
-const DO_NOT_SEND_ITEMS = ['pumpkinspice', 'xpbooster','luckbooster','goldbooster']
+const DO_NOT_SEND_ITEMS = ['pumpkinspice', 'xpbooster','luckbooster','goldbooster', 'xptome']
 const ELIXIRS = ['pumpkinspice']
 
 const HP_POT = 'hpot1'
@@ -152,7 +152,7 @@ function myAttack(target){
 	if(!current_farm_pos.canSolo && !target.target) return
 	change_target(target);
 	useSkills(target);
-	if(!is_in_range(target))
+	if(!is_in_range(target, "quickpunch"))
 	{
 		move(
 			character.x+(target.x-character.x)/2,

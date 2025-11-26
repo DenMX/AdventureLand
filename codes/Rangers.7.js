@@ -2,8 +2,8 @@ var pc = false
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
-const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster']
-const ELIXIRS = ['elixirluck' ]
+const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster',"xpbooster", "pumpkinspice"]
+const ELIXIRS = ['elixirluck', 'pumpkinspice' ]
 
 const JACKO = {name: 'jacko', level: 1}
 const PERSONAL_ITEMS = [JACKO]
@@ -68,7 +68,7 @@ async function passMonsterhuntNext()
 async function useSkills(target)
 {
     await useMark(target)
-    await useSupershot(target)
+    // await useSupershot(target)
 }
 
 async function useSupershot(target)
@@ -91,7 +91,13 @@ async function useMark(target)
     if(!is_on_cooldown('huntersmark') && distance(target, character)<=character.range && !target.s.marked && (FARM_BOSSES.includes(target.mtype) || target.hp> character.attack*3)
         && character.mp> G.skills.huntersmark.mp)
     {
-        await use_skill('huntersmark').then(function(data){ reduce_cooldown("huntersmark",character.ping); });
+        await use_skill('huntersmark').then(() => { reduce_cooldown("huntersmark",character.ping); });
+    }
+    else if(!is_on_cooldown('huntersmark') && character.mp > G.skills.huntersmark.mp) {
+        let entities = Object.values(parent.entities).filter( e => !e.s.marked && parent.party_list.includes(e.target) && distance(character,e)<character.range)
+        for(let mob of entities) {
+            return use_skill('huntersmark', mob.id)
+        }
     }
 }
 
@@ -123,8 +129,8 @@ function myAttack(target){
 	
 	change_target(target);
 	useSkills(target);
-    let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))
-    let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype))
+    let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0))
+    let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype) && e.target)
     console.log('Monsters: '+monsters_in_range.length)
 	if(!is_in_range(target))
 	{
@@ -138,7 +144,7 @@ function myAttack(target){
         // set_message("Attacking");
 		use_skill('5shot', monsters_in_range).catch(() => {});
     }
-	else if(canMassAttack && monsters_in_range.length > 2 && character.mp > G.skills['3shot'].mp)
+	else if(canMassAttack && monsters_in_range.length > 1 && character.mp > G.skills['3shot'].mp)
 	{
 		//if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		// set_message("Attacking");

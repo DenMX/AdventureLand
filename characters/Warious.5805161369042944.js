@@ -5,7 +5,7 @@ const OFFHAND = { name: 'candycanesword', level: 9}
 const BASHER = {name: 'basher', level: 7}
 const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
-const AXE = {name: 'scythe', level: 5}
+const AXE = {name: 'bataxe', level: 8}
 const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 2}
 const ORB = {name: 'orbg', level: 3}
@@ -17,7 +17,7 @@ const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
 
-const DO_NOT_SEND_ITEMS = ['pumpkinspice']
+const DO_NOT_SEND_ITEMS = ['pumpkinspice', "xpbooster", "luckbooster", "goldbooster", 'xptome']
 const ELIXIRS = ['pumpkinspice']
 
 var pc = false
@@ -76,15 +76,6 @@ async function initialize_character() {
 	await load_module('Basics')
     await load_module('State')
     await load_module('MainBehavior')
-	// for(let i in character.items)
-    // {
-    //     if(!character.items[i]) continue;
-    //     if(character.items[i].name == 'computer' || character.items[i].name == 'supercomputer')
-    //     {
-    //         pc = true
-    //         await load_module('PcOwner')
-    //     }
-    // }
 	useElixir()
 	setInterval(useSkills, 1000)
 	setInterval(selectMainWeapon,330)
@@ -147,7 +138,8 @@ async function useMassAgr()
 	if(is_on_cooldown('agitate')|| !current_farm_pos.massFarm || (parent.ctarget && FARM_BOSSES.includes(parent.ctarget.mtype) && parent.ctarget.mtype!='bgoo')) return
 	if( (parent.entities.Archealer?.hp<parent.entities.Archealer?.max_hp*0.5 && Object.values(parent.entities).filter(e => e.type == 'monster' && e.target=='Archealer' ).length > 1) 
 		|| Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !['Archealer','Warious'].includes(e.target) && parent.party_list.includes(e.target)).length>1
-		|| (Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target).length>2 && (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer))))
+		|| (Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) && !e.target && e.aggro<1).length>2 && (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer)))
+	)
 	{
 		await use_skill('agitate').catch(() => {})
 		reduce_cooldown("agitate", Math.max(...parent.pings));
@@ -182,15 +174,29 @@ async function useShell()
 async function useStomp(target)
 {
 	if(!target) return
-	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 &&
-	 (FARM_BOSSES.includes(target.mtype) || 
-	 Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target)).length>2))
+	if(!is_on_cooldown('stomp') && character.mp-G.skills.stomp.mp > character.max_mp*0.1 
+		&& (FARM_BOSSES.includes(target.mtype) 
+			|| Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target)).length>2)
+	)
 	{
-		let switched = await switchToBasher()
-		if(switched == true)
-		{
-			await use_skill('stomp').catch(() => {})
-			reduce_cooldown('stomp', Math.max(...parent.pings));
+		let is_low_hp = false
+		for(let m of parent.party_list) {
+			if(!parent.entities[m] || m == character.name) continue
+			member = parent.entities[m]
+			if(member.hp < member.max_hp * 0.5 && Object.values(parent.entities).filter( e => e.target == m).length>0) {
+				is_low_hp = true
+				break
+			}
+		}
+		if(character.hp < character.max_hp * 0.5 && Object.values(parent.entities).filter( e => e.target == character.name)) is_low_hp = true
+		
+		if(is_low_hp){
+			let switched = await switchToBasher()
+			if(switched == true)
+			{
+				await use_skill('stomp').catch(() => {})
+				reduce_cooldown('stomp', Math.max(...parent.pings));
+			}
 		}
 	}
 }
@@ -200,7 +206,8 @@ async function useCleave(target)
 	target = parent.ctarget
 	if(is_on_cooldown('cleave') || character.mp-G.skills.cleave.mp < character.max_mp*0.1 || (FARM_BOSSES.includes(target?.mtype) && target.mtype!='bgoo')) return
 	let entities = Object.values(parent.entities)
-	if(current_farm_pos.massFarm && (!current_farm_pos.coop || parent.entities.Archealer) && entities.filter(e => current_farm_pos.mobs.includes(e.mtype)  && is_in_range(e, 'cleave')).length > 2)
+	if(current_farm_pos.massFarm && (!current_farm_pos.coop || Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0) 
+		&& entities.filter(e => current_farm_pos.mobs.includes(e.mtype)  && is_in_range(e, 'cleave')).length > 1)
 	{
 		let switched = await switchToCleave()
 		if(switched == true)
@@ -219,7 +226,9 @@ async function useCleave(target)
 function selectMainWeapon()
 {
 	target = parent.ctarget
-	if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
+	if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm 
+	&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop)) 
+	|| target?.mtype == 'bgoo')
 		desired_main = MASS_MAINHAND
 	else if(target && target.mtype == 'snowman')
 		desired_main = FAST_WEAPON
@@ -232,7 +241,9 @@ function selectOffWeapon()
 	if(target && target.mtype == 'snowman')
 		desired_off == null
 	else if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
-	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop)) || target?.mtype == 'bgoo')
+	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm 
+	&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop)) 
+	|| target?.mtype == 'bgoo')
 		desired_off = LOLIPOP
 	else desired_off = OFFHAND
 }

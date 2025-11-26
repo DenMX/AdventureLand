@@ -75,7 +75,7 @@ async function hpPotsCount()
 setInterval(UseFlask, 300)
 function UseFlask(){
 
-	if(character.c?.town) return
+	if(character.c?.town || is_on_cooldown("use_mp")) return
   	if (!character.rip && (character.hp < character.max_hp * use_hp_flask_at_percent) || (character.name == 'MerchanDiser' && character.hp < character.max_hp*0.9)) {
 	  if (can_use("use_hp")) {
 	    use_skill('use_hp');

@@ -92,6 +92,20 @@ async function initialize_character() {
     }
 
     if(parent.S.holidayseason)checkEventBuff()
+    setInterval(() => parent.socket.emit("send_updates", {}), 30000);
+}
+
+function getItemSlotByType(itemName) {
+    switch(G.items[itemName].type) {
+        case "source":
+        case "misc_offhand":
+        case "shield":
+            return "offhand"
+        case "weapon":
+            return "mainhand"
+        default:
+            return G.items[itemName].type
+    }
 }
 
 character.on("new_map", function(data) {
@@ -249,7 +263,7 @@ function getServerPlayers() {
 gettingParty()
 async function gettingParty()
 {
-
+    // if(character.name == "MerchanDiser") return
     // if(parent.party_list.length>0 && parent.party_list.includes('Flamme')) 
     // {
     //     setTimeout(gettingParty, 1000)
@@ -267,11 +281,15 @@ async function gettingParty()
     //     }
     // }
     // else 
-    if(parent.party_list.length>2)
+    if(parent.party_list.length>2 
+        // && parent.party_list.includes("CrownsAnal")
+    )
     {
         setTimeout(gettingParty, 1000)
         return
     }
+    // send_party_request("CrownsAnal")
+    // return setTimeout(gettingParty, 1000)
     let myChars = getMyCharactersOnline()
     if(myChars.length>0)
     {

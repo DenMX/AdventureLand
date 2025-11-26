@@ -92,19 +92,19 @@ const ITEMS_TO_SALE = [
 	'stinger',
 	'slimestaff',
 	'gloves',
-	'wgloves',
+	// 'wgloves',
 	'shoes',
-	'wshoes',
+	// 'wshoes',
 	'pclaw',
 
 	//beginners set
 	'helmet',
-	'pants',
+	// 'pants',
 	'gloves',
 	'shoes',
 	'coat',
 	'quiver',
-	'wcap',
+	// 'wcap',
 
 	//Rugged set
 	'helmet1',
@@ -126,7 +126,6 @@ const ITEMS_TO_SALE = [
 	//halloween
 	'gphelmet',
 	'skullamulet',
-	'lantern',
 
 	//weapon of dead
 	'pmaceofthedead',
@@ -155,10 +154,10 @@ const NOT_SALE_ITEMS_ID =
 {
 	//begginers shit
 	// helmet: {level: 8},
-	// wcap: {level: 8},
+	wcap: {level: 8},
 	// coat: {level: 8},
 	wattire: {level: 8},
-	// pants: {level: 8},
+	pants: {level: 8},
 	wbreeches: {level: 8},
 	wgloves: {level: 8},
 	wshoes: {level: 8},
@@ -206,7 +205,7 @@ const NOT_SALE_ITEMS_ID =
 	pmace: {level: 8},
 	merry: {level:9},
 	warmscarf: {level: 9},
-	bataxe: {level: 7},
+	bataxe: {level: 5},
 	xmace: {level: 6},
 	oozingterror: {level: 7},
 	harbringer: {level: 7},
@@ -248,8 +247,7 @@ const JEWELRY_TO_UPGRADE =
 	wbookhs: {level: 2},
 	santasbelt: {level: 2},
 	dexring: {level: 3},
-	dexearring: {level: 3},
-	dexbelt: {level: 4}
+	dexearring: {level: 3}
 }
 
 const ITEMS_TO_BUY_PONTY =

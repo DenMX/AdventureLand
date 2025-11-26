@@ -10,7 +10,7 @@ async function load_module(module) {
     }
 }
 var pc = false
-const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2']
+const DO_NOT_SEND_ITEMS = ['elixirint0', 'elixirint1', 'elixirint2', 'xpbooster','goldbooster','luckbooster', 'xptome']
 const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2']
 
 const MASS_WEAPON = {name: 'gstaff', level: 6}
@@ -92,8 +92,11 @@ function checkWeapon() {
 		setTimeout(checkWeapon, 250)
 		return
 	}
-	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm && (parent.entities.Archealer || !current_farm_pos.coop))
-		|| target.mtype == 'bgoo')
+	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm 
+		&& character.mp > G.skills.magiport.mp * 1.5
+		&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop))
+		|| target.mtype == 'bgoo'
+	)
 	{
 		desired_main = MASS_WEAPON
 	}

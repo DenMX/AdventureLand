@@ -1,7 +1,7 @@
 let isGoingForLoot = false
 let isGoingToBank = false
 let isExchanging = false
-// let isCombining = false
+// let isCombining = false s
 
 var state='Idling'
 
@@ -64,7 +64,7 @@ async function initChar()
 	cyberland_check = getState?.last_cyber_check
 	bank_check = getState?.last_bank_check
 	last_server_change = Date.now()
-	setInterval(checkItemsCount, 5000)
+	// setInterval(checkItemsCount, 5000)
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
 	merch_queue.push(checkCyberTime)
@@ -81,6 +81,20 @@ async function initChar()
 	setInterval(checkElixirs, getMsFromMinutes(5))
 	scheduler(checkBosses)
 	setInterval(antiFreezingState,getMsFromMinutes(10))
+
+	// setInterval(() => {
+	// 	if(character.esize>2 && locate_item("pants")==-1 && character.gold > 600000000) {
+	// 		let size = character.esize
+	// 		for(let i=0; i<size-2; i++){
+	// 			buy_with_gold("pants")
+	// 		}
+	// 	}
+	// 	else if (state=="Idling") {
+	// 		for(let i of character.items) {
+	// 		if(!i)continue;
+	// 		if(i.name == "pants" && i.level == 8) storeUpgradeAndCombine()
+	// 	}
+	// 	}}, 5000)
 }
 
 function antiFreezingState()

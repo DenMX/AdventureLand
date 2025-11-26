@@ -152,6 +152,13 @@ const FARM_LOCATIONS =
 			coop: true,
 			massFarm: true,
 			canSolo: true
+		},
+		mummy: {
+			location: {x: 258, y: -1089, map: "spookytown"},
+			mobs: ["mummy"],
+			coop: false,
+			massFarm: true,
+			canSolo: false
 		}
 	}
 
@@ -252,7 +259,7 @@ async function saveState()
 
 character.on("cm", function(data){
 	
-	if(!MY_CHARACTERS.includes(data.name)) return
+	if(!MY_CHARACTERS.includes(data.name) && data.name != "CrownMerch") return console.log(data)
 	console.log(data.message)
 	if(data.message.cmd)
 	{
@@ -320,6 +327,10 @@ character.on("cm", function(data){
 			attack_mode=true
 			if(char_action=='farm')smart_move(mob)
 		}
+	}
+	else if(data.name === "CrownMerch" && data.message === "Summon" && character.ctype === "mage") {
+		game_log("Summoning")
+		use_skill("magiport", data.name).catch( e=> console.warn(e))
 	}
 	else console.warn('Unknown command')
 })
