@@ -45,7 +45,7 @@ const FARM_LOCATIONS =
 		},
 		bigbird: {
 			location: {x: 1341, y: 342, map: 'main'},
-			mobs: ['bigbird'],
+			mobs: ['bigbird','scorpion','spider'],
 			coop: true,
 			massFarm: true,
 			canSolo: false

@@ -188,17 +188,17 @@ async function looting(){
 		}
 		
 		// EQUIP FOR KILLING WITH MORE LUCK
-		if(character.hp> character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.hp <3000).length>1) {
+		if(character.hp> character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.type=="monster" && e.hp <5000 && e.target == character.name).length>0) {
 			equipSet("luck")
 		}
 		// EQUIP FOR TANKING
-		else if(character.hp < character.max_hp*0.8){
+		else if(character.hp< character.max_hp*0.75){
 			equipSet("tank")
 		}
 
 	}
 	else if(character.name != LOOTER && (!parent.entities[LOOTER] || !parent.party_list.includes(LOOTER))) Object.values(parent.chests).forEach(e=> loot(e.id));
-	setTimeout(looting,500)
+	setTimeout(looting,1000)
 }
 
 async function equipSet(set) {
@@ -244,19 +244,27 @@ async function equipSet(set) {
 		try{
 			let batch = []
 			let entities_array = Object.values(parent.entities)
-			let phys_mobs = entities_array.filter( e => e.target == character.name && e.damage_type == "physical").length
-			let mage_mobs = entities_array.filter( e => e.target == character.name && e.damage_type == "magical").length
+			let phys_mobs = entities_array.filter( e => e.type == "monster" && e.target == character.name && e.damage_type == "physical").length
+			let mage_mobs = entities_array.filter( e => e.type == "monster" && e.target == character.name && e.damage_type == "magical").length
 			let tank_set = TANK
+
 			if(phys_mobs>0 && mage_mobs>0) tank_set.push(GYBRID_OFFHAND)
 			else {
 				if(phys_mobs>0) tank_set.push(PHYSICAL_OFFHAND)
 				else if(mage_mobs>0) tank_set.push(MAGICAL_OFFHAND)
 			}
+
+			if(entities_array.filter( e => e.target == character.name && e.abilities?.burn).length>0) tank_set.push(ELEMENTAL_ORB)
+
 			for(let i = 0; i<character.items.length; i++) {
 				let item = character.items[i]
 				if(!item) continue
-				if(tank_set.filter(e => e.name == item.name && e.level == item.level).length == 0 ) continue
-				batch.push({num: i, slot: getItemSlotByType(item.name)})
+				if(tank_set.filter(e => e.name == item.name && e.level == item.level).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
+				if(['luckbooster','xpbooster'].includes(item.name) && item.expires){ 
+					booster = i
+					shift(i,'luckbooster')
+				}
+				else if(!['luckbooster','xpbooster','goldbooster'].includes(item.name)) batch.push({num: i, slot: getItemSlotByType(item.name)})
 			}
 			if(batch.length>0) await equip_batch(batch)
 		}
@@ -312,8 +320,8 @@ async function getTartget()
 					
 	}		
 	if(!target && character.name != 'Archealer') return;
-	if(is_on_cooldown('scare')) return;
-	else if (character.name=='Archealer') attackOrHeal(target)
+	if (character.name=='Archealer') attackOrHeal(target)
+	else if(is_on_cooldown('scare') && !target.target) return;
 	else myAttack(target)
 }
 
@@ -350,10 +358,11 @@ async function getSpotForAggro() {
 async function saveSelfAss()
 {
 	if(character.hp>character.max_hp*0.45 || is_on_cooldown('scare')) return
-	if(character.hp<=character.max_hp*0.45 && Object.values(parent.entities).filter(e => e.target == character.name).length>0) {
+	if(character.hp<=character.max_hp*0.4 && Object.values(parent.entities).filter(e => e.target == character.name).length>0) {
+		var current_orb = {name: character.slots.orb.name, level: character.slots.orb.level}
 		if(character.slots.orb.name != 'jacko' )
 		{
-			var current_orb = character.slots.orb
+			
 			for(let i in character.items)
 			{
 				let item = character.items[i]
@@ -363,7 +372,7 @@ async function saveSelfAss()
 				}
 			}
 		}
-		await use_skill('scare')
+		await use_skill('scare').catch(ex => console.warn(ex))
 
 		if(current_orb)
 		{

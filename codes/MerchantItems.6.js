@@ -102,7 +102,7 @@ const ITEMS_TO_SALE = [
 	// 'pants',
 	'gloves',
 	'shoes',
-	'coat',
+	// 'coat',
 	'quiver',
 	// 'wcap',
 
@@ -139,11 +139,13 @@ const ITEMS_TO_SALE = [
 	'harmor',
 	'hhelmet',
 	'hpants',
+	"sword",
+	'sstinger',
 
 	//heavy useless
 	'hboots',
 	'hgloves',
-	'cape'
+	// 'cape'
 	//shields
 	// 'mshield'
 	
@@ -155,7 +157,7 @@ const NOT_SALE_ITEMS_ID =
 	//begginers shit
 	// helmet: {level: 8},
 	wcap: {level: 8},
-	// coat: {level: 8},
+	coat: {level: 8},
 	wattire: {level: 8},
 	pants: {level: 8},
 	wbreeches: {level: 8},
@@ -178,10 +180,8 @@ const NOT_SALE_ITEMS_ID =
 	xgloves: {level: 5},
 	// hgloves: {level: 7},
 	
-	glolipop: {level: 5},
-	tigershield: {level: 7},
 	mcape: {level: 7},
-	// cape: {level: 7},
+	cape: {level: 9},
 	bcape: {level: 7},
 	mittens: {level: 8},
 	frankypants: {level: 6},
@@ -191,7 +191,6 @@ const NOT_SALE_ITEMS_ID =
 
 	//WEAPON
 	firestaff: {level: 9},
-	sword: {level: 9},
 	bow: {level: 9},
 	staff: {level:8},
 	fireblade: {level: 9},
@@ -211,7 +210,7 @@ const NOT_SALE_ITEMS_ID =
 	harbringer: {level: 7},
 	spearofthedead: {level: 7},
 	t3bow: {level: 7},
-	crossbow: {level: 7},
+	crossbow: {level: 4},
 	broom: {level: 7},
 	cclaw: {level: 7},
 	sshield: {level: 7},
@@ -247,7 +246,11 @@ const JEWELRY_TO_UPGRADE =
 	wbookhs: {level: 2},
 	santasbelt: {level: 2},
 	dexring: {level: 3},
-	dexearring: {level: 3}
+	dexearring: {level: 3},
+	
+	//ORBS
+	orbofstr: {level: 2},
+	orbofdex: {level: 2},
 }
 
 const ITEMS_TO_BUY_PONTY =

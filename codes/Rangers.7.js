@@ -2,11 +2,12 @@ var pc = false
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
 
-const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster',"xpbooster", "pumpkinspice"]
+const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster',"xpbooster", "pumpkinspice", 'xptome']
 const ELIXIRS = ['elixirluck', 'pumpkinspice' ]
 
 const JACKO = {name: 'jacko', level: 1}
-const PERSONAL_ITEMS = [JACKO]
+const ORB = {name: "orbofdex", level: 2}
+const PERSONAL_ITEMS = [JACKO, ORB]
 
 initialize_character();
 
@@ -29,6 +30,7 @@ async function initialize_character() {
     }
     useElixir()
     setInterval(saveSelfAss, 1000)
+    setInterval(checkOrb, 1000)
 }
 
 async function load_module(module) {
@@ -48,6 +50,18 @@ async function init()
 
 }
 
+async function checkOrb()
+{
+	if(character.hp > character.max_hp*0.5 && character.slots.orb.name != ORB.name)
+	{
+		for(let i in character.items)
+		{
+			let item = character.items[i]
+			if(!item) continue
+			if(item.name == ORB.name && item.level == ORB.level) await equip(i)
+		}
+	}
+}
 
 const TARGETING_BLACK_LIST = null
 

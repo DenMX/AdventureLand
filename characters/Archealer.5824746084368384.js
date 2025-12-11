@@ -28,7 +28,10 @@ const PERSONAL_ITEMS = [
 	{name: 'mittens', level: 9},
 	{name: 'lmace', level: 7},
 	{name: 'pmace', level: 9},
-	{name: 't2intamulet', level: 3}
+	{name: 't2intamulet', level: 3},
+	{name: 'orba', level: 3},
+	{name: 'intearring', level: 4},
+	{name: 'mearring', level: 0}
 ]
 
 const LUCK_EQUIP = [
@@ -40,7 +43,8 @@ const LUCK_EQUIP = [
 	{name: 'spookyamulet', level: 1},
 	{name: 'mshield', level: 7},
 	{name: 'lmace', level: 7},
-	{name: 'rabbitsfoot', level: 1}
+	{name: 'rabbitsfoot', level: 1},
+	{name: 'mearring', level: 0}
 ]
 
 const LOOT_EQUIP = [
@@ -49,7 +53,8 @@ const LOOT_EQUIP = [
 	{name: 'wbreeches', level: 9},
 	{name: 'wshoes', level: 9},
 	{name: 'handofmidas', level: 4},
-	{name: 'spookyamulet', level: 1}
+	{name: 'spookyamulet', level: 1},
+	{name: 'mearring', level: 0},
 ]
 
 const TANK = [
@@ -59,12 +64,14 @@ const TANK = [
 	{name: 'wingedboots', level: 8},
 	{name: 'mittens', level: 9},
 	{name: 'pmace', level: 9},
-	{name: 't2intamulet', level: 3}
+	{name: 't2intamulet', level: 3},
+	{name: 'intearring', level: 4},
 ]
 
 const PHYSICAL_OFFHAND = {name: 'exoarm', level: 2}
 const MAGICAL_OFFHAND = {name: 'wbookhs', level: 3}
 const GYBRID_OFFHAND = {name: 'lantern', level: 3}
+const ELEMENTAL_ORB = {name: 'orba', level: 3}
 
 const TANK_ITEMS = [{exoarm: {level: 1}}]
 const HEAL_ITEMS = {wbook0: {level: 4}}
@@ -121,14 +128,16 @@ async function initialize_character() {
 setInterval(on_party_request, 1000)
 function on_party_request(name)
 {
-
-	if(MY_CHARACTERS.includes(name) || ADD_PARTY.includes(name)) accept_party_request(name);
+	if(MY_CHARACTERS.includes(name)) accept_party_request(name);
+	let myCharsInParty = 0
+	parent.party_list.forEach( (e) => {if(MY_CHARACTERS.includes(e)) myCharsInParty++})
+	if(myCharsInParty==4 || 9-parent.party_list.length+1 > 4-myCharsInParty) accept_party_request(name);
 }
 
 setInterval(partyheal, 350)
 function partyheal()
 {
-	if(character.mp-G.skills.partyheal.mp >= character.max_mp*0.3) {
+	if(character.mp-G.skills.partyheal.mp >= character.max_mp*0.2) {
 		let count_members_on_low_hp = 0
 
 	  	for (i=0; i<parent.party_list.length; i++){
@@ -178,7 +187,7 @@ function attackOrHeal(target)
 		if(character.hp < character.max_hp * 0.8) 
 		{
 			use_skill('heal', character) ;
-			return;
+			// return;
 		}
 
 		for (i=0; i<parent.party_list.length; i++){
@@ -196,17 +205,18 @@ function attackOrHeal(target)
 				)
 			}
 				use_skill('heal', parent.entities[parent.party_list[i]]);
-			return;
+			// return;
 			}
 		}
 		let players = Object.values(parent.entities).filter(e => e.player && !e.rip && is_in_range(e) && e.hp<e.max_hp*0.7 ) 
 		if(players.length>0)
 		{
 			use_skill('heal', players[0])
-			return
+			// return
 		}
 		useSkills(target);
-		if(!target || is_on_cooldown()) return;
+		if(is_on_cooldown("scare") && !target.target) return
+		if(!target || is_on_cooldown("scare")) return;
 		if(!is_in_range(target))
 		{
 			move(
@@ -236,7 +246,7 @@ async function saveSelfAss()
 {
 	if(is_on_cooldown('scare'))	return
 	
-	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.5)	{
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp<character.max_hp*0.3)	{
 		let cur_orb = character.slots.orb
 		if(character.slots.orb.name !== "jacko"){
 			for(let i =0 ; i<character.items.length; i++){
@@ -299,7 +309,7 @@ async function useSkills(target)
 async function pullmobsFromMember()
 {
 	if(char_action=='farm' && !current_farm_pos.coop)return
-	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.max_mp*0.2) return
+	if(is_on_cooldown('absorb') || character.mp-G.skills.absorb.mp<character.mp_cost*2) return
 	for(member of parent.party_list)
 	{
 		let member_entity = parent.entities[member]
@@ -330,7 +340,7 @@ async function pullMobs() {
 
 	if(character.mp < character.max_mp*0.5) return
 
-	let entities = Object.values(parent.entities).filter( e => (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)) && is_in_range(e,"zapperzap") && !e.target && e.aggro<1)
+	let entities = Object.values(parent.entities).filter( e => (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)) && is_in_range(e,"zapperzap") && !e.target && (e.aggro==0 || getDistance(character, e)> 20*e.aggro))
 	if(entities.length>0){
 		use_skill("zapperzap",entities[0])
 	}
@@ -340,7 +350,7 @@ async function pullMobs() {
 async function useDarkBlessing()
 {
 	if(char_action=='farm' && !current_farm_pos.coop)return
-	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp> G.skills.darkblessing.mp) 
+	if(!is_on_cooldown('darkblessing') && !character.s.darkblessing && character.mp-G.skills.darkblessing.mp> character.max_mp*0.3) 
 	{
 		await use_skill('darkblessing').catch(() => {})
 		reduce_cooldown("darkblessing", Math.max(...parent.pings));
@@ -350,7 +360,7 @@ async function useDarkBlessing()
 
 async function useCurse(target)
 {
-	if(is_on_cooldown('curse')) return
+	if(is_on_cooldown('curse') || is_on_cooldown("scare")) return
 	if( FARM_BOSSES.includes(target?.mtype) && character.mp - G.skills.curse.mp> character.max_mp*0.4 && target.hp>4000) {
 		if(current_farm_pos.mobs.includes("pinkgoblin") && parent.party_list.includes("CrownsAnal")){
 			let targets = Object.values(parent.entities).filter(e => parent.party_list.includes(e.target)).sort( (curr, next) =>

@@ -15,7 +15,7 @@ const ELIXIRS = ['elixirint0', 'elixirint1', 'elixirint2']
 
 const MASS_WEAPON = {name: 'gstaff', level: 6}
 const SOLO_WEAPON = {name: 'firestaff', level: 9}
-const BOOK = {name: 'exoarm', level: 1}
+const BOOK = {name: 'wbook1', level: 3}
 const FAST_WEAPON = {name: 'wand', level: 7}
 const FAST_OFFHAND = {name: 'wbookhs', level: 3}
 
@@ -92,10 +92,10 @@ function checkWeapon() {
 		setTimeout(checkWeapon, 250)
 		return
 	}
-	if((current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm 
-		&& character.mp > G.skills.magiport.mp * 1.5
-		&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop))
-		|| target.mtype == 'bgoo'
+	if(current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm 
+		// && character.mp > G.skills.magiport.mp * 1.5
+		&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop
+		|| target.mtype == 'bgoo')
 	)
 	{
 		desired_main = MASS_WEAPON
@@ -224,7 +224,7 @@ function myAttack(target){
 	
 }
 
-useCMB()
+// useCMB()
 async function useCMB()
 {
 	if(is_on_cooldown('cburst')) 
@@ -236,11 +236,11 @@ async function useCMB()
 	{
 		if( (current_farm_pos.massFarm && current_farm_pos.coop && parent.entities.Archealer) )
 			{
-				target_to_pull = await getSpotForAggro()
-				if(Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target) && e.type=='monster').length < 4 && target_to_pull?.count >= 3)
-				{
-					await smart_move(target_to_pull.monster)
-				}
+				// target_to_pull = await getSpotForAggro()
+				// if(Object.values(parent.entities).filter(e=> parent.party_list.includes(e.target) && e.type=='monster').length < 4 && target_to_pull?.count >= 3)
+				// {
+				// 	await smart_move(target_to_pull.monster)
+				// }
 				targets = Object.values(parent.entities).filter( e=> current_farm_pos.mobs.includes(e.mtype) && !e.target && is_in_range(e)).map(e=> [e.id, 1])
 				if (targets.length>1) await use_skill('cburst', targets)
 			}

@@ -83,16 +83,16 @@ async function initChar()
 	setInterval(antiFreezingState,getMsFromMinutes(10))
 
 	// setInterval(() => {
-	// 	if(character.esize>2 && locate_item("pants")==-1 && character.gold > 600000000) {
+	// 	if(character.esize>2 && locate_item("coat")==-1 && character.gold > 2000000000) {
 	// 		let size = character.esize
 	// 		for(let i=0; i<size-2; i++){
-	// 			buy_with_gold("pants")
+	// 			buy_with_gold("coat")
 	// 		}
 	// 	}
 	// 	else if (state=="Idling") {
 	// 		for(let i of character.items) {
 	// 		if(!i)continue;
-	// 		if(i.name == "pants" && i.level == 8) storeUpgradeAndCombine()
+	// 		if(i.name == "coat" && i.level == 8) storeUpgradeAndCombine()
 	// 	}
 	// 	}}, 5000)
 }
@@ -171,8 +171,10 @@ async function checkEvents()
 
 	for(e of EVENTS)
 	{
+		
 		if(parent.S[e.name])
 		{
+			if(e.name == "grinch" && parent.S[e.name].hp>2500000) continue;
 			if(parent.S[e.name].live && parent.S[e.name].live == true)
 			{
 				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})

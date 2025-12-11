@@ -45,6 +45,8 @@ const EVENTS = [
 
 const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frostyHeal']
 
+const PARTY_LEADER = "Flamme"
+
 const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'pscroll', 'token', 'offering', 'elixir', 'quest']
 
 var death = false
@@ -103,6 +105,10 @@ function getItemSlotByType(itemName) {
             return "offhand"
         case "weapon":
             return "mainhand"
+        case "earring":
+            return "earring1"
+        case "ring":
+            return "ring1"
         default:
             return G.items[itemName].type
     }
@@ -163,7 +169,10 @@ function scheduler(func)
 function handle_death()
 {
     death = true
-    setTimeout(respawn, 15000)
+    setTimeout(async()=> {
+        respawn()
+        // if( character.gold>3200000) buy_with_gold("xptome").catch(ex => console.warn(`Error while buying xptome:\n ${ex}`))
+    }, 15000)
 }
 
 function getMyCharactersOnline()
@@ -207,7 +216,7 @@ function itemsCount()
 	return count
 }
 
-setInterval(on_party_invite,1000)
+// setInterval(on_party_invite,1000)
 // Accept party from one of these sources
 function on_party_invite(name) {
     if (MY_CHARACTERS.includes(name) || name == 'Flamme') {
@@ -217,8 +226,10 @@ function on_party_invite(name) {
 
 function on_party_request(name)
 {
-    if (MY_CHARACTERS.includes(name) || ADD_PARTY.includes(name))
-        accept_party_request(name);
+    if(MY_CHARACTERS.includes(name)) accept_party_request(name);
+	let myCharsInParty = 0
+	parent.party_list.forEach( (e) => {if(MY_CHARACTERS.includes(e)) myCharsInParty++})
+	if(myCharsInParty==4 || 9-parent.party_list.length+1 > 4-myCharsInParty) accept_party_request(name);
 }
 
 
@@ -260,46 +271,24 @@ function getServerPlayers() {
     return playersData;
 }
 
-gettingParty()
+setInterval(gettingParty,2000)
 async function gettingParty()
 {
-    // if(character.name == "MerchanDiser") return
-    // if(parent.party_list.length>0 && parent.party_list.includes('Flamme')) 
-    // {
-    //     setTimeout(gettingParty, 1000)
-    //     return
-    // }
-    // else if(Object.values(getServerPlayers()).filter(c => c.name == 'Flamme'))
-    // {
-    //     //if(parent.party_list.length>0) leave_party()
-    //     send_party_request('Flamme')
-    //     await sleep(5000)
-    //     if(parent.party_list.length>1)
-    //     {
-    //         setTimeout(gettingParty,500)
-    //         return
-    //     }
-    // }
-    // else 
     if(parent.party_list.length>2 
-        // && parent.party_list.includes("CrownsAnal")
+        && parent.party_list.includes(PARTY_LEADER)
     )
     {
-        setTimeout(gettingParty, 1000)
-        return
+        return 
     }
-    // send_party_request("CrownsAnal")
-    // return setTimeout(gettingParty, 1000)
-    let myChars = getMyCharactersOnline()
-    if(myChars.length>0)
+    let online_players = await getServerPlayers()
+    if(online_players.filter( e=> e.name == PARTY_LEADER).length>0) {
+        send_party_request(PARTY_LEADER)
+    }
+    else if(parent.party_list.length<2)
     {
-        for(let char of myChars)
-        {
-            send_party_request(char.name)
-            break
-        }
+        online_players.filter ( e => MY_CHARACTERS.includes(e.name)).forEach( e=> send_party_request(e.name))
     }
-	setTimeout(gettingParty, 400)
+	
 }
 
 function getMsFromMinutes(minutes)

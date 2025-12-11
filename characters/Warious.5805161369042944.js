@@ -7,11 +7,14 @@ const MASS_MAINHAND = {name: 'ololipop', level: 9}
 const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'bataxe', level: 8}
 const SHIELD = {name: 'sshield', level: 8}
-const JACKO = {name: 'jacko', level: 2}
-const ORB = {name: 'orbg', level: 3}
+const JACKO = {name: 'jacko', level: 1}
+const ORB = {name: 'orbofstr', level: 3}
 const FAST_WEAPON = {name: 'rapier', level: 4}
 
-const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON]
+const MANA_TSHIRT = {name: 'tshirt9', level: 5}
+const DMG_TSHIRT = {name: 'coat', level: 10}
+
+const PERSONAL_ITEMS = [MAINHAND, OFFHAND, BASHER, LOLIPOP, AXE, MASS_MAINHAND, SHIELD, JACKO, ORB, FAST_WEAPON, MANA_TSHIRT, DMG_TSHIRT]
 
 const HP_POT = 'hpot1'
 const MP_POT = 'mpot1'
@@ -81,6 +84,8 @@ async function initialize_character() {
 	setInterval(selectMainWeapon,330)
 	setInterval(selectOffWeapon,330)
 	setInterval(checkOrb, 1000)
+	setInterval(saveSelfAss, 1000)
+	setInterval(checkTshirt, 1000)
 }
 
 
@@ -90,14 +95,24 @@ async function useSkills()
 	if((char_action == 'boss' || char_action =='event') && (getDistance(get('Archealer'), character)> 300 || parent.entities.Archealer?.rip)) return
 	await useStomp(target)
 	useShell()
-	useMassAgr()
-	useWarcry()
-	useCleave(target)
+	// useMassAgr()
+	// useWarcry()
+	await useCleave(target)
 	useTaunt(target)
-	setInterval(saveSelfAss, 1000)
 }
 
-
+async function checkTshirt() {
+	let wantedTshirt = (character.mp>character.max_mp*0.15) ? DMG_TSHIRT : MANA_TSHIRT
+	
+	if(character.slots.chest.name != wantedTshirt.name || character.slots.chest.level != wantedTshirt.name) {
+		for(let i in character.items) {
+			let item = character.items[i]
+			if(!item) continue
+			if(item.name == wantedTshirt.name && item.level == wantedTshirt.level) equip(i)
+		}
+	}
+	
+}
 
 useWarcry()
 async function useWarcry(){
@@ -163,8 +178,8 @@ async function useCharge()
 
 async function useShell()
 {
-	if(!is_on_cooldown('hardshell') && (character.hp < character.max_hp*0.5 
-		|| ( character.hp < character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.target == character.name).length>2)))
+	if(is_on_cooldown('hardshell')) return
+	if(character.hp < character.max_hp*0.5 && Object.values(parent.entities).filter(e => e.target == character.name && e.damage_type == "physical").length>2)
 	{
 		await use_skill('hardshell').catch(() => {})
 		// reduce_cooldown("hardshell", Math.min(...parent.pings));
@@ -240,7 +255,7 @@ function selectOffWeapon()
 	target = parent.ctarget
 	if(target && target.mtype == 'snowman')
 		desired_off == null
-	else if(character.hp <= character.max_hp*0.55) desired_off = SHIELD
+	// else if(character.hp <= character.max_hp*0.3) desired_off = SHIELD
 	else if(target && (current_farm_pos.mobs.includes(target?.mtype) && current_farm_pos.massFarm 
 	&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop)) 
 	|| target?.mtype == 'bgoo')
@@ -338,7 +353,7 @@ function myAttack(target)
 	{
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
-		swing(target)
+		// swing(target)
 	}
 }
 
