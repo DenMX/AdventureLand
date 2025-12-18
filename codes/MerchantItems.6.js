@@ -62,13 +62,15 @@ const ITEMS_TO_SALE = [
 	'elixirint1',
 	'elixirint2',
 	'elixirint3',
+	'eggnog',
+	'emptyjar',
 
 	//xmass set
 	'rednose',
 	'iceskates',
 	'xmasshoes',
 	'xmassweater',
-	'xmaspants',
+	// 'xmaspants',
 	'warmscarf',
 	'merry',
 
@@ -80,7 +82,7 @@ const ITEMS_TO_SALE = [
 	'dexring',
 	// 'dexearring',
 	// 'dexbelt',
-	'dexamulet',
+	// 'dexamulet',
 	'ringsj',
 
 	//scrolls
@@ -168,12 +170,13 @@ const NOT_SALE_ITEMS_ID =
 	// gloves1: {level: 8},
 	// shoes1: {level: 8},
 	// coat1: {level: 8},
+	xmaspants: {level: 7},
 
 
 	//
 	xhelmet: {level: 0},
 	xarmor: {level: 0},
-	xpants: {level: 0},
+	xpants: {level: 5},
 	wingedboots: {level: 8},
 	// hboots: {level: 7},
 	xboots: {level: 5},
@@ -209,7 +212,7 @@ const NOT_SALE_ITEMS_ID =
 	oozingterror: {level: 7},
 	harbringer: {level: 7},
 	spearofthedead: {level: 7},
-	t3bow: {level: 7},
+	t3bow: {level: 6},
 	crossbow: {level: 4},
 	broom: {level: 7},
 	cclaw: {level: 7},
@@ -218,7 +221,7 @@ const NOT_SALE_ITEMS_ID =
 	snowflakes: {level: 7},
 	t2quiver: {level: 6},
 	angelwings: {level: 6},
-	rapier: {level: 0},
+	rapier: {level: 5},
 	pinkie: {level: 7},
 	supermittens: {level: 0},
 	wand: {level: 7},
@@ -236,6 +239,7 @@ const JEWELRY_TO_UPGRADE =
 	talkingskull: {level: 2},
 	intamulet: {level: 3},
 	stramulet: {level: 3},
+	dexamulet: {level: 3},
 	intearring: {level: 3},
 	strearring: {level: 3},
 	intring: {level: 4},

@@ -42,7 +42,7 @@ async function mining()
 		scheduler(mining)
 		return
 	}
-	changeState('Going to mining..')
+	changeState('Mining..')
 	await smart_move(MINING_POS)
 	pickaxe = await equipTools('pickaxe')
 	changeState('Mining...')
@@ -67,7 +67,7 @@ async function fishing()
 		scheduler(fishing)
 		return
 	}
-	changeState('Going to fishing')
+	changeState('Fishing')
 	await smart_move(FISHING_POS)
 	try {
 		let rod = await equipTools('rod')
@@ -228,7 +228,7 @@ async function checkParty()
 async function goToChar(charToGo)
 {
 	try{
-		changeState('Going for loot...')
+		changeState('Loot...')
 		await smart_move(get(charToGo.name));
 		if(charToGo.take_items) takeLoot(charToGo.name)
 		for(let i=0; i< character.items.length; i++)
@@ -253,7 +253,7 @@ async function goToChar(charToGo)
 	}
 	finally
 	{
-		await smart_move('main')
+		// await smart_move('main')
 		changeState(DEFAULT_STATE)	
 		setTimeout(scheduler(checkParty), 20000)
 	}	

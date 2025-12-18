@@ -28,6 +28,8 @@ var server_identifier
 
 var merch_queue = []
 
+var last_pool_mechagnomes
+
 async function load_module(module) {
     try {
         if (parent.caracAL) {
@@ -68,9 +70,10 @@ async function initChar()
 	merch_queue.push(checkParty)
 	// merch_queue.push(checkBank)
 	merch_queue.push(checkCyberTime)
+	merch_queue.push(pullMechaGnomes)
 	//merch_queue.push(buyWeapon)
 	// console.log(merch_queue)
-	setTimeout(scheduler(buyPots),getMsFromMinutes(5))
+	setTimeout(() => {scheduler(buyPots)},getMsFromMinutes(5))
 
 	server_identifier = `${parent.server_region} ${parent.server_identifier}`
 	
@@ -97,6 +100,32 @@ async function initChar()
 	// 	}}, 5000)
 }
 
+
+async function pullMechaGnomes() {
+	if(!parent.party_list.includes("arMAGEdon") || Date.now() - last_pool_mechagnomes < G.monsters.mechagnome.respawn * 1000) return merch_queue.push(pullMechaGnomes)
+	changeState("pulling")
+	try {
+		await smart_move("mechagnome").then(async() => { 
+			if(Object.values(parent.entities).filter(e => e.mtype == "mechagnome").length>=4) {
+				parent.socket.emit("eval", {command: "loh"});
+				send_cm("arMAGEdon", "Summon")
+				await sleep(3000)
+				if(character.map=="Cyberland") leave()
+				else last_pool_mechagnomes = Date.now()
+			}
+			else {
+				leave()
+			}
+		})
+	}
+	catch(ex) {
+		console.warn(`Error while pulling gnomes\n ${ex}`)
+	}
+	merch_queue.push(pullMechaGnomes)
+	
+	changeState(DEFAULT_STATE)
+}
+
 function antiFreezingState()
 {
 	if(Date.now-last_state_change>getMsFromMinutes(MINUTES_TO_RESET_STATE))
@@ -113,8 +142,21 @@ async function saveSelfAss()
 		setTimeout(saveSelfAss, 500)
 		return
 	}
-	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0)	await use_skill('scare')
+	if(Object.values(parent.entities).filter(e => e.type == 'monster' && e.target == character.name).length>0 && character.hp< character.max_hp*0.5)	await use_skill('scare')
 	setTimeout(saveSelfAss, 1000)
+}
+
+function on_magiport(name) 
+{
+	if(name == "arMAGEdon") {
+		accept_magiport(name).then(async() => {
+			await sleep(700)	
+			if(smart.moving) stop('smart').catch(() => {});
+			stop('teleport').catch(() => {})
+			change_target(null)
+			if(character.moving) stop('move').catch(() => {})
+		});
+	}
 }
 
 function saveState()
@@ -174,13 +216,7 @@ async function checkEvents()
 		
 		if(parent.S[e.name])
 		{
-			if(e.name == "grinch" && parent.S[e.name].hp>2500000) continue;
-			if(parent.S[e.name].live && parent.S[e.name].live == true)
-			{
-				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})
-				
-			}
-			else if(parent.S[e.name].live === 'undefined')
+			if((parent.S[e.name].live && parent.S[e.name].live == true) || parent.S[e.name].live === "undefined")
 			{
 				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})
 				check_bosses = false
@@ -188,6 +224,14 @@ async function checkEvents()
 			}
 		}
 	}
+}
+
+function on_combined_damage() // When multiple characters stay in the same spot, they receive combined damage, this function gets called whenever a monster deals combined damage
+{
+	move(
+				character.x + (-30 +(Math.random()*30)),
+				character.y + (-30 +(Math.random()*30))
+			)
 }
 
 async function waitEventEnds(name)
@@ -300,7 +344,7 @@ async function checkBank()
 
 async function buyPots()
 {
-	changeState('Going for pots...')
+	changeState('Pots...')
 	if(mpPotsCount()< MAX_MP_POTIONS/3) 
 	{
 		await smart_move('upgrade');
@@ -324,7 +368,7 @@ async function checkCyberTime()
 	}
 	else if(!is_moving(character) && (Date.now()-cyberland_check>MS_TO_CYBER_CHECK || !cyberland_check) && state == DEFAULT_STATE) 
 	{
-		changeState('Going to pray...')
+		changeState('Pray...')
 		await checkCyberlandCommand()
 	}
 	changeState(DEFAULT_STATE)

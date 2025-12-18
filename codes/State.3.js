@@ -328,8 +328,8 @@ character.on("cm", function(data){
 			if(char_action=='farm')smart_move(mob)
 		}
 	}
-	else if(data.name === "CrownMerch" && data.message === "Summon" && character.ctype === "mage") {
-		game_log("Summoning")
+	else if((data.name === "CrownMerch" || MY_CHARACTERS.includes(data.name)) && data.message === "Summon" && character.ctype === "mage") {
+		game_log(`Summoning ${data.name}`)
 		use_skill("magiport", data.name).catch( e=> console.warn(e))
 	}
 	else console.warn('Unknown command')

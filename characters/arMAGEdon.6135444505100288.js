@@ -93,7 +93,7 @@ function checkWeapon() {
 		return
 	}
 	if(current_farm_pos.mobs.includes(target.mtype) && current_farm_pos.massFarm 
-		// && character.mp > G.skills.magiport.mp * 1.5
+		&& character.mp > G.skills.magiport.mp * 1.5
 		&& (Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0 || !current_farm_pos.coop
 		|| target.mtype == 'bgoo')
 	)
@@ -146,7 +146,7 @@ async function changeWeapon() {
 			}
 		}
 	}
-	setTimeout(checkWeapon, 300)
+	setTimeout(checkWeapon, 1000)
 }
 
 async function burst(target)
@@ -163,9 +163,9 @@ async function energize()
 {
     if(is_on_cooldown('energize')) return
 
-    if(parent.entities.Archealer && parent.entities.Archealer.mp < parent.entities.Archealer.max_mp*0.3) 
+    if(parent.entities.Archealer && parent.entities.Archealer.mp < parent.entities.Archealer.max_mp*0.15) 
         use_skill('energize', 'Archealer').catch(() => {})
-    else if(parent.entities.Warious && is_in_range('energize', parent.entities.Warious)) 
+    else if(parent.entities.Warious && is_in_range(parent.entities.Warious,'energize' )) 
         use_skill('energize', 'Warious', 1).catch(() => {})
 }
 
@@ -224,7 +224,7 @@ function myAttack(target){
 	
 }
 
-// useCMB()
+useCMB()
 async function useCMB()
 {
 	if(is_on_cooldown('cburst')) 

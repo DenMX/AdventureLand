@@ -20,7 +20,7 @@ const PERSONAL_ITEMS = [
 	{name: 'handofmidas', level: 4},
 	{name: 'spookyamulet', level: 1},
 	{name: 'lantern', level: 3},
-	{name: 'mshield', level: 7},
+	{name: 'mshield', level: 8},
 	{name: 'xhelmet', level: 7},
 	{name: 'xarmor', level: 6},
 	{name: 'starkillers', level: 7},
@@ -31,20 +31,30 @@ const PERSONAL_ITEMS = [
 	{name: 't2intamulet', level: 3},
 	{name: 'orba', level: 3},
 	{name: 'intearring', level: 4},
-	{name: 'mearring', level: 0}
+	{name: 'mearring', level: 0},
+	{name: 'oxhelmet', level: "undefined"},
+	{name: 'tshirt88', level: 4},
+	{name: 'xmaspants', level: 8},
+	{name: 'eslippers', level: 8},
+	{name: 'mittens', level: 9},
+	{name: 'ecape', level: 6},
+	{name: 'santasbelt', level: 3},
+	{name: 'bcape', level: 7}
 ]
 
 const LUCK_EQUIP = [
-	{name: 'wcap', level: 9},
-	{name: 'wattire', level: 8},
-	{name: 'wbreeches', level: 9},
-	{name: 'wshoes', level: 9},
-	{name: 'wgloves', level: 8},
+	{name: 'oxhelmet', level: "undefined"},
+	{name: 'tshirt88', level: 4},
+	{name: 'xmaspants', level: 8},
+	{name: 'eslippers', level: 8},
+	{name: 'mittens', level: 9},
 	{name: 'spookyamulet', level: 1},
-	{name: 'mshield', level: 7},
+	{name: 'mshield', level: 8},
 	{name: 'lmace', level: 7},
 	{name: 'rabbitsfoot', level: 1},
-	{name: 'mearring', level: 0}
+	{name: 'mearring', level: 0},
+	{name: 'ecape', level: 6},
+	{name: 'santasbelt', level: 3}
 ]
 
 const LOOT_EQUIP = [
@@ -66,6 +76,8 @@ const TANK = [
 	{name: 'pmace', level: 9},
 	{name: 't2intamulet', level: 3},
 	{name: 'intearring', level: 4},
+	{name: 'sbelt', level: 1},
+	{name: 'bcape', level: 7}
 ]
 
 const PHYSICAL_OFFHAND = {name: 'exoarm', level: 2}

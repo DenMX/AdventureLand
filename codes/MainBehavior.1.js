@@ -208,7 +208,7 @@ async function equipSet(set) {
 			for(let i = 0; i<character.items.length; i++) {
 				let item = character.items[i]
 				if(!item) continue
-				if(LUCK_EQUIP.filter(e => e.name == item.name && e.level == item.level).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
+				if(LUCK_EQUIP.filter(e => e.name == item.name && (e.level == item.level || e.name == "oxhelmet")).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
 				
 				if(['goldbooster','xpbooster'].includes(item.name) && item.expires) shift(i,'luckbooster')
 				else if(!['luckbooster','xpbooster','goldbooster'].includes(item.name)) batch.push({num: i, slot: getItemSlotByType(item.name)})
@@ -226,7 +226,7 @@ async function equipSet(set) {
 			for(let i = 0; i<character.items.length; i++) {
 				let item = character.items[i]
 				if(!item) continue
-				if(LOOT_EQUIP.filter(e => e.name == item.name && e.level == item.level).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
+				if(LOOT_EQUIP.filter(e => e.name == item.name && (e.level == item.level || e.name == "oxhelmet")).length == 0 && !['luckbooster','xpbooster','goldbooster'].includes(item.name)) continue
 				
 				if(['luckbooster','xpbooster'].includes(item.name) && item.expires){ 
 					booster = i
