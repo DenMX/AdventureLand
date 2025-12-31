@@ -78,6 +78,60 @@ function characterMoving()
     return false
 }
 
+function generateRandomPointClockwise(reference, target ) {
+
+    let distance = character.range/2
+    let maxAngle = 90
+    // Вычисляем базовый угол от reference к target
+    const baseAngle = Math.atan2(target.y - reference.y, target.x - reference.x);
+    
+    // Добавляем случайное отклонение от 0 до maxAngle градусов ПО ЧАСОВОЙ СТРЕЛКЕ
+    // В математике положительный угол - против часовой, поэтому используем отрицательные значения
+    const maxAngleRad = maxAngle * Math.PI / 180;
+    const randomDeviation = -Math.random() * maxAngleRad; // Отрицательное = по часовой
+    
+    // Итоговый угол
+    const finalAngle = baseAngle + randomDeviation;
+    
+    // Вычисляем координаты
+    const x = target.x + Math.cos(finalAngle) * distance;
+    const y = target.y + Math.sin(finalAngle) * distance;
+    
+    return { x, y };
+}
+
+function getBoundingBoxCenter(points) {
+    if (!points || points.length === 0) {
+        return null;
+    }
+    
+    let minX = points[0].x;
+    let maxX = points[0].x;
+    let minY = points[0].y;
+    let maxY = points[0].y;
+    
+    for (let i = 1; i < points.length; i++) {
+        const point = points[i];
+        minX = Math.min(minX, point.x);
+        maxX = Math.max(maxX, point.x);
+        minY = Math.min(minY, point.y);
+        maxY = Math.max(maxY, point.y);
+    }
+    
+    return {
+        x: (minX + maxX) / 2,
+        y: (minY + maxY) / 2
+    };
+}
+
+function on_combined_damage() // When multiple characters stay in the same spot, they receive combined damage, this function gets called whenever a monster deals combined damage
+{
+	move(
+				character.x + (-30 +(Math.random()*30)),
+				character.y + (-30 +(Math.random()*30))
+			)
+}
+
 async function initialize_character() {
     await load_module('Mover')
     await load_module('PotionUse')
@@ -131,6 +185,7 @@ character.on("new_map", function(data) {
             console.warn("Not enough time to load bank")
         }
     }
+    if(data.name == "jail") leave()
     
 })
 

@@ -216,8 +216,9 @@ async function checkEvents()
 		
 		if(parent.S[e.name])
 		{
-			if((parent.S[e.name].live && parent.S[e.name].live == true) || parent.S[e.name].live === "undefined")
+			if((parent.S[e.name].live && parent.S[e.name].live == true) || parent.S[e.name].live == null)
 			{
+				if(e.name == "grinch" && parent.s[e.name].hp > 5000000) continue
 				send_cm(MY_CHARACTERS, {cmd: 'event', name: e.name, server: `${parent.server_region} ${parent.server_identifier}`})
 				check_bosses = false
 				waitEventEnds(e.name)
@@ -226,13 +227,7 @@ async function checkEvents()
 	}
 }
 
-function on_combined_damage() // When multiple characters stay in the same spot, they receive combined damage, this function gets called whenever a monster deals combined damage
-{
-	move(
-				character.x + (-30 +(Math.random()*30)),
-				character.y + (-30 +(Math.random()*30))
-			)
-}
+
 
 async function waitEventEnds(name)
 {

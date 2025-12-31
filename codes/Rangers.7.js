@@ -6,7 +6,7 @@ const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster',"xpbooster
 const ELIXIRS = ['elixirluck', 'pumpkinspice' ]
 
 const JACKO = {name: 'jacko', level: 1}
-const ORB = {name: "orbofdex", level: 2}
+const ORB = {name: "orbofdex", level: 3}
 const PERSONAL_ITEMS = [JACKO, ORB]
 
 initialize_character();
@@ -126,34 +126,35 @@ async function usePiercing(target)
 
 function kite(target)
 {
-	if(!attack_mode || !target) return
 	
-	let distance = getDistance(target, character)
-	if(target.range<character.range && distance <= (character.range-target.range)/2 && get_target_of(target) == character)
-    {
-        move(
-            character.x+(-60+(Math.random()*120)),
-            character.y+(-60+(Math.random()*120))
-        )
-    }
+	if(!character.moving) {
+		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
+		let new_point = generateRandomPointClockwise(character, target_point)
+		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
+	}
 }
 
 function myAttack(target){
     kite(target)
-	
-	change_target(target);
-	useSkills(target);
+    if(target){
+        
+        change_target(target);
+        useSkills(target);
+    }
+    
     let canMassAttack = (char_action == 'farm' && current_farm_pos.massFarm && (!current_farm_pos.coop || Object.values(parent.entities).filter( e=> parent.party_list.includes(e.name) && e.ctype === "priest").length>0))
     let monsters_in_range = Object.values(parent.entities).filter( e => current_farm_pos.mobs.includes(e.mtype) && e.target)
     console.log('Monsters: '+monsters_in_range.length)
 	if(!is_in_range(target))
 	{
-		move(
+		return move(
 			character.x+(target.x-character.x)/4,
 			character.y+(target.y-character.y)/4
 			);
 	}
-    else if(canMassAttack && monsters_in_range.length > 3 && character.mp > G.skills['5shot'].mp)
+    if(!can_attack(target)) return
+    
+    if(canMassAttack && monsters_in_range.length > 3 && character.mp > G.skills['5shot'].mp)
     {
         // set_message("Attacking");
 		use_skill('5shot', monsters_in_range).catch(() => {});
@@ -164,11 +165,11 @@ function myAttack(target){
 		// set_message("Attacking");
 		use_skill('3shot', monsters_in_range).catch(() => {});
 	}
-    else if(can_attack(target) && target.armor && target.armor > 400)
+    else if( target.armor && target.armor > 400)
     {
         usePiercing(target)
     }
-    else if(can_attack(target) )
+    else 
     {
         //if(get_target_of(target) == character && getDistance(target, character) < character.range) circleMove(target)
 		// set_message("Attacking");

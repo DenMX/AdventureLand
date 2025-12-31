@@ -9,14 +9,14 @@ var pc = false
 const PERSONAL_ITEMS = [
 	{name: 'exoarm', level: 2}, 
 	{name: 't2intamulet', level: 2}, 
-	{name: 'xgloves', level: 5}, 
+	// {name: 'xgloves', level: 5}, 
 	{name: 'jacko', level: 4}, 
 	{name: 'rabbitsfoot', level: 1},
 	{name: 'wcap', level: 9},
 	{name: 'wattire', level: 8},
 	{name: 'wbreeches', level: 9},
 	{name: 'wshoes', level: 9},
-	{name: 'wgloves', level: 8},
+	// {name: 'wgloves', level: 8},
 	{name: 'handofmidas', level: 4},
 	{name: 'spookyamulet', level: 1},
 	{name: 'lantern', level: 3},
@@ -34,7 +34,7 @@ const PERSONAL_ITEMS = [
 	{name: 'mearring', level: 0},
 	{name: 'oxhelmet', level: "undefined"},
 	{name: 'tshirt88', level: 4},
-	{name: 'xmaspants', level: 8},
+	{name: 'xmaspants', level: 9},
 	{name: 'eslippers', level: 8},
 	{name: 'mittens', level: 9},
 	{name: 'ecape', level: 6},
@@ -45,7 +45,7 @@ const PERSONAL_ITEMS = [
 const LUCK_EQUIP = [
 	{name: 'oxhelmet', level: "undefined"},
 	{name: 'tshirt88', level: 4},
-	{name: 'xmaspants', level: 8},
+	{name: 'xmaspants', level: 9},
 	{name: 'eslippers', level: 8},
 	{name: 'mittens', level: 9},
 	{name: 'spookyamulet', level: 1},
@@ -191,9 +191,19 @@ function checkEquippedItems()
 }
 
 
+async function circleMove(target) {
+	if(!character.moving) {
+		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
+		let new_point = generateRandomPointClockwise(character, target_point)
+		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
+	}
+}
+
+
 
 function attackOrHeal(target)
 {
+	if(target) circleMove(target)
 	try{
 
 		if(character.hp < character.max_hp * 0.8) 

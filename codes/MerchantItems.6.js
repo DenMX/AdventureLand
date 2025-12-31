@@ -44,6 +44,7 @@ const ITEMS_TO_SALE = [
 	'ink',
 	'snowball',
 	'dstones',
+	'spores',
 
 	//Elexirs
 	'elixirvit0', 
@@ -64,6 +65,8 @@ const ITEMS_TO_SALE = [
 	'elixirint3',
 	'eggnog',
 	'emptyjar',
+	'rattail',
+	'wbook0',
 
 	//xmass set
 	'rednose',
@@ -170,7 +173,7 @@ const NOT_SALE_ITEMS_ID =
 	// gloves1: {level: 8},
 	// shoes1: {level: 8},
 	// coat1: {level: 8},
-	xmaspants: {level: 7},
+	xmaspants: {level: 8},
 
 
 	//

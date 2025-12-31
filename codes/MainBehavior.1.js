@@ -41,7 +41,7 @@ function on_magiport(name)
 
 
 
-setInterval(checkState, 5000)
+setInterval(checkState, 3000)
 async function checkState() {
 	
 	if(smart.moving) return
@@ -62,7 +62,6 @@ async function checkState() {
 				{
 					current_farm_pos?.location ? await smart_move(current_farm_pos.location) : await smart_move(current_farm_pos.mobs[0])
 					console.log('Farm smart_move')
-					setTimeout(checkState, 2000)
 				}
 				else if(Object.values(parent.entitites).filter(e=>current_farm_pos.mobs.includes(e.mtype))>0 && getDistance(character, current_farm_pos?.location)>radius &&
 					!FARM_BOSSES.includes(parent.ctarget.mtype) && !character.moving)
@@ -93,10 +92,6 @@ async function checkState() {
 
 async function checkAction(action, cur_point, schedule) {
 
-	if(characterMoving()) {
-		setTimeout(checkState, 2000)	
-		return
-	}
 	let bosses = Object.values(parent.entities).filter(e=> FARM_BOSSES.includes(e.mtype))
 	switch (action) {
 		case 'boss':
@@ -117,11 +112,14 @@ async function checkAction(action, cur_point, schedule) {
 				return
 			}
 			// check if event not active
-			if (parent.S[cur_point] == 'indefined' || parent.S[cur_point]?.live == false) {
+			if (!parent.S[cur_point] || parent.S[cur_point]?.live == false) {
 				schedule.length > 0 ? current_event = schedule.shift() : current_event = null, char_action = 'boss'
 			}
 			//check if we need to go for event. Checking bosses count because not every event has coordinates and we can meet boss before event.
-			else if (parent.S[cur_point]?.live || parent.S[cur_point]?.live == 'undefined' && bosses.length<1) await smart_move (parent.S[cur_point])
+			else if (parent.S[cur_point]?.live || parent.S[cur_point].live == null && bosses.length<1) {
+				if(['icegolem','goobrawl'].includes(cur_point))	join(cur_point)
+				else await smart_move (parent.S[cur_point])
+			}
 			
 	}
 		
@@ -186,7 +184,7 @@ async function looting(){
 			// shift(booster, 'luckbooster')
 			last_looting = Date.now()
 		}
-		
+		if(smart.moving) return setTimeout(looting, 1000)
 		// EQUIP FOR KILLING WITH MORE LUCK
 		if(character.hp> character.max_hp*0.75 && Object.values(parent.entities).filter(e => e.type=="monster" && e.hp <5000 && e.target == character.name).length>0) {
 			equipSet("luck")
@@ -283,7 +281,7 @@ async function getTartget()
 	let target = get_targeted_monster()
 	
 	if(target && target.map != character.map || getDistance(target, character) > 500) change_target(null)
-	dontStack()
+	// dontStack()
 
 	if(!target)
 	{

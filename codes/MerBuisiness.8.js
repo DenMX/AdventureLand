@@ -92,12 +92,12 @@ async function fishing()
 	}
 }
 
-setInterval(manageStand, 500)
+setInterval(manageStand, 1500)
 async function manageStand()
 {
-	if(character.moving && character.standed)
+	if((smart.moving || character.moving) && character.standed)
 		close_stand()
-	else if (!character.moving && !character.standed)
+	else if (!smart.moving && !character.moving && !character.standed)
 		open_stand()
 }
 

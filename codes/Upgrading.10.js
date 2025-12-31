@@ -186,25 +186,16 @@ async function storeUpgradeAndCombine()
 	try 
 	{
 		game_log('Storing items...')
-		out: for(i=0; i<character.items.length; i++){
-			
-			
-			if(character.items[i] === null) continue;
-			let item = character.items[i]
-			if(ELIXIRS.includes(item.name)) continue;
-			for (let j of PERSONAL_ITEMS)
-			{
-				if(item.name == j.name && item.level == j.level) continue out
+		for(let i=0; i<2; i++) {
+			await storeItems(i)
+			if(character.esize>1) break
+		}
+		if(character.esize<2) {
+			await smart_move("bank_b")
+			for(let i=0; i<2; i++) {
+				await storeItems(i)
+				if(character.esize>1) break
 			}
-			let gItem = G.items[character.items[i].name]
-			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
-				bank_store(i) 
-			}
-			if((JEWELRY_TO_UPGRADE[item.name] && item.level==JEWELRY_TO_UPGRADE[item.name].level) || (NOT_SALE_ITEMS_ID[item.name] && item.level == NOT_SALE_ITEMS_ID[item.name].level))
-			{
-				bank_store(i);
-			}
-			
 		}
 		
 	}
@@ -219,4 +210,32 @@ async function storeUpgradeAndCombine()
 		if(character.ctype=='merchant')changeState(DEFAULT_STATE)
 	}
     
+}
+
+async function storeItems(idx) {
+	try {
+		out: for(i=0; i<character.items.length; i++){
+			
+			
+			if(character.items[i] === null) continue;
+			let item = character.items[i]
+			if(ELIXIRS.includes(item.name)) continue;
+			for (let j of PERSONAL_ITEMS)
+			{
+				if(item.name == j.name && item.level == j.level) continue out
+			}
+			let gItem = G.items[character.items[i].name]
+			if(ITEM_TYPES_TO_STORE.includes(gItem.type)){
+				await bank_store(i) 
+			}
+			if((JEWELRY_TO_UPGRADE[item.name] && item.level>=JEWELRY_TO_UPGRADE[item.name].level-idx) || (NOT_SALE_ITEMS_ID[item.name] && item.level >= NOT_SALE_ITEMS_ID[item.name].level-idx))
+			{
+				await bank_store(i);
+			}
+			
+		}
+	}
+	catch(ex) {
+		console.warn(`Exception while storing: \n ${ex}`)
+	}
 }
