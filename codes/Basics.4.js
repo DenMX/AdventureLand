@@ -78,9 +78,9 @@ function characterMoving()
     return false
 }
 
-function generateRandomPointClockwise(reference, target ) {
+function generateRandomPointClockwise(reference, target, distance ) {
 
-    let distance = character.range/2
+    if(!distance) distance = character.range/2
     let maxAngle = 90
     // Вычисляем базовый угол от reference к target
     const baseAngle = Math.atan2(target.y - reference.y, target.x - reference.x);
@@ -104,24 +104,20 @@ function getBoundingBoxCenter(points) {
     if (!points || points.length === 0) {
         return null;
     }
+
+    let sumX = 0;
+    let sumY = 0;
     
-    let minX = points[0].x;
-    let maxX = points[0].x;
-    let minY = points[0].y;
-    let maxY = points[0].y;
-    
-    for (let i = 1; i < points.length; i++) {
-        const point = points[i];
-        minX = Math.min(minX, point.x);
-        maxX = Math.max(maxX, point.x);
-        minY = Math.min(minY, point.y);
-        maxY = Math.max(maxY, point.y);
+    for (const point of points) {
+        sumX += point.x;
+        sumY += point.y;
     }
     
     return {
-        x: (minX + maxX) / 2,
-        y: (minY + maxY) / 2
+        x: sumX / points.length,
+        y: sumY / points.length
     };
+    
 }
 
 function on_combined_damage() // When multiple characters stay in the same spot, they receive combined damage, this function gets called whenever a monster deals combined damage

@@ -37,7 +37,7 @@ async function smart_exchange(npc, itemName, slot)
 scheduler(mining)
 async function mining()
 {
-	if(itemsCount()==42 || is_on_cooldown('mining'))
+	if(character.esize<2 || is_on_cooldown('mining'))
 	{
 		scheduler(mining)
 		return
@@ -62,7 +62,7 @@ async function mining()
 scheduler(fishing)
 async function fishing()
 {
-	if(itemsCount()==42 || is_on_cooldown('fishing')) 
+	if(character.esize<2 || is_on_cooldown('fishing')) 
 	{
 		scheduler(fishing)
 		return
@@ -168,7 +168,7 @@ async function equipTools(tool)
 
 async function checkParty()
 {
-	if(itemsCount()>40)
+	if(character.esize<1)
 	{
 		setTimeout(scheduler(checkParty), getMsFromMinutes(2))
 		return

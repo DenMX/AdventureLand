@@ -316,9 +316,16 @@ character.on("cm", function(data){
 		else
 		{
 			last_farm_pos = current_farm_pos
+			let newMobs = []
+			if(typeof data.message.mob === "string") newMobs.push(data.message.mob)
+			else if(Array.isArray(data.message.mob))newMobs = data.message.mob
+			else {
+				game_log("Error parsing mobs for new spot")
+				console.error(`Mob was not string or array. Type of ${typeof data.message.mob}`)
+			}
 			current_farm_pos =
 			{
-					mobs: [data.message.mob],
+					mobs: newMobs,
 					coop: data.message.coop || true,
 					massFarm: data.message.massFarm || false,
 					canSolo: data.message.canSolo || false

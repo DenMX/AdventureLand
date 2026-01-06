@@ -353,17 +353,15 @@ function myAttack(target)
 	{
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.max(...parent.pings));
-		// swing(target)
+		swing(target)
 	}
 }
 
 async function swing(target)
-{
-	if(!character.s.hardshell && Object.values(parent.entities).filter(e => e.target == character.name).length>2)
-	{
-		move(
-			character.x+(target.x-character.x)+10,
-			character.y+(target.y-character.y)+10
-		)
+{	
+	if(!character.moving) {
+		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
+		let new_point = generateRandomPointClockwise(character, target_point, character.range*0.8)
+		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
 	}
 }

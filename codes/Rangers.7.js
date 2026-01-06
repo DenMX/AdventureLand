@@ -6,7 +6,7 @@ const DO_NOT_SEND_ITEMS = [ 'elixirdex2', 'elixirluck', 'luckbooster',"xpbooster
 const ELIXIRS = ['elixirluck', 'pumpkinspice' ]
 
 const JACKO = {name: 'jacko', level: 1}
-const ORB = {name: "orbofdex", level: 3}
+const ORB = {name: "orbofdex", level: 4}
 const PERSONAL_ITEMS = [JACKO, ORB]
 
 initialize_character();
@@ -129,7 +129,7 @@ function kite(target)
 	
 	if(!character.moving) {
 		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
-		let new_point = generateRandomPointClockwise(character, target_point)
+		let new_point = generateRandomPointClockwise(character, target_point, character.range*0.8)
 		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
 	}
 }
