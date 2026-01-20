@@ -169,6 +169,7 @@ async function exchangeItems()
 		}
 		if(G.items[item.name].e && item.q >= G.items[item.name].e) 
 		{
+			if(character.ctype == 'merchant' && !character.s.massexchangepp && character.mp - G.skills.massexchangepp.mp>0) await use_skill('massexchangepp').catch(()=>{})
 			let e  = await exchange(i).catch(()=>{})
 			if(e.success == true) exchangeItem = true
 		}
