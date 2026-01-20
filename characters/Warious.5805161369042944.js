@@ -8,7 +8,7 @@ const LOLIPOP = {name: 'ololipop', level: 9}
 const AXE = {name: 'bataxe', level: 8}
 const SHIELD = {name: 'sshield', level: 8}
 const JACKO = {name: 'jacko', level: 1}
-const ORB = {name: 'orbofstr', level: 3}
+const ORB = {name: 'orbofstr', level: 4}
 const FAST_WEAPON = {name: 'rapier', level: 7}
 
 const MANA_TSHIRT = {name: 'tshirt9', level: 5}

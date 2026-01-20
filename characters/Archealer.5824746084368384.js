@@ -38,7 +38,7 @@ const PERSONAL_ITEMS = [
 	{name: 'eslippers', level: 8},
 	{name: 'mittens', level: 9},
 	{name: 'ecape', level: 6},
-	{name: 'santasbelt', level: 3},
+	// {name: 'santasbelt', level: 3},
 	{name: 'bcape', level: 7},
 	{name: 'wbookhs', level: 3},
 	{name: 'sbelt', level: 1},
@@ -194,10 +194,10 @@ function checkEquippedItems()
 
 
 async function circleMove(target) {
-	if(!character.moving) {
+	if(!character.moving && !smart.moving) {
 		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
 		let new_point = generateRandomPointClockwise(character, target_point)
-		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
+		if(can_move_to(new_point.x,new_point.y)) xmove(new_point.x, new_point.y)
 	}
 }
 

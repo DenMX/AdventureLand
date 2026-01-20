@@ -45,7 +45,7 @@ const EVENTS = [
 
 const ADD_PARTY = ['man1', 'men2', 'men3', 'frostyRogue', 'frostyRogue2', 'frostyHeal']
 
-const PARTY_LEADER = "Flamme"
+const PARTY_LEADER = "Archealer"
 
 const ITEM_TYPES_TO_STORE = ['dungeon_key','material', 'pscroll', 'token', 'offering', 'elixir', 'quest']
 

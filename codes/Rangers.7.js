@@ -127,10 +127,10 @@ async function usePiercing(target)
 function kite(target)
 {
 	
-	if(!character.moving) {
+	if(!character.moving && !smart.moving) {
 		let target_point = getBoundingBoxCenter(Object.values(parent.entities).filter(e => current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)))
 		let new_point = generateRandomPointClockwise(character, target_point, character.range*0.8)
-		if(can_move_to(new_point.x,new_point.y)) move(new_point.x, new_point.y)
+		if(can_move_to(new_point.x,new_point.y)) xmove(new_point.x, new_point.y)
 	}
 }
 
