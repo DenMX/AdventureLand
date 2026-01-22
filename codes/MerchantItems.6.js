@@ -156,11 +156,18 @@ const ITEMS_TO_SALE = [
 	//shields
 	// 'mshield'
 	
+
+	//T-Shirts
+	'tshirt0',
+	'tshirt1',
+	'tshirt2'
 ]
 
 
 const NOT_SALE_ITEMS_ID = 
 {
+	tshirt4: {level: 5},
+	tshirt3: {level: 5},
 	//begginers shit
 	// helmet: {level: 8},
 	wcap: {level: 8},
