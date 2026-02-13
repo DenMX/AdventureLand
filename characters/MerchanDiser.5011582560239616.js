@@ -181,12 +181,24 @@ async function checkEventOnOtherServers()
 	{
 		for(let j of Object.keys(events[i]))
 		{
-			if(Date.now-events[i][j]<500) {
+			if(events[i][j]-Date.now()< 60 * 1000) {
 				if(parent.caracAL) parent.caracAL.deploy(null, i+j) 
 				else change_server(i,j)
 			}
 		}
 	}
+}
+
+function findServerWithUnknownEvent() {
+	let events = get('dragold')
+	for(let i of Object.keys(events))
+	{
+		for(let j of Object.keys(events[i]))
+		{
+			if((!events[i][j] || events[i][j]-Date.now() < 0) && parent.server_region != i && parent.server_identifier != j) return `${i} ${j}`
+		}
+	}
+	return null
 }
 
 async function checkEvents()
@@ -199,13 +211,13 @@ async function checkEvents()
 			dragold[parent.server_region][parent.server_identifier] = parent.S.dragold.spawn
 			set('dragold', dragold)
 			if(!last_server_change || Date.now() - last_server_change > 60000) {
-				let srv_indx = SERVERS.indexOf(server_identifier)
-				if(srv_indx+1 == SERVERS.length) srv_indx = 0 
-				else srv_indx+=1
-				last_server_change = Date.now()
-				saveState()
-				if(parent.caracAL) parent.caracAL.deploy(null, `${SERVERS[srv_indx].split(' ')[0]}${SERVERS[srv_indx].split(' ')[1]}`) 
-				else  change_server(SERVERS[srv_indx].split(' ')[0], SERVERS[srv_indx].split(' ')[1])
+				let srv_indx = findServerWithUnknownEvent()
+				if(srv_indx) {
+					last_server_change = Date.now()
+					saveState()
+					if(parent.caracAL) parent.caracAL.deploy(null, `${SERVERS[srv_indx].split(' ')[0]}${SERVERS[srv_indx].split(' ')[1]}`) 
+					else  change_server(SERVERS[srv_indx].split(' ')[0], SERVERS[srv_indx].split(' ')[1])
+				}
 			}
 		}
 	}

@@ -171,6 +171,8 @@ function becomeHandsome(){
     }
 }
 
+
+
 async function energize()
 {
     if(is_on_cooldown('energize')) return

@@ -123,7 +123,7 @@ async function useStab(target)
 
     if(!target || character.mp < G.skills[stab].mp || is_on_cooldown(stab) || target.hp < character.attack || !is_in_range(target, stab)) return
     if(character.mp-G.skills[stab].mp < character.mp_cost*2 ) return
-    await use_skill(stab, target)
+    await use_skill(stab, target).catch( () => { } )
 }
 
 setInterval(useRspeed, 500)
@@ -139,7 +139,7 @@ async function useRspeed()
     {
         if(!char.s.rspeed) 
         {
-            await use_skill('rspeed', char)
+            await use_skill('rspeed', char).catch( () => { } )
             return
         }
     }
@@ -152,15 +152,15 @@ function myAttack(target){
 	if(!current_farm_pos.canSolo && !target.target) return
 	change_target(target);
 	useSkills(target);
-	if(!is_in_range(target, "quickpunch"))
+	if(distance>character.range/2)
 	{
 		move(
-			character.x+(target.x-character.x)/2,
-			character.y+(target.y-character.y)/2
+			character.x+(target.x-character.x)*0.9,
+			character.y+(target.y-character.y)*0.9
 			);
 		// Walk half the distance
 	}
-	else if(can_attack(target))
+	if(can_attack(target))
 	{
 		attack(target).catch(() => {});
 		reduce_cooldown("attack", Math.min(...parent.pings));

@@ -129,6 +129,7 @@ const ITEMS_TO_SALE = [
 	// 'cupid',
 	't2quiver',
 	'harbringer',
+	't2bow',
 
 	//halloween
 	'gphelmet',
@@ -189,7 +190,7 @@ const NOT_SALE_ITEMS_ID =
 	xhelmet: {level: 0},
 	xarmor: {level: 0},
 	xpants: {level: 5},
-	wingedboots: {level: 8},
+	wingedboots: {level: 6},
 	// hboots: {level: 7},
 	xboots: {level: 5},
 	xgloves: {level: 5},

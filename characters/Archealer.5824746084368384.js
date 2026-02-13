@@ -24,7 +24,7 @@ const PERSONAL_ITEMS = [
 	{name: 'xhelmet', level: 7},
 	{name: 'xarmor', level: 6},
 	{name: 'starkillers', level: 7},
-	{name: 'wingedboots', level: 8},
+	{name: 'wingedboots', level: 9},
 	{name: 'mittens', level: 9},
 	{name: 'lmace', level: 7},
 	{name: 'ornamentstaff', level: 10},
@@ -73,7 +73,7 @@ const TANK = [
 	{name: 'xhelmet', level: 7},
 	{name: 'xarmor', level: 6},
 	{name: 'starkillers', level: 7},
-	{name: 'wingedboots', level: 8},
+	{name: 'wingedboots', level: 9},
 	{name: 'mittens', level: 9},
 	{name: 'ornamentstaff', level: 10},
 	{name: 't2intamulet', level: 3},
@@ -361,7 +361,7 @@ async function pullmobsFromMember()
 
 async function pullMobs() {
 	if(character.hp<character.max_hp*0.5 || is_on_cooldown("zapperzap")) return
-
+	if(current_farm_pos.massFarm != true) return
 	if(character.mp < character.max_mp*0.5) return
 
 	let entities = Object.values(parent.entities).filter( e => (current_farm_pos.mobs.includes(e.mtype) || FARM_BOSSES.includes(e.mtype)) && is_in_range(e,"zapperzap") && !e.target && (e.aggro==0 || getDistance(character, e)> 20*e.aggro))

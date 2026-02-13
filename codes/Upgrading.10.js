@@ -133,6 +133,7 @@ async function checkCraft()
 		{
 			for(let j=0; j< item.q/20; j++)
 			{
+				if(character.esize<2) break;
 				await buy_with_gold('shoes')
 				await auto_craft('wingedboots')
 			}
